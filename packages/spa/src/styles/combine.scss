@@ -1,0 +1,145 @@
+$varuff-combined-vars: map-merge($varuff-vars, $varuff-custom-vars);
+$varuff-combined-colors: map-merge($varuff-themes-colors, $varuff-custom-colors);
+$varuff-layout-colors: map-merge($varuff-default-layout-colors, $varuff-custom-layout-colors);
+
+:root[app-short-name][data-theme-mode] {
+  width: 100vw;
+  height: 100vh;
+  font-size: 100px;
+  box-sizing: border-box;
+
+  body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  @each $var, $value in $varuff-colors {
+    --#{"" + $var + "_rgb"}: #{hexColorToRGB($value)};
+  }
+
+  @each $var, $value in $varuff-combined-vars {
+    --#{"" + $var}: #{$value};
+  }
+
+  @each $name, $theme in $varuff-combined-colors {
+    &[data-theme-mode="#{$name}"] {
+      $pure-color: map-get($theme, pure-color);
+      @each $var, $value in $theme {
+        --#{"" + $var}: #{$value};
+      }
+      @for $opacity from 0 through 10 {
+        --border-#{$opacity}0: #{"solid 1px " + rgba($pure-color, ($opacity * 0.1))};
+      }
+      background-color: var(--primary-bgcolor);
+      color: var(--primary-color);
+    }
+  }
+
+  @each $space, $value in $varuff-spaces {
+    .ruff-m-#{$space} {
+      margin: $value;
+    }
+    .ruff-p-#{$space} {
+      padding: $value;
+    }
+    .ruff-mv-#{$space} {
+      margin-top: $value;
+      margin-bottom: $value;
+    }
+    .ruff-mt-#{$space} {
+      margin-top: $value;
+    }
+    .ruff-mb-#{$space} {
+      margin-bottom: $value;
+    }
+    .ruff-mh-#{$space} {
+      margin-left: $value;
+      margin-right: $value;
+    }
+    .ruff-ml-#{$space} {
+      margin-left: $value;
+    }
+    .ruff-mr-#{$space} {
+      margin-right: $value;
+    }
+    .ruff-pv-#{$space} {
+      padding-top: $value;
+      padding-bottom: $value;
+    }
+    .ruff-pt-#{$space} {
+      padding-top: $value;
+    }
+    .ruff-pb-#{$space} {
+      padding-bottom: $value;
+    }
+    .ruff-ph-#{$space} {
+      padding-left: $value;
+      padding-right: $value;
+    }
+    .ruff-pl-#{$space} {
+      padding-left: $value;
+    }
+    .ruff-pr-#{$space} {
+      padding-right: $value;
+    }
+  }
+
+  @each $name, $styles in $varuff-texts {
+    .ruff-#{$name} {
+      line-height: nth($styles, 1);
+      font-size: nth($styles, 2);
+      font-weight: nth($styles, 3);
+    }
+  }
+
+  .ruff-color-text {
+    color: var(--primary-color);
+  }
+  .ruff-color-text2 {
+    color: var(--primary-color-secondary);
+  }
+  .ruff-color-text3 {
+    color: var(--lowkey-color);
+  }
+  .ruff-color-highlight {
+    color: var(--highlight-color);
+  }
+  .ruff-color-success {
+    color: var(--positive-color);
+  }
+  .ruff-color-error {
+    color: var(--negative-color);
+  }
+  .ruff-color-warning {
+    color: var(--negative-color-secondary);
+  }
+
+  .ruff-color-text-i {
+    color: var(--primary-color) !important;
+  }
+  .ruff-color-text2-i {
+    color: var(--primary-color-secondary) !important;
+  }
+  .ruff-color-text3-i {
+    color: var(--lowkey-color) !important;
+  }
+  .ruff-color-highlight-i {
+    color: var(--highlight-color) !important;
+  }
+  .ruff-color-success-i {
+    color: var(--positive-color) !important;
+  }
+  .ruff-color-error-i {
+    color: var(--negative-color) !important;
+  }
+  .ruff-color-warning-i {
+    color: var(--negative-color-secondary) !important;
+  }
+
+  @each $var, $value in $varuff-layout-colors {
+    --ruff-#{""+$var}: #{$value};
+  }
+}

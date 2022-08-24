@@ -1,0 +1,9 @@
+@import "./commons/index.scss";
+@import "./light/default.scss";
+@import "./dark/default.scss";
+@import "./layout.scss";
+
+$varuff-themes-colors: (
+  dark: $varuff-dark-colors,
+  light: $varuff-light-colors,
+);

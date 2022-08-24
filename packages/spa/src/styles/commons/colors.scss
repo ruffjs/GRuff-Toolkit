@@ -1,0 +1,66 @@
+@function hexColorToRGB($value) {
+  @return #{red($value) + ", " + green($value) + ", " + blue($value)};
+}
+
+$varuff-colors: (
+  // transparent: #00000000,
+  transparent: transparent,
+
+  white: #ffffff,
+  white-transparent: #ffffff66,
+  off-white: #f9fafc,
+
+  black: #000000,
+  black-transparent: #00000033,
+  off-black: #1c1e3b,
+
+  red-main: #f97570,
+  red-light: #f59ca2,
+  red-medium: #ff6666,
+  red-dark: #c53f39,
+
+  orange-main: #ff852f,
+  orange-light: #f4a261,
+  orange-lighter: #fcb345,
+  orange-medium: #ff9417,
+  orange-dark: #c97c09,
+  orange-darker: #e76f51,
+
+  yellow-main: #fdeb60,
+  yellow-light: #fff291,
+  yellow-lighter: #fdf3ac,
+  yellow-dark: #fbea6d,
+  yellow-darker: #e9c46a,
+  yellow-gold: #ffc769,
+
+  green-main: #32c48d,
+  green-bright: #29d344,
+  green-light: #26d694,
+  green-lighter: #29d391,
+  green-dark: #1b875e,
+
+  blue-main: #4babff,
+  blue-bright: #1d91f8,
+  blue-bright-dark: #0478df,
+  blue-light: #51aeff,
+  blue-lighter: #14d5ff,
+  blue-extra-light: #f6f7fe,
+  blue-dark: #3f82dd,
+  blue-darker: #232e49,
+  blue-extra-dark: #1c1e3b,
+
+  gray-main: #81909f,
+  gray-light: #dadada,
+  gray-lighter: #f0f1fa,
+  gray-extra-light: #f9fafe,
+  gray-dark: #687a8c,
+  gray-darker: #202b37,
+  gray-extra-dark: #1c1c1c,
+
+  gray-blue: #114674,
+
+  gray-blue-light: #bac6d9,
+  gray-blue-lighter: #cddbee,
+  gray-blue-darker: #09214f,
+  gray-blue-extra-dark: #091538
+);

@@ -1,0 +1,22 @@
+{
+  "name": "@ruff-web/hooks",
+  "version": "1.0.0",
+  "description": "My webpack project",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.7.3"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  },
+  "mocha": {
+    "require": [
+      "ts-node/register",
+      "tsconfig-paths/register"
+    ],
+    "ui": "bdd"
+  }
+}

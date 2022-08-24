@@ -1,0 +1,36 @@
+$varuff-light-colors: (
+  theme-mode: light,
+  // 主题纯色，前景明黑暗白，背景明白暗黑
+  pure-color: black,
+  pure-bgcolor: white,
+  // 首选前景色，文字，边框等
+  primary-color: rgba(0, 0, 0, 0.85),
+  // 首选背景色，主要色块
+  primary-bgcolor: white,
+  // 次选前景色，文字，边框等，属于主色调，与首选色区隔
+  secondary-color: map-get($varuff-colors, gray-extra-dark),
+  // 次选背景色，需要与主要色块区分但不对比的色块，一般与$primary-bgcolor同层
+  secondary-bgcolor: map-get($varuff-colors, gray-extra-light),
+  // 区块前景色，区块中的主前景色，一般与$primary-color相同，仅在$primary-color在$surface-bgcolor显示不清时专门定义
+  surface-color: map-get($varuff-colors, gray-extra-dark),
+  // 区块背景色，需要在主、次要色块区内突出显示，但不形成强烈对比，一般在$primary-bgcolor、$secondary-bgcolor上层
+  surface-bgcolor: map-get($varuff-colors, gray-lighter),
+  // 反向背景下的前景色，一般也是首选前景色的相反色
+  contrary-color: map-get($varuff-colors, white-transparent),
+  // 反向背景色，突出显示某一块内容，与主、次要色块形成强烈对比
+  contrary-bgcolor: map-get($varuff-colors, blue-dark),
+  // 高亮强调色，可用于前景和背景，要求在$primary-bgcolor中显示清晰，
+  // 可以但不强制兼容$contrary-bgcolor，因为$contrary-bgcolor本身就是一种高亮，$contrary-color于$contrary-bgcolor呈现已得到重点展示。
+  // 含一个备选
+  highlight-color: map-get($varuff-colors, blue-bright),
+  highlight-color-secondary: map-get($varuff-colors, blue-bright-dark),
+  // 低调色，一般用于readonly、disabled、不显眼的边框和不重要的描述文字。含一个备选
+  lowkey-color: map-get($varuff-colors, gray-main),
+  lowkey-color-secondary: map-get($varuff-colors, gray-light),
+  // 积极色，一般用于Success、Completed等。含一个备选
+  positive-color: map-get($varuff-colors, green-main),
+  positive-color-secondary: map-get($varuff-colors, green-dark),
+  // 消极色，一般用于Fail、Error等。含一个备选
+  negative-color: map-get($varuff-colors, red-dark),
+  negative-color-secondary: map-get($varuff-colors, orange-dark),
+);

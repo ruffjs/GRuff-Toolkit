@@ -1,0 +1,62 @@
+@import "./colors.scss";
+@import "./sizes.scss";
+
+$varuff-texts: (
+  title1: (
+    map-get($varuff-font-sizes, lh2),
+    map-get($varuff-font-sizes, h2),
+    map-get($varuff-font-weights, wxl),
+  ),
+  title2: (
+    map-get($varuff-font-sizes, lh4),
+    map-get($varuff-font-sizes, h4),
+    map-get($varuff-font-weights, wl),
+  ),
+  sub-title1: (
+    map-get($varuff-font-sizes, lh5),
+    map-get($varuff-font-sizes, h6),
+    map-get($varuff-font-weights, wl),
+  ),
+  sub-title2: (
+    map-get($varuff-font-sizes, lh5),
+    map-get($varuff-font-sizes, h6),
+    map-get($varuff-font-weights, wm),
+  ),
+  text1: (
+    map-get($varuff-font-sizes, lh5),
+    map-get($varuff-font-sizes, body3),
+    map-get($varuff-font-weights, wm),
+  ),
+  text2: (
+    map-get($varuff-font-sizes, lh5),
+    map-get($varuff-font-sizes, body-m),
+    map-get($varuff-font-weights, wm),
+  ),
+  text3: (
+    map-get($varuff-font-sizes, lh5),
+    map-get($varuff-font-sizes, body4),
+    map-get($varuff-font-weights, wm),
+  ),
+  text4: (
+    map-get($varuff-font-sizes, lh6),
+    map-get($varuff-font-sizes, body4),
+    map-get($varuff-font-weights, wm),
+  ),
+  text5: (
+    map-get($varuff-font-sizes, lh5),
+    map-get($varuff-font-sizes, body5),
+    map-get($varuff-font-weights, wm),
+  ),
+  text6: (
+    map-get($varuff-font-sizes, lh6),
+    map-get($varuff-font-sizes, body5),
+    map-get($varuff-font-weights, wm),
+  ),
+);
+$varuff-sizes: map-merge(
+  map-merge($varuff-font-sizes, $varuff-font-weights),
+  map-merge($varuff-spaces, $varuff-border-radii)
+);
+
+$varuff-vars: map-merge($varuff-colors, $varuff-sizes);
+$varuff-custom-vars: ();

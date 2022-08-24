@@ -1,0 +1,486 @@
+import { AxiosRequestConfig } from "axios";
+import { joinPath, withQuery } from "../utils";
+import Requestor from "./Requestor";
+
+export default class RESTfulRequestor
+  extends Requestor
+  implements RuffClientResourceMethods
+{
+  private pageIndex = 1;
+  private pageSize = 999999;
+
+  withQuery = withQuery;
+
+  get defaultQueryListParams() {
+    return {
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
+    };
+  }
+
+  set defaultpageSize(size: number) {
+    this.pageSize = size;
+  }
+
+  /** 创建资源 **/
+  $addResource<T extends RuffDataModel = any, D = any>(
+    pathname: string,
+    model: D,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.post<T, D>(pathname + withQuery(query), model, config);
+  }
+
+  $createEntity<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+    entityPath: RuffResourcePath,
+    model: D,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$addResource<T, D>(joinPath(entityPath), model, query, config);
+  }
+
+  $createEntityWithAttachment<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    model: D,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<FormData>
+  ) {
+    const body = new FormData();
+    for (let [key, value] of Object.entries(model || {})) {
+      body.append(key, value);
+    }
+    return this.$addResource<T, FormData>(
+      joinPath(entityPath),
+      body,
+      query,
+      config
+    );
+  }
+
+  $addReferences<
+    T extends RuffDataModel = any,
+    D extends RuffReferencesDescription = any
+  >(
+    entityPath: RuffResourcePath,
+    description: D,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$addResource<T, D>(
+      joinPath(entityPath),
+      description,
+      query,
+      config
+    );
+  }
+
+  $createBelonging<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    belongingPath: RuffResourcePath,
+    id: Id,
+    model: D,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$addResource<T, D>(
+      joinPath([joinPath(entityPath), id, joinPath(belongingPath)]),
+      model,
+      query,
+      config
+    );
+  }
+
+  /** 获取资源 **/
+  $getResource<T extends RuffDataModel = any, D = any>(
+    pathname: string,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.get<T, D>(pathname + withQuery(query), config);
+  }
+
+  $getData = this.$getResource;
+
+  $getIdentifiableData<T extends RuffDataModel = any, D = any>(
+    pathname: string,
+    id: Id,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.get<T, D>(joinPath([pathname, id]), config);
+  }
+
+  $getEntityById<T extends RuffDataModel = any, D = any>(
+    entityPath: RuffResourcePath,
+    id: Id,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$getIdentifiableData<T, D>(joinPath(entityPath), id, config);
+  }
+
+  $getEntityByKeys<T extends RuffDataModel = any, D = any>(
+    entityPath: RuffResourcePath,
+    keys: Id[],
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$getIdentifiableData<T, D>(
+      joinPath(entityPath),
+      joinPath(keys),
+      config
+    );
+  }
+
+  $getIdentifiableBelonging<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    belongingPath: RuffResourcePath,
+    aid: Id | Id[],
+    bid: Id | Id[],
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$getIdentifiableData<T, D>(
+      joinPath([joinPath(entityPath), joinPath(aid), joinPath(belongingPath)]),
+      joinPath(bid),
+      config
+    );
+  }
+
+  $getEnumerableData<T extends RuffDataModel = any, D = any>(
+    pathname: string,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.get<RuffDataRecords<T>, D>(pathname + withQuery(query), config);
+  }
+
+  $getEnumerableEntitys<T extends RuffDataModel = any, D = any>(
+    entityPath: RuffResourcePath,
+    query?: RuffPageableResourcesQueryModel,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$getEnumerableData<T, D>(joinPath(entityPath), query, config);
+  }
+
+  $getEnumerableBelongings<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    belongingPath: RuffResourcePath,
+    aidOrAkeys: Id | Id[],
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$getEnumerableData<T, D>(
+      joinPath([
+        joinPath(entityPath),
+        joinPath(aidOrAkeys),
+        joinPath(belongingPath),
+      ]),
+      query,
+      config
+    );
+  }
+
+  $getEnumerableBelonging = this.$getEnumerableBelongings;
+
+  $getEnumerableAndIdentifiableBelonging<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    belongingPath: RuffResourcePath,
+    aidOrAkeys: Id | Id[],
+    bidOrAkeys: Id | Id[],
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$getEnumerableData<T, D>(
+      joinPath([
+        joinPath(entityPath),
+        joinPath(aidOrAkeys),
+        joinPath(belongingPath),
+        joinPath(bidOrAkeys),
+      ]),
+      query,
+      config
+    );
+  }
+
+  $getPageableResources<T extends RuffDataModel = any, D = any>(
+    pathname: string,
+    query?: RuffPageableResourcesQueryModel,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.get<RuffHttpResourcesList<T>, D>(
+      pathname + withQuery({ ...this.defaultQueryListParams, ...query }),
+      config
+    );
+  }
+
+  $getEntitys<T extends RuffDataModel = any, D = any>(
+    entityPath: RuffResourcePath,
+    query?: RuffPageableResourcesQueryModel,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$getPageableResources<T, D>(
+      joinPath(entityPath),
+      query,
+      config
+    );
+  }
+
+  $getPageableBelonging<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    belongingPath: RuffResourcePath,
+    aidOrAkeys: Id | Id[],
+    query?: RuffPageableResourcesQueryModel,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$getPageableResources<T, D>(
+      joinPath([
+        joinPath(entityPath),
+        joinPath(aidOrAkeys),
+        joinPath(belongingPath),
+      ]),
+      query,
+      config
+    );
+  }
+
+  $getPeriodData<T extends RuffPeriodDataItem = any, D = any>(
+    pathname: string,
+    query?: RuffPeriodDataQueryModel,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.get<RuffPeriodData<T>, D>(
+      pathname + withQuery({ ...this.defaultQueryListParams, ...query }),
+      config
+    );
+  }
+
+  $getPeriodBelonging<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    belongingPath: RuffResourcePath,
+    aidOrAkeys: Id | Id[],
+    query?: RuffPeriodDataQueryModel,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$getPeriodData<RuffHttpResourcesList<T>, D>(
+      joinPath([
+        joinPath(entityPath),
+        joinPath(aidOrAkeys),
+        joinPath(belongingPath),
+      ]),
+      query,
+      config
+    );
+  }
+
+  /** 写入资源 **/
+  $setResource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+    pathname: string,
+    model: D,
+    config?: AxiosRequestConfig<D>,
+    patially = false
+  ) {
+    if (patially) {
+      return this.patch<T, D>(pathname, model, config);
+    }
+    return this.put<T, D>(pathname, model, config);
+  }
+
+  $setEntityById<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+    entityPath: RuffResourcePath,
+    idOrKeys: Id | Id[],
+    model: D,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$setResource<T, D>(
+      joinPath([joinPath(entityPath), joinPath(idOrKeys)]),
+      model,
+      config
+    );
+  }
+
+  $setEntityPatiallyById<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    idOrKeys: Id | Id[],
+    model: D,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$setResource<T, D>(
+      joinPath([joinPath(entityPath), joinPath(idOrKeys)]),
+      model,
+      config,
+      true
+    );
+  }
+
+  $setBelonging<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+    entityPath: RuffResourcePath,
+    belongingPath: RuffResourcePath,
+    aidOrAkeys: Id | Id[],
+    model: D,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$setResource<T, D>(
+      joinPath([
+        joinPath(entityPath),
+        joinPath(aidOrAkeys),
+        joinPath(belongingPath),
+      ]) + withQuery(query),
+      model,
+      config
+    );
+  }
+  $setBelongingPatially<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    belongingPath: RuffResourcePath,
+    aidOrAkeys: Id | Id[],
+    model: D,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$setResource<T, D>(
+      joinPath([
+        joinPath(entityPath),
+        joinPath(aidOrAkeys),
+        joinPath(belongingPath),
+      ]) + withQuery(query),
+      model,
+      config,
+      true
+    );
+  }
+
+  /** 删除资源 **/
+  $delResource<T extends RuffDataModel = any, D = any>(
+    pathname: string,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.delete<T, D>(pathname + withQuery(query), config);
+  }
+
+  $removeEntityById<T extends RuffDataModel = any, D = any>(
+    entityPath: RuffResourcePath,
+    id: Id,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$delResource<T, D>(
+      joinPath([joinPath(entityPath), joinPath(id)]),
+      undefined,
+      config
+    );
+  }
+
+  $removeEntityByKeys<T extends RuffDataModel = any, D = any>(
+    entityPath: RuffResourcePath,
+    keys: Id[],
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$delResource<T, D>(
+      joinPath([joinPath(entityPath), joinPath(keys)]),
+      query,
+      config
+    );
+  }
+
+  $removeBelonging<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
+    entityPath: RuffResourcePath,
+    belongingPath: RuffResourcePath,
+    aidOrAkeys: Id | Id[],
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    return this.$delResource<T, D>(
+      joinPath([
+        joinPath(entityPath),
+        joinPath(aidOrAkeys),
+        joinPath(belongingPath),
+      ]),
+      query,
+      config
+    );
+  }
+
+  $clearReferences<
+    T extends RuffDataModel = any,
+    D extends RuffReferencesDescription = any
+  >(
+    entityPath: RuffResourcePath,
+    description: D,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<D>
+  ) {
+    // delete with body
+    return this.request<T, D>({
+      ...config,
+      method: "delete",
+      url: joinPath(entityPath) + withQuery(query),
+      data: description,
+    });
+  }
+
+  /** RPC风格接口 **/
+  $runCommand<T extends RuffDataModel = any, A extends AnyRecord = any>(
+    entityPath: RuffResourcePath,
+    command: string,
+    args: A,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<A>
+  ) {
+    return this.request<T, A>({
+      method: "post",
+      ...config,
+      url: joinPath([joinPath(entityPath), command]) + withQuery(query),
+      data: args,
+    });
+  }
+
+  // /api/v1/device/{devicaId}/acquisition/refresh
+  $takeAction<T extends RuffDataModel = any, A extends AnyRecord = any>(
+    entityPath: RuffResourcePath,
+    command: string,
+    idOrKeys: Id | Id[],
+    args: A,
+    query?: RuffHttpQueryModel | string,
+    config?: AxiosRequestConfig<A>
+  ) {
+    return this.request<T, A>({
+      method: "post",
+      ...config,
+      url:
+        joinPath([joinPath(entityPath), joinPath(idOrKeys), command]) +
+        withQuery(query),
+      data: args,
+    });
+  }
+}

@@ -1,0 +1,25 @@
+$varuff-dark-colors: (
+  theme-mode: dark,
+  pure-color: white,
+  pure-bgcolor: black,
+  primary-color: map-get($varuff-colors, off-white),
+  primary-bgcolor: map-get($varuff-colors, off-black),
+  secondary-color: map-get($varuff-colors, blue-extra-light),
+  secondary-bgcolor: map-get($varuff-colors, blue-extra-dark),
+  surface-color: map-get($varuff-colors, blue-extra-light),
+  surface-bgcolor: map-get($varuff-colors, gray-blue-extra-dark),
+  contrary-color: map-get($varuff-colors, blue-extra-dark),
+  contrary-bgcolor: map-get($varuff-colors, white-transparent),
+  // 高亮强调色
+  highlight-color: map-get($varuff-colors, blue-main),
+  highlight-color-secondary: map-get($varuff-colors, blue-lighter),
+  // 低调色
+  lowkey-color: map-get($varuff-colors, gray-light),
+  lowkey-color-secondary: map-get($varuff-colors, gray-blue-light),
+  // 积极色
+  positive-color: map-get($varuff-colors, green-bright),
+  positive-color-secondary: map-get($varuff-colors, green-lighter),
+  // 消极色
+  negative-color: map-get($varuff-colors, red-main),
+  negative-color-secondary: map-get($varuff-colors, orange-main),
+);

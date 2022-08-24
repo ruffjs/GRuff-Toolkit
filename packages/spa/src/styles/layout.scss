@@ -1,0 +1,53 @@
+$varuff-default-layout-colors: (
+    sign-view-background: var(--signin-bgcolor),
+    // 顶部导航栏背景颜色
+    top-bar-background: var(--primary-bgcolor),
+    // 顶部导航栏阴影
+    top-bar-shadow: rgba(var(--primary-bgcolor), 0.85),
+    // 顶部导航栏默认文本颜色
+    top-bar-text: var(--primary-color),
+    // 顶部导航栏文本悬停颜色
+    top-bar-text_hover: var(--secondary-color),
+    // 菜单栏开关颜色
+    side-bar-switch-text: var(--primary-color),
+    // 菜单栏开关悬停颜色
+    side-bar-switch-text_hover: var(--highlight-color),
+    // 导航栏背景颜色
+    side-bar-background: var(--primary-bgcolor),
+    // 导航栏阴影
+    side-bar-shadow: 0 0 1px rgba(var(--surface-bgcolor), 0.3),
+    // 菜单背景颜色
+    menu-background: var(--secondary-bgcolor),
+    // 菜单悬停背景颜色
+    menu-background_hover: var(--primary-bgcolor),
+    // 菜单激活背景颜色
+    menu-background_active: var(--primary-bgcolor),
+    // 菜单文字颜色
+    menu-text: var(--primary-color),
+    // 菜单文字悬停颜色
+    menu-text_hover: var(--highlight-color),
+    // 菜单文字激活颜色
+    menu-text_active: var(--highlight-color),
+    // 子菜单背景颜色
+    sub-menu-background: var(--primary-bgcolor),
+    // 子菜单悬停背景颜色
+    sub-menu-background_hover: var(--primary-bgcolor),
+    // 子菜单激活背景颜色
+    sub-menu-background_active: var(--primary-bgcolor),
+    // 子菜单文字颜色
+    sub-menu-text: var(--primary-color),
+    // 子菜单文字悬停颜色
+    sub-menu-text_hover: var(--highlight-color),
+    // 子菜单文字激活颜色
+    sub-menu-text_active: var(--highlight-color),
+    // 工作区背景颜色
+    workspace-background: var(--secondary-bgcolor),
+    // 工作区主体背景颜色
+    workspace-surface-background: var(--primary-bgcolor),
+    // 工作区面板阴影颜色
+    workspace-surface-shadow: rgba(var(--surface-bgcolor), 0.1),
+    // 工作区文字默认颜色
+    workspace-text: var(--primary-color),
+);
+
+$varuff-custom-layout-colors: ();
