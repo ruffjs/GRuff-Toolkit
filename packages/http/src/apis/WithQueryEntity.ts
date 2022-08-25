@@ -1,32 +1,22 @@
+import { formatQueryCondition } from "../utils/index";
 import HttpPackagedResource from "../responses/HttpPackagedResource";
 import HttpResourcesList from "../responses/HttpResourcesList";
 import { joinPath } from "../utils";
 import EntityRef from "./EntityRef";
-import { ResourceMethod } from "./ResourceMethod";
+import AbsoluteBase from "./AbsoluteBase";
+import { AxiosResponse } from "axios";
 
 export default class WithQueryEntity<
-  CH extends string = any,
-  CO extends string = any
-> {
-  static createEntity<CH extends string = any, CO extends string = any>(
+  B extends string = any,
+  A extends string = any
+> extends AbsoluteBase {
+  static createEntity<B extends string = any, A extends string = any>(
     name: string,
-    options: Readonly<RuffEntityOptions<CH, CO>>,
+    options: Readonly<RuffEntityOptions<any, any, B, A>>,
     query: RuffPageableResourcesQueryModel
   ) {
-    const entity = new WithQueryEntity(name, options, query);
-    return Object.assign(
-      entity,
-      {} as WithQueryEntity<CH, CO> &
-        Record<CH, WithQueryEntity<string, string>> &
-        Record<CO, AnyFn>
-    );
+    return new WithQueryEntity(name, options, query);
   }
-
-  protected _client: RuffHttpClient;
-  protected _prefix = "api/v1";
-  protected _dirname: string;
-  protected _options: RuffEntityOptions<CH, CO>;
-  protected _query: RuffPageableResourcesQueryModel;
 
   setPrefix(prefix: string) {
     this._prefix = prefix;
@@ -38,21 +28,14 @@ export default class WithQueryEntity<
 
   protected constructor(
     name: string,
-    options: RuffEntityOptions<CH, CO>,
+    options: RuffEntityOptions<any, any, B, A>,
     query: RuffPageableResourcesQueryModel
   ) {
-    const { client, resource, config } = options;
-    this._client = client;
-    this._dirname = resource.dirname || name;
-    this._options = options;
-    this._query = query;
-    console.log(
-      resource.methods?.map((m) => ResourceMethod[m]),
-      resource
-    );
+    super(name, options, query);
   }
 
-  query(condition: AnyRecord) {
+  query(...qs: RuffHttpQueryCondition[]): WithQueryEntity {
+    const condition = formatQueryCondition(...qs);
     this._query = {
       ...this._query,
       ...condition,
@@ -61,6 +44,7 @@ export default class WithQueryEntity<
   }
 
   async list(pageSize: number = 10, pageIndex: number = 1) {
+    console.log("this._query", this._query);
     const { data } = await this._client.$getEntitys(
       joinPath([this._prefix, this._dirname]),
       {
@@ -69,18 +53,26 @@ export default class WithQueryEntity<
         pageIndex,
       }
     );
-    console.log(data);
+    // console.log(data);
     const list = new HttpResourcesList(data);
     data.content.forEach((item: any) => {
-      //   const ref = EntityRef.createEntityRef(this._name, this._options);
+      const ref: any = EntityRef.createRef(
+        this._dirname,
+        item.id,
+        this._options,
+        this._query
+      );
       list.push(
         new HttpPackagedResource(item, {
           get(target, p) {
+            if (p === "rawData") {
+              return item;
+            }
             if (p in item) {
               return item[p];
             }
-            if (p === "rawData") {
-              return item;
+            if (p in ref && typeof ref[p] === "function") {
+              return ref[p];
             }
             return undefined;
           },
@@ -90,5 +82,9 @@ export default class WithQueryEntity<
     return list;
   }
 
-  get() {}
+  get<T extends RuffDataModel = any>(): Promise<
+    AxiosResponse<RuffHttpResponse<T>, any>
+  > {
+    throw new Error("Method not implemented.");
+  }
 }

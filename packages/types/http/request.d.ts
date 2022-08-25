@@ -1,4 +1,5 @@
 interface RuffHttpQueryModel extends AnyRecord {}
+type RuffHttpQueryCondition = RuffHttpQueryModel | string;
 
 interface RuffPageableResourcesQueryModel extends RIQueryModel {
   sort?: string;

@@ -26,7 +26,7 @@ export default class RESTfulRequestor
   $addResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.post<T, D>(pathname + withQuery(query), model, config);
@@ -35,7 +35,7 @@ export default class RESTfulRequestor
   $createEntity<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     entityPath: RuffResourcePath,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$addResource<T, D>(joinPath(entityPath), model, query, config);
@@ -47,7 +47,7 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<FormData>
   ) {
     const body = new FormData();
@@ -68,7 +68,7 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     description: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$addResource<T, D>(
@@ -87,7 +87,7 @@ export default class RESTfulRequestor
     belongingPath: RuffResourcePath,
     id: Id,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$addResource<T, D>(
@@ -101,7 +101,7 @@ export default class RESTfulRequestor
   /** 获取资源 **/
   $getResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.get<T, D>(pathname + withQuery(query), config);
@@ -112,9 +112,10 @@ export default class RESTfulRequestor
   $getIdentifiableData<T extends RuffDataModel = any, D = any>(
     pathname: string,
     id: Id,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.get<T, D>(joinPath([pathname, id]), config);
+    return this.$getResource<T, D>(joinPath([pathname, id]), query, config);
   }
 
   $getEntityById<T extends RuffDataModel = any, D = any>(
@@ -122,17 +123,24 @@ export default class RESTfulRequestor
     id: Id,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getIdentifiableData<T, D>(joinPath(entityPath), id, config);
+    return this.$getIdentifiableData<T, D>(
+      joinPath(entityPath),
+      id,
+      undefined,
+      config
+    );
   }
 
   $getEntityByKeys<T extends RuffDataModel = any, D = any>(
     entityPath: RuffResourcePath,
     keys: Id[],
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$getIdentifiableData<T, D>(
       joinPath(entityPath),
       joinPath(keys),
+      query,
       config
     );
   }
@@ -143,8 +151,8 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aid: Id | Id[],
-    bid: Id | Id[],
+    aid: IdOrKeys,
+    bid: IdOrKeys,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$getIdentifiableData<T, D>(
@@ -156,7 +164,7 @@ export default class RESTfulRequestor
 
   $getEnumerableData<T extends RuffDataModel = any, D = any>(
     pathname: string,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.get<RuffDataRecords<T>, D>(pathname + withQuery(query), config);
@@ -176,8 +184,8 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
-    query?: RuffHttpQueryModel | string,
+    aidOrAkeys: IdOrKeys,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$getEnumerableData<T, D>(
@@ -199,9 +207,9 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
-    bidOrAkeys: Id | Id[],
-    query?: RuffHttpQueryModel | string,
+    aidOrAkeys: IdOrKeys,
+    bidOrAkeys: IdOrKeys,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$getEnumerableData<T, D>(
@@ -245,7 +253,7 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
+    aidOrAkeys: IdOrKeys,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
@@ -277,7 +285,7 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
+    aidOrAkeys: IdOrKeys,
     query?: RuffPeriodDataQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
@@ -307,7 +315,7 @@ export default class RESTfulRequestor
 
   $setEntityById<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     entityPath: RuffResourcePath,
-    idOrKeys: Id | Id[],
+    idOrKeys: IdOrKeys,
     model: D,
     config?: AxiosRequestConfig<D>
   ) {
@@ -323,7 +331,7 @@ export default class RESTfulRequestor
     D extends RuffDataModel = any
   >(
     entityPath: RuffResourcePath,
-    idOrKeys: Id | Id[],
+    idOrKeys: IdOrKeys,
     model: D,
     config?: AxiosRequestConfig<D>
   ) {
@@ -338,9 +346,9 @@ export default class RESTfulRequestor
   $setBelonging<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
+    aidOrAkeys: IdOrKeys,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$setResource<T, D>(
@@ -359,9 +367,9 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
+    aidOrAkeys: IdOrKeys,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$setResource<T, D>(
@@ -379,7 +387,7 @@ export default class RESTfulRequestor
   /** 删除资源 **/
   $delResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.delete<T, D>(pathname + withQuery(query), config);
@@ -400,7 +408,7 @@ export default class RESTfulRequestor
   $removeEntityByKeys<T extends RuffDataModel = any, D = any>(
     entityPath: RuffResourcePath,
     keys: Id[],
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$delResource<T, D>(
@@ -416,8 +424,8 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
-    query?: RuffHttpQueryModel | string,
+    aidOrAkeys: IdOrKeys,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$delResource<T, D>(
@@ -437,7 +445,7 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     description: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     // delete with body
@@ -454,7 +462,7 @@ export default class RESTfulRequestor
     entityPath: RuffResourcePath,
     command: string,
     args: A,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<A>
   ) {
     return this.request<T, A>({
@@ -469,9 +477,9 @@ export default class RESTfulRequestor
   $takeAction<T extends RuffDataModel = any, A extends AnyRecord = any>(
     entityPath: RuffResourcePath,
     command: string,
-    idOrKeys: Id | Id[],
+    idOrKeys: IdOrKeys,
     args: A,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<A>
   ) {
     return this.request<T, A>({

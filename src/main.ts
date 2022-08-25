@@ -1,5 +1,5 @@
-import Entity from "@ruff-web/http/src/Entity/Entity";
-import userResource from "@ruff-web/entities/src/presets/user/user.src";
+import Entity from "@ruff-web/http/src/apis/Entity";
+import userResource from "@ruff-web/entities/src/presets/user/user.http";
 import clients from "./http/clients";
 
 console.log(clients);
@@ -9,18 +9,41 @@ clients.user.onTokenRequired = () =>
 const userEntity = Entity.createEntity("user", {
   resource: userResource,
   client: clients.user,
+  prefix: "api/v1",
 });
 
-console.log(userEntity);
-
-// userEntity.token;
-
-// userEntity.login;
-
-for (const user of await userEntity.list()) {
+for (const user of await userEntity.list(3)) {
   console.log(user.name, user, user.rawData);
+  console.log(await user.profile());
 }
 
 const withQueryUserEntity = userEntity.query({ role: "Admin" });
 console.log(withQueryUserEntity);
-console.log(await withQueryUserEntity.query({ role: "PM" }).list());
+console.log(
+  await withQueryUserEntity
+    .query({ role: "PM" })
+    .query("type=Gateway&type=Device", "nodeType=composite")
+    .query({
+      online: true,
+    })
+    .list()
+);
+
+console.log(await userEntity.loginLog.list());
+const idealizedUserLoginLogEntity = Entity.idealizeEntity(
+  userEntity.loginLog,
+  userResource.children.loginLog
+);
+
+console.log(await idealizedUserLoginLogEntity.list());
+
+const ref = userEntity(10);
+ref.profile({});
+ref.profile.get();
+
+userEntity.login({
+  loginName: "string",
+  password: "string",
+  clientType: "Web",
+});
+ref.doSth({ foo: "bar" });

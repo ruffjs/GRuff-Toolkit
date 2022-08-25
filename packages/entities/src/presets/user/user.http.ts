@@ -1,10 +1,15 @@
-import { ResourceMethod as M } from "@ruff-web/http/src/Entity/ResourceMethod";
+import { ResourceMethod as M } from "@ruff-web/http/src/apis/ResourceMethod";
 
 export default {
   methods: [M.POST, M.LIST, M.PUT, M.DELETE],
   children: {
     loginLog: {
       methods: [M.LIST],
+      children: {
+        loginLog2: {
+          methods: [M.LIST],
+        },
+      },
     },
     token: {
       methods: [M.POST],
@@ -29,5 +34,10 @@ export default {
       methods: [M.WRITE, M.DROP],
     },
   },
-  acts: {},
+  acts: {
+    doSth: {
+      method: M.POST,
+      dirname: "fetch404",
+    },
+  },
 };

@@ -14,16 +14,26 @@ interface RuffBelongingConfiguration {
   config?: RuffHttpApiConfiguration;
 }
 
-interface RuffEntityConfiguration<CH extends string, CO extends string>
-  extends RuffBelongingConfiguration {
-  children?: Record<CH, RuffEntityConfiguration>;
-  commands?: Record<CO, RuffHttpRPCConfiguration>;
-  attrs?: Record<string, RuffBelongingConfiguration>;
-  acts?: Record<string, RuffHttpRPCConfiguration>;
+interface RuffEntityConfiguration<
+  C extends string = any,
+  X extends string = any,
+  B extends string = any,
+  A extends string = any
+> extends RuffBelongingConfiguration {
+  children?: Record<C, RuffEntityConfiguration>;
+  commands?: Record<X, RuffHttpRPCConfiguration>;
+  attrs?: Record<B, RuffBelongingConfiguration>;
+  acts?: Record<A, RuffHttpRPCConfiguration>;
 }
 
-interface RuffEntityOptions<CH extends string, CO extends string> {
-  resource: RuffEntityConfiguration<CH, CO>;
+interface RuffEntityOptions<
+  C extends string = any,
+  X extends string = any,
+  B extends string = any,
+  A extends string = any
+> {
+  resource: RuffEntityConfiguration<C, X, B, A>;
+  prefix: string;
   client: RuffHttpClient;
   config?: RuffHttpApiConfiguration;
 }

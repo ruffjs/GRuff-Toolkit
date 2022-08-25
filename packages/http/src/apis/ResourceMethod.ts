@@ -207,12 +207,15 @@ export enum ResourceMethod {
   UNREF, //          delete
 }
 
-export type EntityResourceMethod =
+export type CommandMethod =
   | ResourceMethod.POST
   | ResourceMethod.GET
   | ResourceMethod.PUT
   | ResourceMethod.DELETE
-  | ResourceMethod.PATCH
+  | ResourceMethod.PATCH;
+
+export type EntityResourceMethod =
+  | CommandMethod
   | ResourceMethod.LIST
   | ResourceMethod.PICK
   | ResourceMethod.GET_BY_KEYS
