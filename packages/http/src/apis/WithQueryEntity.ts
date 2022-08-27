@@ -44,7 +44,7 @@ export default class WithQueryEntity<
   }
 
   async list(pageSize: number = 10, pageIndex: number = 1) {
-    console.log("this._query", this._query);
+    // console.log("this._query", this._query);
     const { data } = await this._client.$getEntitys(
       joinPath([this._prefix, this._dirname]),
       {

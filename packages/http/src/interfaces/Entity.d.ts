@@ -34,6 +34,6 @@ interface RuffEntityOptions<
 > {
   resource: RuffEntityConfiguration<C, X, B, A>;
   prefix: string;
-  client: RuffHttpClient;
+  client: RuffResourceRequestor;
   config?: RuffHttpApiConfiguration;
 }

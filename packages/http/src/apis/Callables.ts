@@ -2,7 +2,7 @@ import { joinPath } from "../utils";
 import { ResourceMethod } from "./ResourceMethod";
 
 type CreateRPCApiOptions = {
-  client: RuffHttpClient;
+  client: RuffResourceRequestor;
   prefix: string;
   command: RuffHttpRPCConfiguration;
 };
@@ -20,7 +20,7 @@ export default class Callables {
     );
   }
 
-  private _client: RuffHttpClient;
+  private _client: RuffResourceRequestor;
   private _url: string;
   private _options: CreateRPCApiOptions;
 

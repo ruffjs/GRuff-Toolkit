@@ -1,7 +1,7 @@
 import { formatQueryCondition } from "../utils";
 
 export default class AbsoluteBase {
-  protected _client: RuffHttpClient;
+  protected _client: RuffResourceRequestor;
   protected _prefix;
   protected _dirname: string;
   protected _options: RuffEntityOptions;

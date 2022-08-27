@@ -1,3 +1,4 @@
+import { ResourceMethod } from "./ResourceMethod";
 import { formatQueryCondition, joinPath } from "../utils/index";
 import EntityRef, { ExtendedEntityRef } from "./EntityRef";
 import WithQueryEntity from "./WithQueryEntity";
@@ -37,10 +38,10 @@ export default class Entity<
         options,
         {} as RuffPageableResourcesQueryModel
       );
-    } as unknown as CallableEntity<B, A>;
+    } as unknown as ExtendedEntity<C, X, B, A>;
     const { client, resource, config } = options;
 
-    const { children, commands } = resource;
+    const { methods, children, commands } = resource;
     if (children !== undefined) {
       (Object.keys(children) as C[]).forEach((childname) => {
         (callable as AnyRecord)[childname] = (entity as AnyRecord)[childname] =
@@ -64,13 +65,25 @@ export default class Entity<
       });
     }
 
-    return Object.assign(callable, {
+    const bounds = {
       setPrefix: entity.setPrefix.bind(entity),
       getPrefix: entity.getPrefix.bind(entity),
       list: entity.list.bind(entity),
-      get: entity.get.bind(entity),
       query: entity.query.bind(entity),
-    } as unknown as ExtendedEntity<C, X, B, A>);
+    } as Entity;
+
+    if (methods?.includes(ResourceMethod.GET_BY_KEYS)) {
+      bounds.get = entity.get.bind(entity);
+    }
+    if (methods?.includes(ResourceMethod.GET)) {
+      bounds.get = entity.get.bind(entity);
+    }
+
+    if (methods?.includes(ResourceMethod.POST)) {
+      bounds.post = entity.post.bind(entity);
+    }
+
+    return Object.assign(callable, bounds);
   }
 
   static idealizeEntity<
@@ -96,6 +109,14 @@ export default class Entity<
       this._dirname,
       this._options,
       condition as RuffPageableResourcesQueryModel
+    );
+  }
+
+  async post(data: any) {
+    return this._client.$createEntity(
+      joinPath([this._prefix, this._dirname]),
+      data,
+      this._query
     );
   }
 }

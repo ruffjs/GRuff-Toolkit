@@ -1,11 +1,103 @@
-import { AxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { joinPath, withQuery } from "../utils";
-import Requestor from "./Requestor";
+import Random from "./random";
+import MockResponse from "./MockResponse";
+import Mock from "./Mock";
 
-export default class RESTfulRequestor
-  extends Requestor
-  implements RuffResourceRequestor
-{
+const tmpls = {
+  告警类型: "@alertType",
+  中文名: "@cname",
+  中文短文本: "@cword(2, 8)",
+  中文长文本: "@cword(8, 20)",
+  Base64图片: "@dataImage(64x64)",
+  日期时间: "@datetime",
+  设备名称: "@deviceName",
+  电子邮件: "@email",
+  FSU名称: "@fsuName",
+  自增ID: "@increment(1)",
+  手机号: "@integer(13000000000,19099999999)",
+  自然数: "@natural(2, 10)",
+  基站名称: "@stationName",
+  序列号: "@string('number',10)",
+  用户等级: "@userLevel",
+};
+
+export default class MockRequestor implements RuffResourceRequestor {
+  private _endpoint: string = "mock://";
+  private _axiosInstance: AxiosInstance;
+  private _timeout = 0;
+  private _config: AxiosRequestConfig<any>;
+
+  constructor(options?: AnyRecord, config: AxiosRequestConfig<any> = {}) {
+    if (options) {
+    }
+    this._config = config || {};
+
+    this._axiosInstance = axios.create({
+      ...config,
+      baseURL: this._endpoint,
+      timeout: this._timeout,
+    });
+  }
+
+  get network() {
+    return {
+      timeout: this._timeout,
+      endpoint: this._endpoint,
+    };
+  }
+
+  get axiosInstance(): AxiosInstance {
+    if (!this._axiosInstance) {
+      this._axiosInstance = axios.create({
+        ...this._config,
+        baseURL: "/",
+        timeout: this._timeout,
+      });
+    }
+    throw this._axiosInstance;
+  }
+
+  request<T = any, D = any>(
+    config: AxiosRequestConfig<D>
+  ): Promise<MockResponse<RuffHttpResponse<T>>> {
+    throw new Error("Method not implemented.");
+  }
+
+  get<T = any, D = any>(
+    url: string,
+    config?: any
+  ): Promise<MockResponse<RuffHttpResponse<T>>> {
+    throw new Error("Method not implemented.");
+  }
+  post<T = any, D = any>(
+    url: string,
+    data?: D | undefined,
+    config?: any
+  ): Promise<MockResponse<RuffHttpResponse<T>>> {
+    throw new Error("Method not implemented.");
+  }
+  put<T = any, D = any>(
+    url: string,
+    data?: D | undefined,
+    config?: any
+  ): Promise<MockResponse<RuffHttpResponse<T>>> {
+    throw new Error("Method not implemented.");
+  }
+  patch<T = any, D = any>(
+    url: string,
+    data?: Partial<D> | undefined,
+    config?: any
+  ): Promise<MockResponse<RuffHttpResponse<T>>> {
+    throw new Error("Method not implemented.");
+  }
+  delete<T = any, D = any>(
+    url: string,
+    config?: any
+  ): Promise<MockResponse<RuffHttpResponse<T>>> {
+    throw new Error("Method not implemented.");
+  }
+
   private pageIndex = 1;
   private pageSize = 999999;
 
@@ -29,7 +121,14 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.post<T, D>(pathname + withQuery(query), model, config);
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 
   $createEntity<T extends RuffDataModel = any, D extends RuffDataModel = any>(
@@ -38,7 +137,52 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$addResource<T, D>(joinPath(entityPath), model, query, config);
+    console.log(Random);
+
+    console.log(Random.province());
+    console.log(Random.range(1, 10, 2));
+    console.log(Random.echo("String"));
+
+    console.log(Random.name());
+    console.log(Random.cname());
+    console.log(Random.image(300, "#ff0000", "#ffff00", "Hello,Ruff"));
+
+    console.log(
+      Mock.mock({
+        data: {
+          ["content|3"]: [
+            {
+              "id|+1": 1024,
+              name: tmpls.基站名称,
+              alertType: tmpls.告警类型,
+              createdAt: tmpls.日期时间,
+              level: "@alertLevel",
+              regionalLevel: "@province @city @county",
+              state: "@alertState",
+              type: "@deviceType",
+              results: "@cword(5, 10)",
+            },
+          ],
+          totalCount: 25,
+        },
+        status: 200,
+        message: "OK",
+      })
+    );
+
+    return MockResponse.resolve(
+      {
+        data: model,
+        message: "OK",
+        status: 200,
+      },
+      {
+        ...config,
+        method: "post",
+        url: joinPath(entityPath) + withQuery(query),
+        data: model,
+      }
+    );
   }
 
   $createEntityWithAttachment<
@@ -54,10 +198,12 @@ export default class RESTfulRequestor
     for (let [key, value] of Object.entries(model || {})) {
       body.append(key, value);
     }
-    return this.$addResource<T, FormData>(
-      joinPath(entityPath),
-      body,
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -71,10 +217,12 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$addResource<T, D>(
-      joinPath(entityPath),
-      description,
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -90,10 +238,12 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$addResource<T, D>(
-      joinPath([joinPath(entityPath), id, joinPath(belongingPath)]),
-      model,
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -104,7 +254,14 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.get<T, D>(pathname + withQuery(query), config);
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 
   $getData = this.$getResource;
@@ -115,7 +272,14 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getResource<T, D>(joinPath([pathname, id]), query, config);
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 
   $getEntityById<T extends RuffDataModel = any, D = any>(
@@ -123,10 +287,12 @@ export default class RESTfulRequestor
     id: Id,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getIdentifiableData<T, D>(
-      joinPath(entityPath),
-      id,
-      undefined,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -137,10 +303,12 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getIdentifiableData<T, D>(
-      joinPath(entityPath),
-      joinPath(keys),
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -155,9 +323,12 @@ export default class RESTfulRequestor
     bid: IdOrKeys,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getIdentifiableData<T, D>(
-      joinPath([joinPath(entityPath), joinPath(aid), joinPath(belongingPath)]),
-      joinPath(bid),
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -167,7 +338,14 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.get<RuffDataRecords<T>, D>(pathname + withQuery(query), config);
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 
   $getEnumerableEntitys<T extends RuffDataModel = any, D = any>(
@@ -175,7 +353,14 @@ export default class RESTfulRequestor
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getEnumerableData<T, D>(joinPath(entityPath), query, config);
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 
   $getEnumerableBelongings<
@@ -188,13 +373,12 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getEnumerableData<T, D>(
-      joinPath([
-        joinPath(entityPath),
-        joinPath(aidOrAkeys),
-        joinPath(belongingPath),
-      ]),
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -212,14 +396,12 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getEnumerableData<T, D>(
-      joinPath([
-        joinPath(entityPath),
-        joinPath(aidOrAkeys),
-        joinPath(belongingPath),
-        joinPath(bidOrAkeys),
-      ]),
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -229,8 +411,12 @@ export default class RESTfulRequestor
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.get<RuffHttpResourcesList<T>, D>(
-      pathname + withQuery({ ...this.defaultQueryListParams, ...query }),
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -240,9 +426,12 @@ export default class RESTfulRequestor
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getPageableResources<T, D>(
-      joinPath(entityPath),
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -257,13 +446,12 @@ export default class RESTfulRequestor
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getPageableResources<T, D>(
-      joinPath([
-        joinPath(entityPath),
-        joinPath(aidOrAkeys),
-        joinPath(belongingPath),
-      ]),
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -273,8 +461,12 @@ export default class RESTfulRequestor
     query?: RuffPeriodDataQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.get<RuffPeriodData<T>, D>(
-      pathname + withQuery({ ...this.defaultQueryListParams, ...query }),
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -289,13 +481,12 @@ export default class RESTfulRequestor
     query?: RuffPeriodDataQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$getPeriodData<RuffHttpResourcesList<T>, D>(
-      joinPath([
-        joinPath(entityPath),
-        joinPath(aidOrAkeys),
-        joinPath(belongingPath),
-      ]),
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -307,10 +498,14 @@ export default class RESTfulRequestor
     config?: AxiosRequestConfig<D>,
     patially = false
   ) {
-    if (patially) {
-      return this.patch<T, D>(pathname, model, config);
-    }
-    return this.put<T, D>(pathname, model, config);
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 
   $setEntityById<T extends RuffDataModel = any, D extends RuffDataModel = any>(
@@ -319,9 +514,12 @@ export default class RESTfulRequestor
     model: D,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$setResource<T, D>(
-      joinPath([joinPath(entityPath), joinPath(idOrKeys)]),
-      model,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -335,11 +533,13 @@ export default class RESTfulRequestor
     model: D,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$setResource<T, D>(
-      joinPath([joinPath(entityPath), joinPath(idOrKeys)]),
-      model,
-      config,
-      true
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
     );
   }
 
@@ -351,13 +551,12 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$setResource<T, D>(
-      joinPath([
-        joinPath(entityPath),
-        joinPath(aidOrAkeys),
-        joinPath(belongingPath),
-      ]) + withQuery(query),
-      model,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -372,15 +571,13 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$setResource<T, D>(
-      joinPath([
-        joinPath(entityPath),
-        joinPath(aidOrAkeys),
-        joinPath(belongingPath),
-      ]) + withQuery(query),
-      model,
-      config,
-      true
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
     );
   }
 
@@ -390,7 +587,14 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.delete<T, D>(pathname + withQuery(query), config);
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 
   $removeEntityById<T extends RuffDataModel = any, D = any>(
@@ -411,9 +615,12 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$delResource<T, D>(
-      joinPath([joinPath(entityPath), joinPath(keys)]),
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -428,13 +635,12 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$delResource<T, D>(
-      joinPath([
-        joinPath(entityPath),
-        joinPath(aidOrAkeys),
-        joinPath(belongingPath),
-      ]),
-      query,
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
       config
     );
   }
@@ -448,13 +654,14 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    // delete with body
-    return this.request<T, D>({
-      ...config,
-      method: "delete",
-      url: joinPath(entityPath) + withQuery(query),
-      data: description,
-    });
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 
   /** RPC风格接口 **/
@@ -465,12 +672,14 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<A>
   ) {
-    return this.request<T, A>({
-      method: "post",
-      ...config,
-      url: joinPath([joinPath(entityPath), command]) + withQuery(query),
-      data: args,
-    });
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 
   // /api/v1/device/{devicaId}/acquisition/refresh
@@ -482,13 +691,13 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<A>
   ) {
-    return this.request<T, A>({
-      method: "post",
-      ...config,
-      url:
-        joinPath([joinPath(entityPath), joinPath(idOrKeys), command]) +
-        withQuery(query),
-      data: args,
-    });
+    return MockResponse.resolve(
+      {
+        data: {},
+        message: "OK",
+        status: 200,
+      },
+      config
+    );
   }
 }

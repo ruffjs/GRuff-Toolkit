@@ -40,7 +40,7 @@ interface RuffClientBasicMethods {
   get axiosInstance(): AxiosInstance;
 }
 
-interface RuffClientResourceMethods {
+interface RuffResourceRequestor extends RuffClientBasicMethods {
   /** 创建资源 **/
   $addResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
@@ -331,10 +331,7 @@ interface RuffClientHooks {
   onServiceError(error: AnyError): void;
 }
 
-interface RuffHttpClient
-  extends RuffClientBasicMethods,
-    RuffClientResourceMethods,
-    RuffClientHooks {}
+interface RuffHttpClient extends RuffResourceRequestor, RuffClientHooks {}
 
 interface RuffClientOptions {
   host?: string;

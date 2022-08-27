@@ -5,6 +5,7 @@ export const isEmptyObject = (obj: any) => JSON.stringify(obj) === "{}";
 export const isNotEmpty = (obj: any) => obj !== null && !isEmptyObject(obj);
 
 type joinable = string | number;
+
 export const joinPath = (path: joinable[] | joinable) => {
   if (typeof path === "object" && path instanceof Array) {
     return path.join("/") || "/";

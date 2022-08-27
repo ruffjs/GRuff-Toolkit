@@ -5,8 +5,6 @@ declare module "*.vue" {
   export default component;
 }
 
-type AnyRecord = Record<string, any>;
-
 interface IStorage {
   write: (key: string, data: any) => void;
   read: <T = any>(key: string) => T;

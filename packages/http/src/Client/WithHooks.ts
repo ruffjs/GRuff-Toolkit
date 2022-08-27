@@ -32,6 +32,7 @@ export default class WithHooks
     throw error;
   }
   private __responseFulfilledInterceptor(res: AxiosResponse<any, any>) {
+    console.log(res);
     if (res.data?.status === 200) {
       this.__hooks.onResponseFulfilled(res);
     } else {
@@ -68,11 +69,11 @@ export default class WithHooks
     }
 
     const axiosInstance = this.axiosInstance;
-    axiosInstance?.interceptors.request.use(
+    axiosInstance.interceptors.request.use(
       this.__requestFulfilledInterceptor.bind(this),
       this.__requestRejectedInterceptor.bind(this)
     );
-    axiosInstance?.interceptors.response.use(
+    axiosInstance.interceptors.response.use(
       this.__responseFulfilledInterceptor.bind(this),
       this.__responseRejectedInterceptor.bind(this)
     );

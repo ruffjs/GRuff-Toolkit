@@ -35,6 +35,7 @@ export default abstract class Requestor {
       this._timeout = DefaultServer.timeout;
     }
     this._endpoint = (this._endpoint + "/").replace(/\/+$/, "/");
+
     this._axiosInstance = axios.create({
       ...config,
       baseURL: this._endpoint,
@@ -44,7 +45,7 @@ export default abstract class Requestor {
 
   request<T = any, D = any>(
     config: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).request<
         T,
@@ -56,7 +57,7 @@ export default abstract class Requestor {
   get<T = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).get<
         T,
@@ -69,7 +70,7 @@ export default abstract class Requestor {
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).post(url, data, config);
     return Promise.reject("Axios Instance not found.");
@@ -78,7 +79,7 @@ export default abstract class Requestor {
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).put(url, data, config);
     return Promise.reject("Axios Instance not found.");
@@ -87,7 +88,7 @@ export default abstract class Requestor {
     url: string,
     data?: Partial<D>,
     config?: AxiosRequestConfig<Partial<D>>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).patch(url, data, config);
     return Promise.reject("Axios Instance not found.");
@@ -95,7 +96,7 @@ export default abstract class Requestor {
   delete<T = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).delete(url, config);
     return Promise.reject("Axios Instance not found.");

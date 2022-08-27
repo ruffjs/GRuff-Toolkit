@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "axios";
+// import "./httphook";
 import WithHooks from "./WithHooks";
 
 interface IClientHelper {
