@@ -1,26 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { joinPath, withQuery } from "../utils";
-import Random from "./random";
 import MockResponse from "./MockResponse";
-import Mock from "./Mock";
-
-const tmpls = {
-  告警类型: "@alertType",
-  中文名: "@cname",
-  中文短文本: "@cword(2, 8)",
-  中文长文本: "@cword(8, 20)",
-  Base64图片: "@dataImage(64x64)",
-  日期时间: "@datetime",
-  设备名称: "@deviceName",
-  电子邮件: "@email",
-  FSU名称: "@fsuName",
-  自增ID: "@increment(1)",
-  手机号: "@integer(13000000000,19099999999)",
-  自然数: "@natural(2, 10)",
-  基站名称: "@stationName",
-  序列号: "@string('number',10)",
-  用户等级: "@userLevel",
-};
 
 export default class MockRequestor implements RuffResourceRequestor {
   private _endpoint: string = "mock://";
@@ -137,38 +117,6 @@ export default class MockRequestor implements RuffResourceRequestor {
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    console.log(Random);
-
-    console.log(Random.province());
-    console.log(Random.range(1, 10, 2));
-    console.log(Random.echo("String"));
-
-    console.log(Random.name());
-    console.log(Random.cname());
-    console.log(Random.image(300, "#ff0000", "#ffff00", "Hello,Ruff"));
-
-    console.log(
-      Mock.mock({
-        data: {
-          ["content|3"]: [
-            {
-              "id|+1": 1024,
-              name: tmpls.基站名称,
-              alertType: tmpls.告警类型,
-              createdAt: tmpls.日期时间,
-              level: "@alertLevel",
-              regionalLevel: "@province @city @county",
-              state: "@alertState",
-              type: "@deviceType",
-              results: "@cword(5, 10)",
-            },
-          ],
-          totalCount: 25,
-        },
-        status: 200,
-        message: "OK",
-      })
-    );
 
     return MockResponse.resolve(
       {

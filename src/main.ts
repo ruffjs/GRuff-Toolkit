@@ -1,3 +1,6 @@
-// import "./http/test/user";
+// import "./demos/user";
 
-import "./http/test/mock";
+// import "./demos/mock";
+
+import "./demos/random";
+
