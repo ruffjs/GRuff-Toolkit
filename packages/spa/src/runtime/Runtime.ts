@@ -8,7 +8,7 @@ import Antd from "ant-design-vue"
 import "../styles/antd/antd.variable.css"
 import bricks from "@ruff-web/bricks"
 import icons from "@ruff-web/icons"
-import { allocateStorage } from "@ruff-web/storage/index"
+import { allocateStorage } from "@ruff-web/data-storage/index"
 import createVuexStore from "./store/createVuexStore"
 import createVueRouter from "./router/createVueRouter"
 import NotFoundView from "../views/NotFound.vue"
@@ -157,7 +157,7 @@ export default class Runtime implements RIRuntime {
       vueApp.config.errorHandler = (err, vm, info) => {
         console.log(err, vm, info)
       }
-      vueApp.config.warnHandler = (err, vm, info) => {}
+      vueApp.config.warnHandler = (err, vm, info) => { }
       vueApp
         .use(Antd)
         .use(icons)

@@ -1,6 +1,8 @@
-// import "./demos/user";
+// import "./demos/http/user";
 
-// import "./demos/mock";
+// import "./demos/http/mock";
 
-import "./demos/random";
+// import "./demos/random";
+
+import "./demos/storage";
 
