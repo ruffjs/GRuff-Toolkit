@@ -1,6 +1,6 @@
 import Entity from "@ruff-web/http/src/apis/Entity";
-import userResource from "@ruff-web/entities/src/presets/user/user.http";
-import clients from "../../http/clients";
+import userResource from "@ruff-web/entities/src/presets/user/user.mock";
+import clients from "./clients";
 import Random from "@ruff-web/data-random/src";
 
 console.log(clients, clients.mock.network);
@@ -70,11 +70,12 @@ const tmpls = {
 //   },
 // });
 
-const userEntity = Entity.createEntity("user", {
-  resource: userResource,
-  client: clients.mock,
-  prefix: "api/v1",
-});
+// const userEntity = Entity.createEntity("user", {
+//   resource: userResource,
+//   client: clients.mock,
+//   prefix: "api/v1",
+// });
+const userEntity = Entity.idealizeEntity(clients.mock.user, userResource);
 
 const res = await userEntity.post({
   name: "string",

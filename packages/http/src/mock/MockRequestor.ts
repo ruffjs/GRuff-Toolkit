@@ -1,14 +1,26 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import Entity from "../apis/Entity";
 import { joinPath, withQuery } from "../utils";
+import registerEntities from "../utils/registerEntities";
 import MockResponse from "./MockResponse";
 
-export default class MockRequestor implements RuffResourceRequestor {
+export default class MockRequestor<E extends string = any>
+  implements RuffResourceRequestor
+{
   private _endpoint: string = "mock://";
   private _axiosInstance: AxiosInstance;
   private _timeout = 0;
   private _config: AxiosRequestConfig<any>;
 
-  constructor(options?: AnyRecord, config: AxiosRequestConfig<any> = {}) {
+  constructor(
+    options: (RuffClientOptions & RuffClientHooks) | string,
+    config: AxiosRequestConfig<any> = {},
+    entitis: Record<E, RuffEntityConfiguration> = {} as Record<
+      E,
+      RuffEntityConfiguration
+    >,
+    mock: {}
+  ) {
     if (options) {
     }
     this._config = config || {};
@@ -18,6 +30,10 @@ export default class MockRequestor implements RuffResourceRequestor {
       baseURL: this._endpoint,
       timeout: this._timeout,
     });
+
+    registerEntities(entitis, this as any);
+
+    console.log(mock);
   }
 
   get network() {
@@ -117,7 +133,6 @@ export default class MockRequestor implements RuffResourceRequestor {
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-
     return MockResponse.resolve(
       {
         data: model,
