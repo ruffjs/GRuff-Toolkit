@@ -6,29 +6,40 @@ export const basic = {
     required: false,
     validator(value: number | string | undefined) {
       if (typeof value === "number" && value >= 0) {
-        return true
+        return true;
       }
       if (typeof value === "string" && value === "auto") {
-        return true
+        return true;
       }
-      return false
+      return false;
     },
   },
+  dataLength: Number,
   simplePagination: [Boolean],
   pagination: {
     type: [Object, Boolean],
     required: false,
     validator(value: AnyRecord | boolean | undefined) {
       if (typeof value === "object" || value === false) {
-        return true
+        return true;
       }
-      return false
+      return false;
     },
   },
-}
+};
+
+export const hidableColumns = {
+  ...basic,
+  onHiddenCheck: Function,
+  columns: {
+    type: Array as () => AnyRecord[],
+    default: [],
+  },
+};
 
 export const variColumns = {
   ...basic,
+  onHiddenCheck: Function,
   columns: {
     type: Object as () => Record<string, AnyRecord[]>,
     default: {
@@ -39,4 +50,4 @@ export const variColumns = {
     type: String,
     default: "default",
   },
-}
+};

@@ -9,6 +9,8 @@
           :bodyHeight="bodyHeight"
           :isScrollNeeded="isScrollNeeded"
           :scrollYConfig="isScrollNeeded ? { y: bodyHeight } : undefined"
+          :computedColumns="computedColumns"
+          :hiddenColumns="hiddenColumns"
         />
       </div>
     </box>
@@ -33,15 +35,23 @@
 </template>
 
 <script setup lang="ts">
-import { useSlots } from "vue";
-import { basic } from "../utils/props";
+import { computed, ref, useSlots } from "vue";
+import { hidableColumns } from "../utils/props";
+import { divideHidableColumns } from "../utils/methods";
 import useHeightCalculator from "../traits/useHeightCalculator";
 import useTableWrapperProps from "../traits/useTableWrapperProps";
 
 const slots = useSlots();
 const emit = defineEmits(["pageChange", "pageSizeChange"]);
-const props = defineProps(basic);
+const props = defineProps(hidableColumns);
 const { tableWrapper, bodyHeight, isScrollNeeded } = useHeightCalculator();
 const { tableHeight, paginationHeight } = useTableWrapperProps(props, slots);
+
+const hiddenColumns = ref<any[]>([]);
+const computedColumns = computed(() => {
+  const [showns, hiddens] = divideHidableColumns(props.columns, props);
+  hiddenColumns.value = hiddens;
+  return showns;
+});
 </script>
 <style lang="scss"></style>

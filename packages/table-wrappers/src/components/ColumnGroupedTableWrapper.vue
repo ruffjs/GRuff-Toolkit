@@ -5,30 +5,46 @@
     </box>
     <box flex="1" :height="tableHeight">
       <div class="ruff-table-wrapper" ref="tableWrapper">
-        <slot :bodyHeight="bodyHeight" :computedColumns="computedColumns" :hiddenColumns="hiddenColumns" />
+        <slot
+          :bodyHeight="bodyHeight"
+          :isScrollNeeded="isScrollNeeded"
+          :scrollYConfig="isScrollNeeded ? { y: bodyHeight } : undefined"
+          :computedColumns="computedColumns"
+          :hiddenColumns="hiddenColumns"
+        />
       </div>
     </box>
     <box v-if="pagination" row="reverse" :height="paginationHeight" padding-top="13">
-      <a-pagination size="small" :simple="simplePagination" :show-size-changer="(pagination as any).showSizeChanger"
-        :show-quick-jumper="(pagination as any).showQuickJumper" showLessItems :value="(pagination as any).index"
-        :current="(pagination as any).index" :total="(pagination as any).total" :page-size="(pagination as any).size"
+      <a-pagination
+        size="small"
+        :simple="simplePagination"
+        :show-size-changer="(pagination as any).showSizeChanger"
+        :show-quick-jumper="(pagination as any).showQuickJumper"
+        showLessItems
+        :value="(pagination as any).index"
+        :current="(pagination as any).index"
+        :total="(pagination as any).total"
+        :page-size="(pagination as any).size"
         :show-total="(total: number) => `共计 ${(pagination as any).total} 条`"
-        :page-size-options="(pagination as any).pageSizeOptions" @change="(...args: any) => emit('pageChange', ...args)"
-        @showSizeChange="(...args: any) => emit('pageSizeChange', ...args)" />
+        :page-size-options="(pagination as any).pageSizeOptions"
+        @change="(...args: any) => emit('pageChange', ...args)"
+        @showSizeChange="(...args: any) => emit('pageSizeChange', ...args)"
+      />
     </box>
   </box>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, useSlots } from "vue";
-import { variColumns } from "../consts/props";
+import { variColumns } from "../utils/props";
+import { divideHidableColumns } from "../utils/methods";
 import useHeightCalculator from "../traits/useHeightCalculator";
 import useTableWrapperProps from "../traits/useTableWrapperProps";
 
 const slots = useSlots();
 const emit = defineEmits(["pageChange", "pageSizeChange"]);
 const props = defineProps(variColumns);
-const { tableWrapper, bodyHeight } = useHeightCalculator();
+const { tableWrapper, bodyHeight, isScrollNeeded } = useHeightCalculator();
 const { tableHeight, paginationHeight } = useTableWrapperProps(props, slots);
 
 const hiddenColumns = ref<any[]>([]);
@@ -46,25 +62,9 @@ const computedColumns = computed(() => {
     columns = [...defaultColumns, ...selectedColumns];
   }
 
-  const hiddens: any[] = [],
-    showns = columns.filter((column: AnyRecord) => {
-      if (column.hidden) {
-        let hidden = false;
-        if (typeof column.hidden === "function") {
-          hidden = Boolean(column.hidden());
-        } else {
-          hidden = column.hidden;
-        }
-        if (hidden) {
-          hiddens.push(column);
-          return false;
-        }
-      }
-      return true;
-    });
+  const [showns, hiddens] = divideHidableColumns(columns, props);
   hiddenColumns.value = hiddens;
   return showns;
 });
 </script>
-<style lang="scss">
-</style>
+<style lang="scss"></style>

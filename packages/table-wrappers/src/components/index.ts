@@ -1,8 +1,10 @@
-import "./styles.scss"
-import BasicTableWrapper from "./BasicTableWrapper.vue"
-import VariableColumnsTableWrapper from "./VariableColumnsTableWrapper.vue"
+import "./styles.scss";
+import BasicTableWrapper from "./BasicTableWrapper.vue";
+import ColumnHidableTableWrapper from "./ColumnHidableTableWrapper.vue";
+import ColumnGroupedTableWrapper from "./ColumnGroupedTableWrapper.vue";
 
 export default {
   BasicTableWrapper,
-  VariableColumnsTableWrapper,
-}
+  ColumnHidableTableWrapper,
+  ColumnGroupedTableWrapper,
+};
