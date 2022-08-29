@@ -8,7 +8,7 @@ type AnyArray<T = any> = Array<T>;
 type AnyList<T = any> = Array<T>;
 type AnyFn<A extends AnyArray = any[], R = any> = (...args: A) => R;
 type AnyRecord<T = any> = Record<string, T>;
-type _AnyRecord<T = any> = Record<string, T>;
+
 type ScalarRecord = Record<string, ScalarValue>;
 type AnyError = Error & {
   reason?: string;

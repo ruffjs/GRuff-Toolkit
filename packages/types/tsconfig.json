@@ -13,10 +13,10 @@
         "moduleResolution": "node"
     },
     "files": [
-        "./index.ts",
+        "./index.d.ts"
     ],
     "include": [
         "./src",
-        "./types"
+        "./test"
     ]
 }

@@ -1,5 +1,3 @@
-import { AnyRecord } from '@ruff-web/types'
-
 type KeysOptions<
     SK extends string = any,
     NK extends string = any,

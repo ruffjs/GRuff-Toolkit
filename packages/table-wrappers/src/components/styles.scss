@@ -1,0 +1,10 @@
+.ruff-table-wrapper {
+    height: 100%;
+    overflow: hidden;
+
+    .ant-table,
+    .ant-table-empty {
+        width: 100%;
+        height: 100%;
+    }
+}

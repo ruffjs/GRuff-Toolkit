@@ -7,15 +7,19 @@ import ScrollBox from "./src/boxes/ScrollBox.vue"
 import Text from "./src/texts/Text.vue"
 
 export default {
+  _installed: false,
   install(app: App<any>) {
-    app.component("Box", Box)
-    app.component("BBox", Box)
-    app.component("AbsBox", AbsoluteBox)
-    app.component("BAbsoluteBox", AbsoluteBox)
-    app.component("BTouchable", Touchable)
-    app.component("BScrollBox", ScrollBox)
-    app.component("Txt", Text)
-    app.component(Text.name, Text)
+    if (this._installed === false) {
+      app.component("Box", Box)
+      app.component("BBox", Box)
+      app.component("AbsBox", AbsoluteBox)
+      app.component("BAbsoluteBox", AbsoluteBox)
+      app.component("BTouchable", Touchable)
+      app.component("BScrollBox", ScrollBox)
+      app.component("Txt", Text)
+      app.component(Text.name, Text)
+      this._installed = true
+    }
     return app
   },
 }

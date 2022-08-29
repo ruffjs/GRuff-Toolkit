@@ -1,4 +1,4 @@
-export function extend() {
+export function extend(this: any, ...args: any[]) {
   var target = arguments[0] || {},
     i = 1,
     length = arguments.length,
@@ -37,7 +37,7 @@ export function extend() {
   return target;
 }
 
-export function each(obj, iterator, context) {
+export function each(obj: any, iterator: AnyFn, context: any) {
   var i, key;
   if (type(obj) === "number") {
     for (i = 0; i < obj; i++) {
@@ -54,44 +54,40 @@ export function each(obj, iterator, context) {
   }
 }
 
-export function type(obj) {
-  return obj === null || obj === undefined
-    ? String(obj)
-    : Object.prototype.toString
-        .call(obj)
-        .match(/\[object (\w+)\]/)[1]
-        .toLowerCase();
+export function type(obj: any) {
+  return (obj === null || obj === undefined) ? String(obj) : ((Object.prototype.toString.call(obj).match(/\[object (\w+)\]/) as string[])[1])
+    .toLowerCase();
 }
 
-export function isString(obj) {
+export function isString(obj: any) {
   return type(obj) === "string";
 }
 
-export function isObject(obj) {
+export function isObject(obj: any) {
   return type(obj) === "object";
 }
 
-export function isArray(obj) {
+export function isArray(obj: any) {
   return type(obj) === "array";
 }
 
-export function isRegExp(obj) {
+export function isRegExp(obj: any) {
   return type(obj) === "regexp";
 }
 
-export function isFunction(obj) {
+export function isFunction(obj: any) {
   return type(obj) === "function";
 }
 
-export function isObjectOrArray(value) {
+export function isObjectOrArray(value: any) {
   return isObject(value) || isArray(value);
 }
 
-export function isNumeric(value) {
+export function isNumeric(value: any) {
   return !isNaN(parseFloat(value)) && isFinite(value);
 }
 
-export function keys(obj) {
+export function keys(obj: any) {
   var keys = [];
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) keys.push(key);
@@ -99,7 +95,7 @@ export function keys(obj) {
   return keys;
 }
 
-export function values(obj) {
+export function values(obj: any) {
   var values = [];
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) values.push(obj[key]);
@@ -107,7 +103,7 @@ export function values(obj) {
   return values;
 }
 
-export function heredoc(fn) {
+export function heredoc(fn: any) {
   // 1. 移除起始的 function(){ /*!
   // 2. 移除末尾的 */ }
   // 3. 移除起始和末尾的空格
@@ -119,6 +115,6 @@ export function heredoc(fn) {
     .replace(/[\s\xA0]+$/, ""); // .trim()
 }
 
-export function noop() {}
+export function noop() { }
 
 export default {};
