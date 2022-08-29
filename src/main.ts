@@ -6,4 +6,6 @@
 
 // import "./demos/storage";
 
-import './demos/table'
+import "./demos/mapping";
+
+// import './demos/table'
