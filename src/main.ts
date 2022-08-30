@@ -1,15 +1,15 @@
-// import "./demo-entries/http/clients";
+// import "../demos/entries/http/clients";
 
-// import "./demo-entries/http/user";
+// import "../demos/entries/http/user";
 
-// import "./demo-entries/http/mock";
+// import "../demos/entries/http/mock";
 
-// import "./demo-entries/random";
+// import "../demos/entries/random";
 
-// import "./demo-entries/storage";
+// import "../demos/entries/storage";
 
-// import "./demo-entries/mapping";
+// import "../demos/entries/mapping";
 
-// import './demo-entries/table'
+// import "../demos/entries/table";
 
-import "./demo-entries/spa";
+import "../demos/entries/spa";

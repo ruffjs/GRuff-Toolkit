@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, useSlots, watch } from "vue";
+import { Component, onMounted, useSlots, watch } from "vue";
 
 import useConfigurations from "../../traits/useConfigurations";
 import logoSrc from "../../assets/images/logo.png";
@@ -92,17 +92,27 @@ const props = defineProps({
     type: String,
     default: "Ruff IoT SPA",
   },
-  menu: Array,
+  menu: Array as () => RuffSPAMenuItem[],
   shotcuts: {
-    type: Array,
+    type: Array as () => ShotcutItem<Component>[],
     default: [],
   },
 });
-const { isMenuCollapsed, setMenuItems } = useConfigurations();
+const { isMenuCollapsed, setMenuItems, setShotcuts } = useConfigurations();
 watch(
   () => props.menu,
-  (menu: any) => {
-    setMenuItems((menu || []) as RuffSPAMenuItem[]);
+  (menu) => {
+    setMenuItems(menu || []);
+  },
+  {
+    immediate: true,
+  }
+);
+
+watch(
+  () => props.shotcuts,
+  (shotcuts) => {
+    setShotcuts(shotcuts || []);
   },
   {
     immediate: true,

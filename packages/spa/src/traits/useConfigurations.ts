@@ -1,4 +1,4 @@
-import { computed } from "vue";
+import { Component, computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 const rootElement: HTMLElement = document.documentElement;
 const titleElement: HTMLTitleElement =
@@ -107,6 +107,12 @@ export default function useConfigurations() {
     store.commit("app/assignState", { memuItems, memuKeyTargetMap: map });
   };
 
+  const getShotcuts = (): ShotcutItem<Component>[] => store.state.app.shotcuts;
+  const shotcuts = computed(getShotcuts);
+  const setShotcuts = (shotcuts: ShotcutItem[]) => {
+    store.commit("app/assignState", { shotcuts });
+  };
+
   return {
     isMobileDevice,
     isDesktopDevice,
@@ -140,5 +146,9 @@ export default function useConfigurations() {
     getMenuKeyTargetMap,
     getMenuItems,
     setMenuItems,
+
+    getShotcuts,
+    shotcuts,
+    setShotcuts,
   };
 }

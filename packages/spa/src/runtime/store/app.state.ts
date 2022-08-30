@@ -1,8 +1,8 @@
 export default {
   data: (storage: IStorage) => {
-    const { read } = storage
+    const { read } = storage;
     const darkModeMedia: MediaQueryList =
-      window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)")
+      window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
 
     return {
       viewport: 1,
@@ -20,24 +20,25 @@ export default {
         page404: null,
         page403: null,
       },
-    } as AppState
+      shotcuts: [],
+    } as AppState;
   },
   getters: {
     isMobileDevice(state: AppState) {
-      return state.viewDeviceMode === "mobile"
+      return state.viewDeviceMode === "mobile";
     },
     isDesktopDevice(state: AppState) {
-      return state.viewDeviceMode === "desktop"
+      return state.viewDeviceMode === "desktop";
     },
     computedTheme: (state: AppState, getters: AppGetters) => {
-      let themeMode = state.themeMode_custom
+      let themeMode = state.themeMode_custom;
       if (["dark", "light"].includes(themeMode) === false) {
-        themeMode = state.themeMode_system
+        themeMode = state.themeMode_system;
       }
-      return [themeMode, state.themeSchemeName]
+      return [themeMode, state.themeSchemeName];
     },
     isMenuCollapsed(state: AppState) {
-      return state.menuStatus === "collapsed"
+      return state.menuStatus === "collapsed";
     },
   },
-}
+};

@@ -13,15 +13,25 @@
       <Breadcrumb v-if="withCrumb" />
     </box>
     <box :flex="1" paddingH="10" row justify="right">
-      <router-link to="/notice">
-        <b-touchable :padding="[20, 10]">
-          <txt :line-height="24">
-            <b-icon type="bell-outlined" size="18" class="top-bar-text" />
-          </txt>
-        </b-touchable>
-      </router-link>
-      <ThemePicker />
-      <Account />
+      <template v-for="shotcut in shotcuts">
+        <router-link v-if="shotcut.type === 'link'" :to="(shotcut.link as string)">
+          <b-touchable :padding="[20, 10]">
+            <txt :line-height="24">
+              <b-icon type="bell-outlined" size="18" class="top-bar-text" />
+            </txt>
+          </b-touchable>
+        </router-link>
+        <DropDown
+          v-else-if="shotcut.type === 'dropdown'"
+          :name="shotcut.name"
+          :selected="shotcut.selected"
+          :items="shotcut.items"
+        />
+        <component v-else-if="shotcut.type === 'component'" :is="shotcut.component" />
+      </template>
+
+      <!-- <ThemePicker /> -->
+      <!-- <Account /> -->
     </box>
   </box>
 </template>
@@ -32,9 +42,10 @@ import Account from "./Account.vue";
 import ThemePicker from "./ThemePicker.vue";
 import Breadcrumb from "../../components/crumbs/Breadcrumb.vue";
 import { ref } from "vue";
+import DropDown from "./DropDown.vue";
 
 const withCrumb = ref(false);
-const { isMenuCollapsed, toggleMenuStatus } = useConfigurations();
+const { isMenuCollapsed, toggleMenuStatus, shotcuts } = useConfigurations();
 </script>
 <style lang="scss">
 .side-bar-switch {

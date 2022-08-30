@@ -20,7 +20,7 @@
         "packages/*"
       ],
       "@/*": [
-        "src/*"
+        "demos/*"
       ]
     },
     "lib": [
@@ -31,16 +31,21 @@
     ]
   },
   "include": [
+    "demos/**/*.ts",
+    "demos/**/*.d.ts",
+    "demos/**/*.jsx",
+    "demos/**/*.tsx",
+    "demos/**/*.vue",
     "packages/**/*.ts",
     "packages/**/*.d.ts",
     "packages/**/*.jsx",
     "packages/**/*.tsx",
     "packages/**/*.vue",
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.jsx",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+    "demos/**/*.ts",
+    "demos/**/*.d.ts",
+    "demos/**/*.jsx",
+    "demos/**/*.tsx",
+    "demos/**/*.vue"
   ],
   "references": [
     {

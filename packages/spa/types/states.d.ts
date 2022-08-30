@@ -24,7 +24,35 @@ type MemuKeyTargetMap = Record<
   }
 >;
 
-type AppState = {
+type ShotcutItem_Link = {
+  type: "link";
+  link: string;
+  icon?: string;
+  name?: string;
+};
+type ShotcutItem_DropDownItem = {
+  key: string;
+  onclick: AnyFn;
+  name: string;
+  icon?: string;
+};
+type ShotcutItem_DropDown = {
+  type: "dropdown";
+  name?: string;
+  icon?: string;
+  selected: string;
+  items: ShotcutItem_DropDownItem[];
+};
+type ShotcutItem_Component<T extends Object = any> = {
+  type: "component";
+  component: T;
+};
+type ShotcutItem<T extends Object = any> =
+  | ShotcutItem_Link
+  | ShotcutItem_DropDown
+  | ShotcutItem_Component<T>;
+
+type AppState<T extends Object = any> = {
   viewport: number;
   viewDeviceMode: DeviceMode;
   viewDeviceType: DeviceType;
@@ -35,6 +63,7 @@ type AppState = {
   menuStatus: MenuStatus;
   memuItems: RuffSPAMenuItem[];
   memuKeyTargetMap: MemuKeyTargetMap;
+  shotcuts: ShotcutItem[];
 };
 
 type AppGetters = {

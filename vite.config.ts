@@ -9,7 +9,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
     resolve: {
       alias: {
         "@ruff-web": resolve(__dirname, "packages"),
-        "@": resolve(__dirname, "src"),
+        "@": resolve(__dirname, "demos"),
       },
     },
     css: {
