@@ -1,8 +1,8 @@
 <template>
   <router-link to="/">
     <b-touchable
-      :width="isMenuCollapsed && isDesktopDevice ? 80 : 256"
-      :height="64"
+      :width="isMenuCollapsed && isDesktopDevice ? dockWidth : menuWidth"
+      :height="topHeight"
       background="var(--ruff-top-bar-background)"
       justify="center"
     >
@@ -25,10 +25,12 @@
 </template>
 
 <script setup lang="ts">
-import logoSrc from "../../assets/images/logo.png"
-import useConfigurations from "../../traits/useConfigurations"
+import logoSrc from "../../assets/images/logo.png";
+import useScreenInfos from "../../traits/useScreenInfos";
+import useMenuSettings from "../../traits/useMenuSettings";
 
-const { isDesktopDevice, isMobileDevice, isMenuCollapsed } = useConfigurations()
+const { isDesktopDevice, isMobileDevice } = useScreenInfos();
+const { isMenuCollapsed } = useMenuSettings();
 const props = defineProps({
   logo: {
     type: String,
@@ -38,7 +40,19 @@ const props = defineProps({
     type: String,
     default: "Ruff IoT SPA",
   },
-})
+  topHeight: {
+    type: Number,
+    default: 64,
+  },
+  menuWidth: {
+    type: Number,
+    default: 256,
+  },
+  dockWidth: {
+    type: Number,
+    default: 80,
+  },
+});
 </script>
 <style lang="scss" scoped>
 .left-bar-logo {

@@ -1,52 +1,40 @@
 export default [
   {
+    key: "workspace/home",
+    keys: ["workspace/home"],
+    name: "首页",
+    icon: "home-outlined",
+    link: "/home",
+  },
+  {
     key: "workspace/monitor",
-    name: "储罐监控",
+    name: "页面容器",
     icon: "fund-outlined",
     children: [
       {
-        key: "workspace/monitor/history",
-        keys: ["workspace/monitor/history", "workspace/monitor/history/:id"],
-        name: "远程监控",
-        link: "/monitor/history",
+        key: "workspace/pages/fixed",
+        name: "固定高度页面",
+        link: "/pages/fixed",
       },
       {
-        key: "workspace/monitor/realtime",
-        keys: ["workspace/monitor/realtime", "workspace/monitor/realtime/:id"],
-        name: "实时液位",
-        link: "/monitor/realtime",
-        accessDesc: {
-          roles: ["PM"],
-        },
-      },
-    ],
-  },
-  {
-    key: "workspace/device",
-    keys: ["workspace/device", "workspace/device/list", "workspace/device/:id"],
-    name: "设备运维",
-    icon: "appstore-outlined",
-    accessDesc: {
-      roles: ["PM"],
-    },
-    link: "/device",
-  },
-  {
-    key: "workspace/setting",
-    name: "基础配置",
-    icon: "setting-outlined",
-    children: [
-      {
-        key: "workspace/setting/site",
-        keys: ["workspace/setting/site", "workspace/setting/site/:id"],
-        name: "站点管理",
-        link: "/setting/site/",
+        key: "workspace/pages/scroll",
+        name: "可滚动页面",
+        link: "/pages/realtime",
       },
       {
-        key: "workspace/setting/user",
-        keys: ["workspace/setting/user", "workspace/setting/user/:id"],
-        name: "用户管理",
-        link: "/setting/user",
+        key: "workspace/pages/realtime",
+        name: "含通用头部的页面",
+        link: "/pages/realtime",
+      },
+      {
+        key: "workspace/pages/realtime",
+        name: "含通用头部的页面（自动）",
+        link: "/pages/realtime",
+      },
+      {
+        key: "workspace/pages/realtime",
+        name: "含自定义头部的页面",
+        link: "/pages/realtime",
       },
     ],
   },

@@ -1,7 +1,7 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 
-export default function () {
+export default function useAdvanceMenuData() {
   const store = useStore<RuffSPAState>();
   const items = computed(() => store.state.app.memuItems);
   const linkMap: Record<string, string> = {};
@@ -28,6 +28,7 @@ export default function () {
     }
   };
   items.value.forEach(mapper);
+
   return {
     items,
     update,

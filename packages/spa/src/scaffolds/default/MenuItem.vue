@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import usePassport from "@ruff-web/spa/src/traits/usePassport";
+import usePassport from "@ruff-web/spa/src/traits/useUserPassport";
 import { ref, watch } from "vue";
 import { getCurrentRuntime } from "../../runtime";
 import SubMenuItem from "./SubMenuItem.vue";

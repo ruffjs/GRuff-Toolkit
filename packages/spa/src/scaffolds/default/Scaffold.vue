@@ -5,30 +5,40 @@
         <b-box
           :flex="1"
           row
-          width="calc(100vw + 256px)"
-          :margin-left="isMenuCollapsed ? -256 : 0"
+          :width="`calc(100vw + ${menuWidth}px)`"
+          :margin-left="isMenuCollapsed ? -menuWidth : 0"
           style="transition: margin-left 0.15s ease-in-out"
         >
           <box
-            :width="256"
+            :width="menuWidth"
             height="100vh"
             column
             background="var(--ruff-side-bar-background)"
           >
-            <Logo :logo="props.logo" :title="props.name" />
-            <Menu v-if="props.menu" />
-            <box v-else flex="1" height="calc(100vh - 64px)" style="overflow-y: auto">
-              <slot name="memu" />
+            <Logo
+              :topHeight="topHeight"
+              :menuWidth="menuWidth"
+              :dockWidth="dockWidth"
+              :logo="props.logo"
+              :title="props.name"
+            />
+            <box
+              flex="1"
+              :height="`calc(100vh - ${topHeight}px)`"
+              style="overflow-y: auto"
+            >
+              <Menu v-if="props.menu" />
+              <slot v-else name="memu" />
             </box>
           </box>
           <box :flex="1" height="100vh">
-            <box width="100vw" :height="64">
+            <box width="100vw" :height="topHeight">
               <TopBar />
             </box>
             <box
               :flex="1"
               width="100vw"
-              height="calc(100vh - 64px)"
+              :height="`calc(100vh - ${topHeight}px)`"
               background="var(--ruff-workspace-background)"
             >
               <router-view />
@@ -40,27 +50,30 @@
     <template #desktop>
       <b-box :flex="1" row width="100vw">
         <box
-          :width="isMenuCollapsed ? 80 : 256"
+          :width="isMenuCollapsed ? dockWidth : menuWidth"
           column
           background="var(--ruff-side-bar-background)"
         >
-          <Logo :logo="props.logo" :title="props.name" />
-          <Menu v-if="props.menu" />
-          <box v-else flex="1" height="calc(100vh - 64px)" style="overflow-y: auto">
-            <slot name="memu" />
+          <Logo
+            :topHeight="topHeight"
+            :menuWidth="menuWidth"
+            :dockWidth="dockWidth"
+            :logo="props.logo"
+            :title="props.name"
+          />
+          <box flex="1" :height="`calc(100vh - ${topHeight}px)`" style="overflow-y: auto">
+            <Menu v-if="props.menu" />
+            <slot v-else name="memu" />
           </box>
         </box>
-        <box
-          :flex="1"
-          :width="isMenuCollapsed ? 'calc(100vw - 80px)' : 'calc(100vw - 256px)'"
-        >
-          <box width="100%" :height="64">
+        <box :flex="1" :width="mainWidth">
+          <box width="100%" :height="topHeight">
             <TopBar />
           </box>
           <box
             :flex="1"
             width="100%"
-            height="calc(100vh - 64px)"
+            :height="`calc(100vh - ${topHeight}px)`"
             background="var(--ruff-workspace-background)"
           >
             <router-view />
@@ -73,9 +86,10 @@
 </template>
 
 <script setup lang="ts">
-import { Component, watch } from "vue";
+import { Component, computed, watch } from "vue";
 
-import useConfigurations from "../../traits/useConfigurations";
+import useMenuSettings from "../../traits/useMenuSettings";
+import useTopbarSettings from "../../traits/useTopbarSettings";
 import logoSrc from "../../assets/images/logo.png";
 
 import Logo from "./Logo.vue";
@@ -92,13 +106,30 @@ const props = defineProps({
     type: String,
     default: "Ruff IoT SPA",
   },
+  topHeight: {
+    type: Number,
+    default: 64,
+  },
+  menuWidth: {
+    type: Number,
+    default: 256,
+  },
+  dockWidth: {
+    type: Number,
+    default: 80,
+  },
   menu: Array as () => RuffSPAMenuItem[],
   shotcuts: {
     type: Array as () => ShotcutItem<Component>[],
     default: [],
   },
 });
-const { isMenuCollapsed, setMenuItems, setShotcuts } = useConfigurations();
+const { isMenuCollapsed, setMenuItems } = useMenuSettings();
+const { setShotcuts } = useTopbarSettings();
+const mainWidth = computed(() => {
+  `calc(100vw - ${isMenuCollapsed.value ? props.dockWidth : props.menuWidth}px)'`;
+});
+
 watch(
   () => props.menu,
   (menu) => {

@@ -37,15 +37,15 @@
 </template>
 
 <script setup lang="ts">
-import useConfigurations from "../../traits/useConfigurations";
-import Account from "./Account.vue";
-import ThemePicker from "./ThemePicker.vue";
+import useMenuSettings from "../../traits/useMenuSettings";
+import useTopbarSettings from "../../traits/useTopbarSettings";
 import Breadcrumb from "../../components/crumbs/Breadcrumb.vue";
 import { ref } from "vue";
 import DropDown from "./DropDown.vue";
 
 const withCrumb = ref(false);
-const { isMenuCollapsed, toggleMenuStatus, shotcuts } = useConfigurations();
+const { isMenuCollapsed, toggleMenuStatus } = useMenuSettings();
+const { shotcuts } = useTopbarSettings();
 </script>
 <style lang="scss">
 .side-bar-switch {

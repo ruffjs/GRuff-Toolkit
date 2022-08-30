@@ -1,5 +1,5 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import { Modal, notification } from "ant-design-vue";
+import { Modal } from "ant-design-vue";
 import { computed, createVNode } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -9,7 +9,7 @@ import { useStore } from "vuex";
 // import { UserAttrType, UsrResourceType } from "@/utils/clients/types"
 // import { getAttr } from "@/utils/clients/userClient"
 
-export default function () {
+export default function useUserPassport() {
   const store = useStore<RuffSPAState>();
   const router = useRouter();
   const route = useRoute();

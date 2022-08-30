@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { ref, watch } from "vue";
-import usePassport from "@ruff-web/spa/src/traits/usePassport";
+import usePassport from "@ruff-web/spa/src/traits/useUserPassport";
 import { getCurrentRuntime } from "../../runtime";
 
 export default {

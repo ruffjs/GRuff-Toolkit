@@ -14,35 +14,41 @@ import { onErrorCaptured, onMounted, useSlots, watch } from "vue";
 // import { ConfigProvider } from "ant-design-vue";
 import { registerTheme } from "../styles/antd/cssVariables";
 
-import useConfigurations from "../traits/useConfigurations";
-import useRootStyle from "../traits/useRootStyle";
+import useGeneralSettings from "../traits/useGeneralSettings";
+import useColorTheme from "../traits/useColorTheme";
 
 const { name } = defineProps({
   name: String,
 });
 
 const slots = useSlots();
-const { setAppTitle, setTheme, getThemeMode, getColorScheme } = useConfigurations();
+const { setAppTitle } = useGeneralSettings();
+const {
+  computedTheme,
+  setTheme,
+  getThemeMode,
+  getColorScheme,
+  getCSSVarValue,
+} = useColorTheme();
 
-const { theme, getVarValue } = useRootStyle();
 watch(
-  theme,
+  computedTheme,
   () => {
     // ConfigProvider.config({
     //   theme: {
-    //     primaryColor: getVarValue("highlight-color"), // 全局主色
-    //     successColor: getVarValue("positive-color"), // 成功色
-    //     warningColor: getVarValue("negative-color-secondary"), // 警告色
-    //     errorColor: getVarValue("negative-color"), // 错误色
-    //     infoColor: getVarValue("highlight-color-secondary"),
+    //     primaryColor: getCSSVarValue("highlight-color"), // 全局主色
+    //     successColor: getCSSVarValue("positive-color"), // 成功色
+    //     warningColor: getCSSVarValue("negative-color-secondary"), // 警告色
+    //     errorColor: getCSSVarValue("negative-color"), // 错误色
+    //     infoColor: getCSSVarValue("highlight-color-secondary"),
     //   } as any,
     // });
     registerTheme("ant", {
-      primaryColor: getVarValue("highlight-color"), // 全局主色
-      successColor: getVarValue("positive-color"), // 成功色
-      warningColor: getVarValue("negative-color-secondary"), // 警告色
-      errorColor: getVarValue("negative-color"), // 错误色
-      infoColor: getVarValue("highlight-color-secondary"),
+      primaryColor: getCSSVarValue("highlight-color"), // 全局主色
+      successColor: getCSSVarValue("positive-color"), // 成功色
+      warningColor: getCSSVarValue("negative-color-secondary"), // 警告色
+      errorColor: getCSSVarValue("negative-color"), // 错误色
+      infoColor: getCSSVarValue("highlight-color-secondary"),
     } as any);
   }
   // { immediate: true }
@@ -54,19 +60,19 @@ onMounted(() => {
   setTheme(getThemeMode(), getColorScheme());
   // ConfigProvider.config({
   //   theme: {
-  //     primaryColor: getVarValue("highlight-color"), // 全局主色
-  //     successColor: getVarValue("positive-color"), // 成功色
-  //     warningColor: getVarValue("negative-color-secondary"), // 警告色
-  //     errorColor: getVarValue("negative-color"), // 错误色
-  //     infoColor: getVarValue("highlight-color-secondary"),
+  //     primaryColor: getCSSVarValue("highlight-color"), // 全局主色
+  //     successColor: getCSSVarValue("positive-color"), // 成功色
+  //     warningColor: getCSSVarValue("negative-color-secondary"), // 警告色
+  //     errorColor: getCSSVarValue("negative-color"), // 错误色
+  //     infoColor: getCSSVarValue("highlight-color-secondary"),
   //   } as any,
   // });
   registerTheme("ant", {
-    primaryColor: getVarValue("highlight-color"), // 全局主色
-    successColor: getVarValue("positive-color"), // 成功色
-    warningColor: getVarValue("negative-color-secondary"), // 警告色
-    errorColor: getVarValue("negative-color"), // 错误色
-    infoColor: getVarValue("highlight-color-secondary"),
+    primaryColor: getCSSVarValue("highlight-color"), // 全局主色
+    successColor: getCSSVarValue("positive-color"), // 成功色
+    warningColor: getCSSVarValue("negative-color-secondary"), // 警告色
+    errorColor: getCSSVarValue("negative-color"), // 错误色
+    infoColor: getCSSVarValue("highlight-color-secondary"),
   } as any);
 });
 

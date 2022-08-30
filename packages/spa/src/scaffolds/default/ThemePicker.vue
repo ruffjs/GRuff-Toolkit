@@ -16,14 +16,14 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
-import useConfigurations from "../../traits/useConfigurations";
+import useColorTheme from "../../traits/useColorTheme";
 
 const map = {
   light: "浅色",
   dark: "深色",
   system: "自动",
 };
-const { themeMode, setThemeMode } = useConfigurations();
+const { themeMode, setThemeMode } = useColorTheme();
 const theme = computed(() => {
   console.log(themeMode.value);
   return map[themeMode.value];

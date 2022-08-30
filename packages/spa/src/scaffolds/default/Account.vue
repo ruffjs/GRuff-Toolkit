@@ -26,7 +26,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
-import usePassport from "../../traits/usePassport";
+import usePassport from "../../traits/useUserPassport";
 import avatar from "../../assets/images/avatar.png";
 
 const { userInfo, signOut: handleLogout, updateInfo } = usePassport();

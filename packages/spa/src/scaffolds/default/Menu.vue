@@ -1,34 +1,29 @@
 <template>
-  <box flex="1" height="calc(100vh - 64px)" style="overflow-y: auto">
-    <a-menu
-      v-model:openKeys="state.openKeys"
-      v-model:selectedKeys="state.selectedKeys"
-      mode="inline"
-      :theme="computedTheme[0]"
-      :inline-collapsed="isMenuCollapsed && isDesktopDevice"
-      background="var(--ruff-menu-background)"
-    >
-      <MenuItem v-for="item in menuItems" :key="item.key" :item="item" />
-    </a-menu>
-  </box>
+  <a-menu
+    v-model:openKeys="state.openKeys"
+    v-model:selectedKeys="state.selectedKeys"
+    mode="inline"
+    :theme="computedTheme[0]"
+    :inline-collapsed="isMenuCollapsed && isDesktopDevice"
+    background="var(--ruff-menu-background)"
+  >
+    <MenuItem v-for="item in menuItems" :key="item.key" :item="item" />
+  </a-menu>
 </template>
 
 <script setup lang="ts">
-import useConfigurations from "../../traits/useConfigurations";
-import { defineComponent, reactive, toRefs, watch } from "vue";
+import useScreenInfos from "../../traits/useScreenInfos";
+import useColorTheme from "../../traits/useColorTheme";
+import useMenuSettings from "../../traits/useMenuSettings";
+import { reactive, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import MenuItem from "./MenuItem.vue";
 
 const route = useRoute();
 const router = useRouter();
-const {
-  computedTheme,
-  isDesktopDevice,
-  isMenuCollapsed,
-  setMenuStatus,
-  menuItems,
-  memuKeyTargetMap,
-} = useConfigurations();
+const { isDesktopDevice } = useScreenInfos();
+const { computedTheme } = useColorTheme();
+const { isMenuCollapsed, setMenuStatus, menuItems, memuKeyTargetMap } = useMenuSettings();
 
 const state = reactive<any>({
   selectedKeys: [],
