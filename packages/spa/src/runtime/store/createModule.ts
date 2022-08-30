@@ -1,9 +1,9 @@
-import createMutations from "./createMutations"
+import createMutations from "./createMutations";
 
 export default function (
   { data, getters, mutations, actions }: any,
   namespace: string,
-  storage: RIAppStorage,
+  storage: RuffAppStorage,
   extendedGetters?: Record<string, AnyFn>
 ) {
   return {
@@ -12,11 +12,11 @@ export default function (
       if (typeof data === "function") {
         return {
           ...data(storage),
-        }
+        };
       }
       return {
         ...data,
-      }
+      };
     },
     getters: {
       ...extendedGetters,
@@ -29,5 +29,5 @@ export default function (
     actions: {
       ...actions,
     },
-  }
+  };
 }

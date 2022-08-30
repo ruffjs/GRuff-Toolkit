@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import usePassport from "../traits/usePassport";
-import defineFormModel from "@ruff-web/views/src/traits/defineFormModel";
+import defineFormModel from "@ruff-web/form-wrappers/src/traits/defineFormModel";
 // import bgImageSrc from "@/assets/images/background.jpg"
 const bgImageSrc = null;
 

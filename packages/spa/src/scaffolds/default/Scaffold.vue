@@ -102,7 +102,7 @@ const { isMenuCollapsed, setMenuItems } = useConfigurations();
 watch(
   () => props.menu,
   (menu: any) => {
-    setMenuItems((menu || []) as RIMenuItem[]);
+    setMenuItems((menu || []) as RuffSPAMenuItem[]);
   },
   {
     immediate: true,

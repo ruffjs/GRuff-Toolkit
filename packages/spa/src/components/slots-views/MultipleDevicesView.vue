@@ -29,7 +29,7 @@ import { computed, useSlots } from "vue";
 import { useStore } from "vuex";
 import flags from "../../runtime/viewport/flags";
 
-const store = useStore<RIRootState>();
+const store = useStore<RuffSPAState>();
 const viewport = computed(() => store.state.app.viewport);
 const slots = useSlots();
 </script>

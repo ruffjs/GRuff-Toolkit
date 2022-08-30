@@ -1,30 +1,30 @@
 type DefaultPages = {
-  home?: any
-  forbidden?: any
-  default?: any
-}
-type WithDefaultsPages = Array<RIPageConfig> & DefaultPages
+  home?: any;
+  forbidden?: any;
+  default?: any;
+};
+type WithDefaultsPages = Array<RuffSPAPageConfig> & DefaultPages;
 interface RIRuntime {
-  storage: RIAppStorage
-  store: Store<RIRootState>
-  router: Router
+  storage: RuffAppStorage;
+  store: Store<RuffSPAState>;
+  router: Router;
 }
 type CreateRuntimeConfiguration = {
-  storageConfig?: any
-  anonymousAccess?: boolean
-  globalState?: any
+  storageConfig?: any;
+  anonymousAccess?: boolean;
+  globalState?: any;
   extendedGetters?: {
-    app?: Record<string, AnyFn>
-    user?: Record<string, AnyFn>
-  }
-  signInView?: any
-  notFoundView?: any
-  pages?: WithDefaultsPages
-  boundaries?: number[]
-  onCreate(runtime: RIRuntime)
-  onInstalled?: (runtime: RIRuntime) => void
+    app?: Record<string, AnyFn>;
+    user?: Record<string, AnyFn>;
+  };
+  signInView?: any;
+  notFoundView?: any;
+  pages?: WithDefaultsPages;
+  boundaries?: number[];
+  onCreate(runtime: RIRuntime);
+  onInstalled?: (runtime: RIRuntime) => void;
   onPermissionCheck(
     userState: UserState,
     acceesDescription: AnyRecord
-  ): Promise<unknown>
-}
+  ): Promise<unknown>;
+};

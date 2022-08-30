@@ -1,7 +1,7 @@
 <template>
   <ConfigProvider :locale="zhCN">
-    <r-app name="Ruff 储罐监测系统">
-      <r-scaffold name="Ruff 储罐监测系统" :menu="menu" :shotcuts="[]">
+    <r-app name="GRuff Demos">
+      <r-scaffold name="GRuff Demos" :menu="menu" :shotcuts="[]">
         <template #memu>当配置了menu属性时优先应用menu属性进行渲染</template>
       </r-scaffold>
     </r-app>
@@ -12,5 +12,5 @@
 import { ConfigProvider } from "ant-design-vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 
-import menu from "./configs/menu";
+import menu from "./spa-configs/menu";
 </script>

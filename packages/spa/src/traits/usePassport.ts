@@ -1,75 +1,75 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons-vue"
-import { Modal, notification } from "ant-design-vue"
-import { computed, createVNode } from "vue"
-import { useRoute, useRouter } from "vue-router"
-import { useStore } from "vuex"
-import * as api from "@/utils/http/api"
+import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import { Modal, notification } from "ant-design-vue";
+import { computed, createVNode } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
+// import * as api from "@/utils/http/api"
 // import { login } from "@/utils/clients/guestClient"
 // import { notifyReqErr } from "@/utils/clients/helper"
 // import { UserAttrType, UsrResourceType } from "@/utils/clients/types"
 // import { getAttr } from "@/utils/clients/userClient"
 
 export default function () {
-  const store = useStore<RIRootState>()
-  const router = useRouter()
-  const route = useRoute()
-  const userInfo = computed(() => store.state.user.info)
+  const store = useStore<RuffSPAState>();
+  const router = useRouter();
+  const route = useRoute();
+  const userInfo = computed(() => store.state.user.info);
 
-  const isSuper = computed(() => store.getters["user/isSuper"])
-  const isAdmin = computed(() => isSuper.value || store.getters["user/isPM"])
+  const isSuper = computed(() => store.getters["user/isSuper"]);
+  const isAdmin = computed(() => isSuper.value || store.getters["user/isPM"]);
   const isCommon = computed(
     () => isAdmin.value || store.getters["user/isNormal"]
-  )
+  );
 
   const signIn = async (username: string, password: string) => {
     try {
-      const res = await api.login(username, password)
-      const { token, info: meta } = res.data as any
-      // console.log(token, meta)
-      store.dispatch("user/updateAccount", {
-        token,
-        info: {
-          id: meta.id,
-          email: meta.email,
-          name: meta.name,
-          nickname: meta.name,
-          level: meta.level,
-          groups: [...meta.roles],
-        },
-        meta,
-        admin: meta.level === "Admin",
-        superuser: meta.type === "Tenant",
-        banned: false,
-      })
-      store.dispatch("lists/updateSites")
-      if (route.query.fromPath) {
-        router.replace(route.query.fromPath as string)
-      } else {
-        router.replace({
-          name: "workspace/home",
-        })
-      }
+      // const res = await api.login(username, password)
+      // const { token, info: meta } = res.data as any
+      // // console.log(token, meta)
+      // store.dispatch("user/updateAccount", {
+      //   token,
+      //   info: {
+      //     id: meta.id,
+      //     email: meta.email,
+      //     name: meta.name,
+      //     nickname: meta.name,
+      //     level: meta.level,
+      //     groups: [...meta.roles],
+      //   },
+      //   meta,
+      //   admin: meta.level === "Admin",
+      //   superuser: meta.type === "Tenant",
+      //   banned: false,
+      // })
+      // store.dispatch("lists/updateSites")
+      // if (route.query.fromPath) {
+      //   router.replace(route.query.fromPath as string)
+      // } else {
+      //   router.replace({
+      //     name: "workspace/home",
+      //   })
+      // }
     } catch (error) {
-      console.log("handleSignInError", error)
-      if (
-        error &&
-        (error as any).response &&
-        (error as any).response.data.message
-      ) {
-        notification.error({
-          message: "请求失败",
-          description: (error as any).response.data.message,
-        })
-      } else {
-        console.log(error)
-      }
+      // console.log("handleSignInError", error)
+      // if (
+      //   error &&
+      //   (error as any).response &&
+      //   (error as any).response.data.message
+      // ) {
+      //   notification.error({
+      //     message: "请求失败",
+      //     description: (error as any).response.data.message,
+      //   })
+      // } else {
+      //   console.log(error)
+      // }
     }
-  }
+  };
 
   const updateInfo = async () => {
     // TO-DO
     // 与服务器交互
-    if (userInfo.value === null) return
+    if (userInfo.value === null) return;
     try {
       // const res = await getAttr<UsrProfile>(
       //   UsrResourceType.UserAccount,
@@ -86,9 +86,9 @@ export default function () {
       //   },
       // })
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const signOut = () => {
     Modal.confirm({
@@ -101,11 +101,11 @@ export default function () {
         store.commit("user/storeState", {
           token: "",
           current: null,
-        })
-        router.replace("/sign-in")
+        });
+        router.replace("/sign-in");
       },
-    })
-  }
+    });
+  };
 
   return {
     userInfo,
@@ -117,5 +117,5 @@ export default function () {
     updateInfo,
     // checkAuthByRoles,
     signOut,
-  }
+  };
 }

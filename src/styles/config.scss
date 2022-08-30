@@ -1,0 +1,83 @@
+$custom-colors: (
+  primary-bgcolor_dark: #0b203c,
+  secondary-bgcolor_dark: #001427,
+  highlight-color_dark: #4f92ce,
+  secondary-bgcolor_light: #63b3c2,
+  surface-bgcolor_light: #dceaeb,
+);
+
+$varuff-custom-colors: (
+  dark:
+    map-merge(
+      map-get($varuff-themes-colors, dark),
+      (
+        primary-bgcolor: map-get($custom-colors, primary-bgcolor_dark),
+        primary-color: map-get($varuff-colors, white),
+        secondary-bgcolor: map-get($custom-colors, secondary-bgcolor_dark),
+        secondary-color: map-get($varuff-colors, white),
+        surface-bgcolor: map-get($varuff-colors, black),
+        surface-color: map-get($varuff-colors, white),
+        contrary-bgcolor: map-get($varuff-colors, white),
+        contrary-color: map-get($varuff-colors, black),
+        highlight-color: map-get($custom-colors, highlight-color_dark),
+        highlight-color-secondary: map-get($varuff-colors, white),
+        highlight-color-3: #5ee8e8,
+        negative-color: #f84444,
+
+        contrary-bgcolor_rgb: hexColorToRGB(map-get($varuff-colors, white)),
+        signin-bgcolor: map-get($custom-colors, primary-bgcolor_dark),
+        signin-button-border-color: map-get($custom-colors, highlight-color_dark),
+        topbar-bgcolor: map-get($custom-colors, primary-bgcolor_dark),
+        sidebar-bgcolor: map-get($custom-colors, secondary-bgcolor_dark),
+        workspace-bgcolor: map-get($custom-colors, secondary-bgcolor_dark),
+        device-card-bgcolor: map-get($custom-colors, secondary-bgcolor_dark),
+        border-color: map-get($varuff-colors, white),
+        tank-image: url(../assets/tanks/tank.default.svg),
+        water-image: url(../assets/tanks/water.default.svg),
+        tank-bgcolor: map-get($varuff-colors, white),
+        water-color: #4f92ce,
+        ant-selection-item-color: map-get($varuff-colors, black),
+      )
+    ),
+  light:
+    map-merge(
+      map-get($varuff-themes-colors, light),
+      (
+        primary-bgcolor: map-get($varuff-colors, white),
+        primary-color: map-get($varuff-colors, black),
+        secondary-bgcolor: map-get($custom-colors, secondary-bgcolor_light),
+        secondary-color: map-get($varuff-colors, white),
+        surface-bgcolor: map-get($custom-colors, surface-bgcolor_light),
+        surface-color: map-get($varuff-colors, white),
+        contrary-bgcolor: map-get($varuff-colors, black),
+        contrary-color: map-get($varuff-colors, white),
+        highlight-color: map-get($custom-colors, secondary-bgcolor_light),
+        highlight-color-secondary: map-get($custom-colors, secondary-bgcolor_light),
+        highlight-color-3: #5ee8e8,
+        negative-color: #f84444,
+
+        contrary-bgcolor_rgb: hexColorToRGB(map-get($varuff-colors, black)),
+        signin-bgcolor: map-get($custom-colors, secondary-bgcolor_light),
+        signin-button-border-color: #d9d9d9,
+        topbar-bgcolor: map-get($custom-colors, secondary-bgcolor_light),
+        sidebar-bgcolor: map-get($varuff-colors, white),
+        workspace-bgcolor: map-get($custom-colors, surface-bgcolor_light),
+        device-card-bgcolor: map-get($custom-colors, surface-bgcolor_light),
+        border-color: map-get($custom-colors, secondary-bgcolor_light),
+        tank-image: url(../assets/tanks/tank.light.svg),
+        water-image: url(../assets/tanks/water.light.svg),
+        tank-bgcolor: map-get($custom-colors, surface-bgcolor_light),
+        water-color: map-get($custom-colors, secondary-bgcolor_light),
+        ant-selection-item-color: map-get($varuff-colors, black),
+      )
+    ),
+);
+
+$varuff-custom-layout-colors: (
+  // 顶部导航栏背景颜色
+  top-bar-background: var(--topbar-bgcolor),
+  // 导航栏背景颜色
+  side-bar-background: var(--sidebar-bgcolor),
+  // 工作区背景颜色
+  workspace-background: var(--workspace-bgcolor)
+);

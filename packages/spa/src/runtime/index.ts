@@ -1,30 +1,33 @@
-import Runtime from "./Runtime"
-import registerComponents from "./registerComponents"
+import Runtime from "./Runtime";
+import registerComponents from "./registerComponents";
 
-export function withDefaults(pages: RIPageConfig[], defaults: DefaultPages) {
-  const withDefaultsPages = pages as WithDefaultsPages
-  Object.assign(withDefaultsPages, defaults)
-  return withDefaultsPages
+export function withDefaults(
+  pages: RuffSPAPageConfig[],
+  defaults: DefaultPages
+) {
+  const withDefaultsPages = pages as WithDefaultsPages;
+  Object.assign(withDefaultsPages, defaults);
+  return withDefaultsPages;
 }
 
 export function createRuntime(
   configs?: CreateRuntimeConfiguration | undefined
 ) {
-  const runtime = Runtime.createInstance(configs)
+  const runtime = Runtime.createInstance(configs);
   runtime.onInstalled = () => {
-    registerComponents(Runtime.getCurrentVueInstance())
+    registerComponents(Runtime.getCurrentVueInstance());
     if (typeof configs?.onInstalled === "function") {
-      configs.onInstalled(runtime)
+      configs.onInstalled(runtime);
     }
-    delete runtime.onInstalled
-  }
-  return runtime
+    delete runtime.onInstalled;
+  };
+  return runtime;
 }
 
 export function getCurrentRuntime() {
-  return Runtime.getCurrentInstance()
+  return Runtime.getCurrentInstance();
 }
 
 export function getCurrentVueApp() {
-  return Runtime.getCurrentVueInstance()
+  return Runtime.getCurrentVueInstance();
 }

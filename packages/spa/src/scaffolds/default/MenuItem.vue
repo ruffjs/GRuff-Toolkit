@@ -29,7 +29,7 @@ import { getCurrentRuntime } from "../../runtime";
 import SubMenuItem from "./SubMenuItem.vue";
 
 const props = defineProps({
-  item: Object as () => RIMenuItem,
+  item: Object as () => RuffSPAMenuItem,
 });
 const { userInfo } = usePassport();
 const show = ref(false);

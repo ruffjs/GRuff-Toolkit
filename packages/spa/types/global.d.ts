@@ -12,13 +12,14 @@ interface IStorage {
   clear: () => void;
   createBucket: (namespace: string) => AnyRecord;
 }
-interface RIAppStorage extends IStorage {
+
+interface RuffAppStorage extends IStorage {
   app: AnyRecord;
   user: AnyRecord;
 }
 
-interface RIApplication {
-  use(plugin: any, ...options: any[]): RIApplication;
+interface RuffSPA {
+  use(plugin: any, ...options: any[]): RuffSPA;
   start(
     onStarted?: (...args: any[]) => void,
     onError?: (...args: any[]) => void
@@ -27,35 +28,35 @@ interface RIApplication {
   onStarted?: (...args: any[]) => void;
   onError?: (...args: any[]) => void;
 
-  storage: RIAppStorage;
+  storage: RuffAppStorage;
 }
 
-interface RIApplicationOptions {
+interface RuffSPAOptions {
   [x: string]: any;
 }
 
-interface RIRootState {
+interface RuffSPAState {
   app: AppState;
   user: UserState;
 }
 
-interface RIPageConfig {
+interface RuffSPAPageConfig {
   name?: string;
   path: string;
   alias?: string | string[];
   component?: unknown;
   redirect?: unknown;
-  children?: RIPageConfig[];
+  children?: RuffSPAPageConfig[];
   accessDesc?: any;
   meta?: Record<string | number | symbol, unknown>;
 }
 
-interface RIMenuItem {
+interface RuffSPAMenuItem {
   key: string;
   keys?: string[];
   name: string;
   icon?: string;
   link?: string;
   accessDesc?: any;
-  children?: RIMenuItem[];
+  children?: RuffSPAMenuItem[];
 }

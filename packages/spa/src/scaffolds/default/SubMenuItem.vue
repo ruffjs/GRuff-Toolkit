@@ -25,7 +25,7 @@ export default {
 </script>
 <script setup lang="ts">
 const props = defineProps({
-  item: Object as () => RIMenuItem,
+  item: Object as () => RuffSPAMenuItem,
 });
 const { userInfo } = usePassport();
 const show = ref(false);
