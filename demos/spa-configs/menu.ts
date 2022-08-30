@@ -9,7 +9,7 @@ export default [
   {
     key: "workspace/monitor",
     name: "页面容器",
-    icon: "fund-outlined",
+    icon: "snippets-outlined",
     children: [
       {
         key: "workspace/pages/fixed",

@@ -1,8 +1,8 @@
 <template>
   <ConfigProvider :locale="zhCN">
-    <r-app name="GRuff Demos">
+    <r-app name="GRuff Toolkit Demos">
       <r-scaffold
-        name="GRuff Demos"
+        name="GRuff Toolkit"
         :menu="menu"
         :menu-width="256"
         :top-height="50"
