@@ -1,6 +1,6 @@
 <template>
   <a-dropdown placement="bottomRight">
-    <b-touchable :padding="[20, 10]" row>
+    <b-touchable :padding="[0, 10]" row>
       <box>
         <txt class="top-bar-text">{{ name }}</txt>
       </box>

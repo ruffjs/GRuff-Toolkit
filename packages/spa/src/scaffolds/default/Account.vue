@@ -1,6 +1,6 @@
 <template>
   <a-dropdown v-if="userInfo && userInfo.name" placement="bottomRight">
-    <b-touchable :padding="[20, 10]" row>
+    <b-touchable :padding="[0, 10]" row>
       <box height="20">
         <a-avatar :size="20" :src="avatar" class="antd-pro-global-header-index-avatar" />
       </box>
@@ -19,7 +19,7 @@
     </template>
   </a-dropdown>
   <a-spin v-else size="small" :style="{ marginLeft: 8, marginRight: 8 }">
-    <b-touchable :padding="[20, 10]" row>
+    <b-touchable :padding="[0, 10]" row>
       <txt line-height="22">获取用户信息</txt>
     </b-touchable>
   </a-spin>

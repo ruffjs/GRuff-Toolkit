@@ -1,7 +1,13 @@
 <template>
-  <box :flex="1" row justify="space-between" background="var(--ruff-top-bar-background)">
+  <box
+    :flex="1"
+    row
+    justify="space-between"
+    height="100%"
+    background="var(--ruff-top-bar-background)"
+  >
     <box row align="center">
-      <b-touchable @click="toggleMenuStatus" padding="--ms">
+      <b-touchable @click="toggleMenuStatus" :padding="[0, '--ms']">
         <txt :line-height="18" :margin="[8, 0]">
           <b-icon
             :type="isMenuCollapsed ? 'menu-unfold-outlined' : 'menu-fold-outlined'"
@@ -12,11 +18,11 @@
       </b-touchable>
       <Breadcrumb v-if="withCrumb" />
     </box>
-    <box :flex="1" paddingH="10" row justify="right">
+    <box :flex="1" paddingH="10" row justify="right" align="center">
       <template v-for="shotcut in shotcuts">
         <router-link v-if="shotcut.type === 'link'" :to="(shotcut.link as string)">
-          <b-touchable :padding="[20, 10]">
-            <txt :line-height="24">
+          <b-touchable :padding="[0, 10]">
+            <txt :line-height="18">
               <b-icon type="bell-outlined" size="18" class="top-bar-text" />
             </txt>
           </b-touchable>
