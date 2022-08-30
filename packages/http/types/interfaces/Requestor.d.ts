@@ -12,7 +12,7 @@ interface RuffResourceRequestor {
   $createEntity<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     entityPath: RuffResourcePath,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, any>>;
 
@@ -29,7 +29,7 @@ interface RuffResourceRequestor {
   >(
     entityPath: RuffResourcePath,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<FormData>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, FormData>>;
 
@@ -42,7 +42,7 @@ interface RuffResourceRequestor {
   >(
     entityPath: RuffResourcePath,
     description: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
@@ -54,7 +54,7 @@ interface RuffResourceRequestor {
     belongingPath: RuffResourcePath,
     id: Id,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
@@ -108,8 +108,8 @@ interface RuffResourceRequestor {
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
-    query?: RuffHttpQueryModel | string,
+    aidOrAkeys: IdOrKeys,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<RuffDataRecords<T>>, D>>;
 
@@ -122,8 +122,8 @@ interface RuffResourceRequestor {
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
-    query?: RuffHttpQueryModel | string,
+    aidOrAkeys: IdOrKeys,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<RuffDataRecords<T>>, D>>;
 
@@ -136,9 +136,9 @@ interface RuffResourceRequestor {
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
-    bidOrAkeys: Id | Id[],
-    query?: RuffHttpQueryModel | string,
+    aidOrAkeys: IdOrKeys,
+    bidOrAkeys: IdOrKeys,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<RuffDataRecords<T>>, D>>;
 
@@ -160,7 +160,7 @@ interface RuffResourceRequestor {
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
+    aidOrAkeys: IdOrKeys,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<RuffHttpResourcesList<T>>, D>>;
@@ -174,7 +174,7 @@ interface RuffResourceRequestor {
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
+    aidOrAkeys: IdOrKeys,
     query?: RuffPeriodDataQueryModel,
     config?: AxiosRequestConfig<D>
   ): Promise<
@@ -188,7 +188,7 @@ interface RuffResourceRequestor {
    */
   $setEntityById<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     entityPath: RuffResourcePath,
-    idOrKeys: Id | Id[],
+    idOrKeys: IdOrKeys,
     model: D,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -201,7 +201,7 @@ interface RuffResourceRequestor {
     D extends RuffDataModel = any
   >(
     entityPath: RuffResourcePath,
-    idOrKeys: Id | Id[],
+    idOrKeys: IdOrKeys,
     model: D,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -212,9 +212,9 @@ interface RuffResourceRequestor {
   $setBelonging<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
+    aidOrAkeys: IdOrKeys,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
@@ -238,7 +238,7 @@ interface RuffResourceRequestor {
   $removeEntityByKeys<T extends RuffDataModel = any, D = any>(
     entityPath: RuffResourcePath,
     keys: Id[],
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
@@ -251,8 +251,8 @@ interface RuffResourceRequestor {
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aidOrAkeys: Id | Id[],
-    query?: RuffHttpQueryModel | string,
+    aidOrAkeys: IdOrKeys,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
@@ -265,7 +265,7 @@ interface RuffResourceRequestor {
   >(
     entityPath: RuffResourcePath,
     description: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
@@ -281,7 +281,7 @@ interface RuffResourceRequestor {
     entityPath: RuffResourcePath,
     command: string,
     args: A,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<A>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, A>>;
 
@@ -298,9 +298,9 @@ interface RuffResourceRequestor {
   $takeAction<T extends RuffDataModel = any, A extends AnyRecord = any>(
     entityPath: RuffResourcePath,
     command: string,
-    idOrKeys: Id | Id[],
+    idOrKeys: IdOrKeys,
     args: A,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<A>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, A>>;
 }

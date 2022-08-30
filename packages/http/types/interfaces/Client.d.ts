@@ -45,20 +45,20 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
   $addResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     model: D,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, any>>;
 
   /** 获取资源 */
   $getResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
   $getData<T extends RuffDataModel = any, D = any>(
     pathname: string,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
@@ -70,7 +70,7 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
 
   $getEnumerableData<T extends RuffDataModel = any, D = any>(
     pathname: string,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<RuffDataRecords<T>>, D>>;
 
@@ -97,7 +97,7 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
   /** 删除资源 */
   $delResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
-    query?: RuffHttpQueryModel | string,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 }
