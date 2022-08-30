@@ -30,7 +30,7 @@ export default class AbsoluteBase {
   ) {
     const { client, prefix, resource, config } = options;
     this._client = client;
-    this._prefix = prefix;
+    this._prefix = prefix || 'api/v1';
     this._dirname = resource.dirname || name;
     this._options = options;
     this._query = query;

@@ -9,7 +9,14 @@ import { AxiosResponse } from "axios";
 export default class WithQueryEntity<
   B extends string = any,
   A extends string = any
-> extends AbsoluteBase {
+  > extends AbsoluteBase {
+  protected static pageIndex = 1;
+  protected static pageSize = 10;
+
+  static set defaultpageSize(size: number) {
+    WithQueryEntity.pageSize = size;
+  }
+
   static createEntity<B extends string = any, A extends string = any>(
     name: string,
     options: Readonly<RuffEntityOptions<any, any, B, A>>,
@@ -43,7 +50,7 @@ export default class WithQueryEntity<
     return this;
   }
 
-  async list(pageSize: number = 10, pageIndex: number = 1) {
+  async list(pageSize: number = WithQueryEntity.pageSize, pageIndex: number = WithQueryEntity.pageIndex) {
     // console.log("this._query", this._query);
     const { data } = await this._client.$getEntitys(
       joinPath([this._prefix, this._dirname]),
@@ -53,9 +60,9 @@ export default class WithQueryEntity<
         pageIndex,
       }
     );
-    // console.log(data);
+    console.log(data);
     const list = new HttpResourcesList(data);
-    data.content.forEach((item: any) => {
+    data?.content?.forEach((item: any) => {
       const ref: any = EntityRef.createRef(
         this._dirname,
         item.id,

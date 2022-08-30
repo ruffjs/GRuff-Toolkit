@@ -4,23 +4,9 @@ import Requestor from "./Requestor";
 
 export default class RESTfulRequestor
   extends Requestor
-  implements RuffResourceRequestor
-{
-  private pageIndex = 1;
-  private pageSize = 999999;
+  implements RuffResourceRequestor {
 
   withQuery = withQuery;
-
-  get defaultQueryListParams() {
-    return {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-    };
-  }
-
-  set defaultpageSize(size: number) {
-    this.pageSize = size;
-  }
 
   /** 创建资源 **/
   $addResource<T extends RuffDataModel = any, D = any>(
@@ -230,7 +216,7 @@ export default class RESTfulRequestor
     config?: AxiosRequestConfig<D>
   ) {
     return this.get<RuffHttpResourcesList<T>, D>(
-      pathname + withQuery({ ...this.defaultQueryListParams, ...query }),
+      pathname + withQuery(query),
       config
     );
   }
@@ -274,7 +260,7 @@ export default class RESTfulRequestor
     config?: AxiosRequestConfig<D>
   ) {
     return this.get<RuffPeriodData<T>, D>(
-      pathname + withQuery({ ...this.defaultQueryListParams, ...query }),
+      pathname + withQuery(query),
       config
     );
   }

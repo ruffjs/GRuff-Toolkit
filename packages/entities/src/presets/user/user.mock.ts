@@ -1,12 +1,23 @@
-import { ResourceMethod as M } from "@ruff-web/http/src/apis/ResourceMethod";
+import { ResourceMethod as M } from "@ruff-web/http/src/resource/ResourceMethod";
 
 export default {
+  prefix: 'api/v1',
   methods: [M.POST, M.LIST, M.PUT, M.DELETE],
   [M.POST]: () => {
     console.log("11111");
   },
   [M.LIST]: () => {
-    console.log("22222");
+    // console.log("22222");
+    return {
+      content: [{
+        foo: 'bar1'
+      }, {
+        foo: 'bar2'
+      }, {
+        foo: 'bar3'
+      }],
+      totalCount: 10
+    }
   },
   [M.PUT]: () => {
     console.log("33333");

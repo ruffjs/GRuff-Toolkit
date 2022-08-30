@@ -7,7 +7,7 @@ export enum ResourceMethod {
    *
    * sample: /api/v1/device
    */
-  POST,
+  POST = 1,
 
   /**
    * 创建包含附件的实体资源

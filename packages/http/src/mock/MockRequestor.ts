@@ -1,25 +1,24 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import Entity from "../apis/Entity";
+import Entity from "../resource/Entity";
+import { ResourceMethod as M } from "../resource/ResourceMethod";
 import { joinPath, withQuery } from "../utils";
 import registerEntities from "../utils/registerEntities";
 import MockResponse from "./MockResponse";
 
 export default class MockRequestor<E extends string = any>
-  implements RuffResourceRequestor
-{
+  implements RuffResourceRequestor {
   private _endpoint: string = "mock://";
   private _axiosInstance: AxiosInstance;
   private _timeout = 0;
   private _config: AxiosRequestConfig<any>;
 
+  private _randoms: Record<string, RuffMockRandom>
+
   constructor(
     options: (RuffClientOptions & RuffClientHooks) | string,
     config: AxiosRequestConfig<any> = {},
-    entitis: Record<E, RuffEntityConfiguration> = {} as Record<
-      E,
-      RuffEntityConfiguration
-    >,
-    mock: {}
+    entitis: RuffClientEntitisConfigs<E>,
+    randoms: Record<string, RuffMockRandom> = {}
   ) {
     if (options) {
     }
@@ -33,7 +32,8 @@ export default class MockRequestor<E extends string = any>
 
     registerEntities(entitis, this as any);
 
-    console.log(mock);
+    this._randoms = randoms
+    console.log(this._randoms);
   }
 
   get network() {
@@ -94,20 +94,12 @@ export default class MockRequestor<E extends string = any>
     throw new Error("Method not implemented.");
   }
 
-  private pageIndex = 1;
-  private pageSize = 999999;
+
 
   withQuery = withQuery;
 
-  get defaultQueryListParams() {
-    return {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-    };
-  }
-
-  set defaultpageSize(size: number) {
-    this.pageSize = size;
+  $getPrefix(): string {
+    return "api/v1"
   }
 
   /** 创建资源 **/
@@ -133,6 +125,9 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
+    const apiId = `${entityPath}`
+    console.log('apiId:', apiId)
+
     return MockResponse.resolve(
       {
         data: model,
@@ -389,6 +384,20 @@ export default class MockRequestor<E extends string = any>
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
+    const apiId = `${joinPath(entityPath)}:${M.LIST}`
+    const random = this._randoms[apiId]
+    // console.log(random)
+    if (typeof random === 'function') {
+      return MockResponse.resolve(
+        {
+          data: random(query, {}, config),
+          message: "OK",
+          status: 200,
+        },
+        config
+      );
+    }
+
     return MockResponse.resolve(
       {
         data: {},

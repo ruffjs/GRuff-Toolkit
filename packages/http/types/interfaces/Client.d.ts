@@ -176,7 +176,7 @@ interface RuffResourceRequestor extends RuffClientBasicMethods {
     entityPath: RuffResourcePath,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<RuffHttpResourcesList<T>>, any>>;
+  ): Promise<AxiosResponse<RuffHttpResponse<RuffHttpResourcesList<T>>, D>>;
 
   $getPageableBelonging<
     T extends RuffDataModel = any,
@@ -331,9 +331,28 @@ interface RuffClientHooks {
   onServiceError(error: AnyError): void;
 }
 
-interface RuffHttpClient extends RuffResourceRequestor, RuffClientHooks {}
+interface RuffHttpClient extends RuffResourceRequestor, RuffClientHooks { }
 
 interface RuffClientOptions {
   host?: string;
-  timeout: number;
+  timeout: number; prefix: string
+}
+
+type RuffClientEntitisConfigs<E extends string = any> = Record<E, RuffEntityConfiguration & { prefix: string }>
+
+interface RuffClientConfigs<E extends string = any> {
+  axios?: AxiosRequestConfig<any>;
+  entitis?: RuffClientEntitisConfigs<E>;
+}
+
+type RuffClientMocksConfigs<E extends string = any> = Record<E, RuffMockConfiguration>
+
+interface RuffMockClientConfigs<E extends string = any>
+  extends RuffClientConfigs<E> {
+  mock: RuffClientMocksConfigs<E>;
+}
+
+interface RuffRandomsClientConfigs<E extends string = any>
+  extends RuffClientConfigs<E> {
+  randoms: Record<string, RuffMockRandom>;
 }

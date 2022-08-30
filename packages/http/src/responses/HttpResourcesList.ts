@@ -6,16 +6,16 @@ export default class HttpResourcesList<T extends RuffHttpResource = any>
 
   constructor(raw: any) {
     super();
-    this._raw = raw;
+    this._raw = raw || {};
   }
 
   get rawData(): RuffDataRecords<T> {
-    return this._raw.content;
+    return this._raw.content || [];
   }
   get total(): number {
-    return this._raw.totalCount;
+    return this._raw.totalCount || 0;
   }
   get count(): number {
-    return this._raw.content.length;
+    return this._raw.content?.length || 0;
   }
 }

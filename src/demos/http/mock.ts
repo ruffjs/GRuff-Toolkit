@@ -1,26 +1,41 @@
-import Entity from "@ruff-web/http/src/apis/Entity";
+import Entity from "@ruff-web/http/src/resource/Entity";
 import userResource from "@ruff-web/entities/src/presets/user/user.mock";
 import clients from "./clients";
-import Random from "@ruff-web/data-random/src";
 
-console.log(clients, clients.mock.network);
-const tmpls = {
-  告警类型: "@alertType",
-  中文名: "@cname",
-  中文短文本: "@cword(2, 8)",
-  中文长文本: "@cword(8, 20)",
-  Base64图片: "@dataImage(64x64)",
-  日期时间: "@datetime",
-  设备名称: "@deviceName",
-  电子邮件: "@email",
-  FSU名称: "@fsuName",
-  自增ID: "@increment(1)",
-  手机号: "@integer(13000000000,19099999999)",
-  自然数: "@natural(2, 10)",
-  基站名称: "@stationName",
-  序列号: "@string('number',10)",
-  用户等级: "@userLevel",
-};
+const userEntity = Entity.idealizeEntity(clients.mock.user, userResource);
+
+console.log(await userEntity.list(3))
+
+// for (const user of await userEntity.list(3)) {
+//   console.log(user.name, user, user.rawData);
+//   console.log(await user.profile());
+// }
+
+
+
+
+
+
+
+
+
+// const tmpls = {
+//   告警类型: "@alertType",
+//   中文名: "@cname",
+//   中文短文本: "@cword(2, 8)",
+//   中文长文本: "@cword(8, 20)",
+//   Base64图片: "@dataImage(64x64)",
+//   日期时间: "@datetime",
+//   设备名称: "@deviceName",
+//   电子邮件: "@email",
+//   FSU名称: "@fsuName",
+//   自增ID: "@increment(1)",
+//   手机号: "@integer(13000000000,19099999999)",
+//   自然数: "@natural(2, 10)",
+//   基站名称: "@stationName",
+//   序列号: "@string('number',10)",
+//   用户等级: "@userLevel",
+// };
 
 // Random.extend({
 //   userLevel: function () {
@@ -75,17 +90,17 @@ const tmpls = {
 //   client: clients.mock,
 //   prefix: "api/v1",
 // });
-const userEntity = Entity.idealizeEntity(clients.mock.user, userResource);
 
-const res = await userEntity.post({
-  name: "string",
-  email: "string",
-  phone: "string",
-  password: "string",
-  remark: "string",
-  roleIds: [0],
-  projectIds: [0],
-  allProject: false,
-});
 
-console.log(res, res.data.data);
+// const res = await userEntity.post({
+//   name: "string",
+//   email: "string",
+//   phone: "string",
+//   password: "string",
+//   remark: "string",
+//   roleIds: [0],
+//   projectIds: [0],
+//   allProject: false,
+// });
+
+// console.log(res, res.data.data);

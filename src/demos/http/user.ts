@@ -1,4 +1,4 @@
-import Entity from "@ruff-web/http/src/apis/Entity";
+import Entity from "@ruff-web/http/src/resource/Entity";
 import userResource from "@ruff-web/entities/src/presets/user/user.http";
 import clients from "./clients";
 
@@ -43,4 +43,5 @@ userEntity.login({
   password: "string",
   clientType: "Web",
 });
+
 ref.doSth({ foo: "bar" });

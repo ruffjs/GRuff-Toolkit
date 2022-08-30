@@ -37,7 +37,7 @@ export default class MockResponse<T, D = any> implements AxiosResponse {
     statusText: string,
     config: AxiosRequestConfig<D>
   ) {
-    console.log(data);
+    // console.log(data);
     this.data = data;
     this.status = status;
     this.statusText = statusText;

@@ -1,4 +1,4 @@
-import { ResourceMethod as M } from "@ruff-web/http/src/apis/ResourceMethod";
+import { ResourceMethod as M } from "@ruff-web/http/src/resource/ResourceMethod";
 
 export default {
   methods: [M.POST, M.LIST, M.PUT, M.DELETE],

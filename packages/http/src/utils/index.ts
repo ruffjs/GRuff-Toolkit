@@ -8,10 +8,10 @@ type joinable = string | number;
 
 export const joinPath = (path: joinable[] | joinable) => {
   if (typeof path === "object" && path instanceof Array) {
-    return path.join("/") || "/";
+    return path.filter(dir => !!dir).join("/").replace(/\/+/, '/') || "/";
   }
   if (typeof path === "string") {
-    return path || "/";
+    return path.replace(/\/+/, '/') || "/";
   }
   if (typeof path === "number") {
     return String(path) || "/";
@@ -27,7 +27,7 @@ export const withQuery = (query?: RuffHttpQueryCondition) => {
   return "";
 };
 
-class _MultipleValues extends Array {}
+class _MultipleValues extends Array { }
 const formatQueryConditionUnit = (query: RuffHttpQueryCondition) => {
   if (query) {
     if (typeof query === "object") return query;

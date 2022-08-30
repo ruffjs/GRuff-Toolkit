@@ -1,6 +1,7 @@
-import { ResourceMethod as M } from "@ruff-web/http/src/apis/ResourceMethod";
+import { ResourceMethod as M } from "@ruff-web/http/src/resource/ResourceMethod";
 
 export default {
+  prefix: 'api/v1',
   methods: [M.POST, M.LIST, M.PUT, M.DELETE],
   children: {
     loginLog: {

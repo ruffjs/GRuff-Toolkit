@@ -1,9 +1,10 @@
 import { AxiosRequestConfig } from "axios";
-import Entity, { ExtendedEntity } from "../apis/Entity";
+import { ExtendedEntity } from "../resource/Entity";
 import MockRequestor from "../mock/MockRequestor";
 import registerEntities from "../utils/registerEntities";
 // import "./httphook";
 import WithHooks from "./WithHooks";
+import formatMockConfigs from "../utils/formatMockConfigs";
 
 interface IClientHelper {
   [x: string]: AnyFn;
@@ -29,35 +30,35 @@ export enum ExtendsType {
   object,
 }
 
-interface RuffClientConfigs<E extends string = any> {
-  axios?: AxiosRequestConfig<any>;
-  entitis?: Record<E, RuffEntityConfiguration>;
-}
-
-interface RuffMockClientConfigs<E extends string = any>
-  extends RuffClientConfigs<E> {
-  mock: {};
-}
-
 export default class Client<E extends string = any>
   extends WithHooks
-  implements RuffHttpClient
-{
+  implements RuffHttpClient {
   static createClient<E extends string = any>(
     options: (RuffClientOptions & RuffClientHooks) | string,
-    configs?: RuffClientConfigs
+    configs?: RuffClientConfigs<E>
   ): Client<E> & Record<E, ExtendedEntity>;
   static createClient<E extends string = any>(
     options: (RuffClientOptions & RuffClientHooks) | string,
-    configs: RuffMockClientConfigs
+    configs: RuffMockClientConfigs<E>
   ): MockRequestor<E> & Record<E, ExtendedEntity>;
   static createClient<E extends string = any>(
     options: (RuffClientOptions & RuffClientHooks) | string,
-    configs: RuffClientConfigs<E> | RuffMockClientConfigs<E> = {}
+    configs: RuffRandomsClientConfigs<E>
+  ): MockRequestor<E> & Record<E, ExtendedEntity>;
+  static createClient<E extends string = any>(
+    options: (RuffClientOptions & RuffClientHooks) | string,
+    configs: RuffClientConfigs<E> | RuffMockClientConfigs<E> | RuffRandomsClientConfigs<E> = {}
   ) {
-    const { axios, mock, entitis } = configs as RuffMockClientConfigs;
-    if (mock) {
-      const client = new MockRequestor<E>(options, axios, entitis, mock);
+    const { axios, mock, randoms, entitis } = configs as RuffMockClientConfigs<E> & RuffRandomsClientConfigs<E>;
+    if (randoms || mock) {
+      const _randoms: Record<string, RuffMockRandom> = {}
+      if (mock) {
+        Object.assign(_randoms, formatMockConfigs(mock, 'api/v1'))
+      }
+      if (randoms) {
+        Object.assign(_randoms, randoms)
+      }
+      const client = new MockRequestor<E>(options, axios, entitis || {} as RuffClientEntitisConfigs<E>, _randoms);
       return client;
     }
     // console.log(entitis);
@@ -68,12 +69,9 @@ export default class Client<E extends string = any>
   private constructor(
     options: (RuffClientOptions & RuffClientHooks) | string,
     config: AxiosRequestConfig<any> = {},
-    entitis: Record<E, RuffEntityConfiguration> = {} as Record<
-      E,
-      RuffEntityConfiguration
-    >
+    entitis?: RuffClientEntitisConfigs<E>
   ) {
     super(options, config);
-    registerEntities(entitis, this as any);
+    registerEntities(entitis || {} as RuffClientEntitisConfigs<E>, this as any);
   }
 }
