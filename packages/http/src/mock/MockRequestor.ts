@@ -1,20 +1,16 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import Entity from "../resource/Entity";
+import { AxiosRequestConfig } from "axios";
 import { ResourceMethod as M } from "../resource/ResourceMethod";
 import { joinPath, withQuery } from "../utils";
 import registerEntities from "../utils/registerEntities";
 import MockResponse from "./MockResponse";
 
 export default class MockRequestor<E extends string = any>
-  implements RuffResourceRequestor {
-  private _endpoint: string = "mock://";
-  private _axiosInstance: AxiosInstance;
-  private _timeout = 0;
+  implements RuffResourceRequestor
+{
   private _config: AxiosRequestConfig<any>;
+  private _randoms: Record<string, RuffMockRandom>;
 
-  private _randoms: Record<string, RuffMockRandom>
-
-  constructor(
+  protected constructor(
     options: (RuffClientOptions & RuffClientHooks) | string,
     config: AxiosRequestConfig<any> = {},
     entitis: RuffClientEntitisConfigs<E>,
@@ -22,101 +18,12 @@ export default class MockRequestor<E extends string = any>
   ) {
     if (options) {
     }
-    this._config = config || {};
-
-    this._axiosInstance = axios.create({
-      ...config,
-      baseURL: this._endpoint,
-      timeout: this._timeout,
-    });
 
     registerEntities(entitis, this as any);
 
-    this._randoms = randoms
+    this._config = config || {};
+    this._randoms = randoms;
     console.log(this._randoms);
-  }
-
-  get network() {
-    return {
-      timeout: this._timeout,
-      endpoint: this._endpoint,
-    };
-  }
-
-  get axiosInstance(): AxiosInstance {
-    if (!this._axiosInstance) {
-      this._axiosInstance = axios.create({
-        ...this._config,
-        baseURL: "/",
-        timeout: this._timeout,
-      });
-    }
-    throw this._axiosInstance;
-  }
-
-  request<T = any, D = any>(
-    config: AxiosRequestConfig<D>
-  ): Promise<MockResponse<RuffHttpResponse<T>>> {
-    throw new Error("Method not implemented.");
-  }
-
-  get<T = any, D = any>(
-    url: string,
-    config?: any
-  ): Promise<MockResponse<RuffHttpResponse<T>>> {
-    throw new Error("Method not implemented.");
-  }
-  post<T = any, D = any>(
-    url: string,
-    data?: D | undefined,
-    config?: any
-  ): Promise<MockResponse<RuffHttpResponse<T>>> {
-    throw new Error("Method not implemented.");
-  }
-  put<T = any, D = any>(
-    url: string,
-    data?: D | undefined,
-    config?: any
-  ): Promise<MockResponse<RuffHttpResponse<T>>> {
-    throw new Error("Method not implemented.");
-  }
-  patch<T = any, D = any>(
-    url: string,
-    data?: Partial<D> | undefined,
-    config?: any
-  ): Promise<MockResponse<RuffHttpResponse<T>>> {
-    throw new Error("Method not implemented.");
-  }
-  delete<T = any, D = any>(
-    url: string,
-    config?: any
-  ): Promise<MockResponse<RuffHttpResponse<T>>> {
-    throw new Error("Method not implemented.");
-  }
-
-
-
-  withQuery = withQuery;
-
-  $getPrefix(): string {
-    return "api/v1"
-  }
-
-  /** 创建资源 **/
-  $addResource<T extends RuffDataModel = any, D = any>(
-    pathname: string,
-    model: D,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
-  ) {
-    return MockResponse.resolve(
-      {
-        data: {},
-        message: "OK",
-        status: 200,
-      },
-      config
-    );
   }
 
   $createEntity<T extends RuffDataModel = any, D extends RuffDataModel = any>(
@@ -125,8 +32,8 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    const apiId = `${entityPath}`
-    console.log('apiId:', apiId)
+    const apiId = `${entityPath}`;
+    console.log("apiId:", apiId);
 
     return MockResponse.resolve(
       {
@@ -185,48 +92,11 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  $createBelonging<
-    T extends RuffDataModel = any,
-    D extends RuffDataModel = any
-  >(
+  $addBelonging<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
     id: Id,
     model: D,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
-  ) {
-    return MockResponse.resolve(
-      {
-        data: {},
-        message: "OK",
-        status: 200,
-      },
-      config
-    );
-  }
-
-  /** 获取资源 **/
-  $getResource<T extends RuffDataModel = any, D = any>(
-    pathname: string,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
-  ) {
-    return MockResponse.resolve(
-      {
-        data: {},
-        message: "OK",
-        status: 200,
-      },
-      config
-    );
-  }
-
-  $getData = this.$getResource;
-
-  $getIdentifiableData<T extends RuffDataModel = any, D = any>(
-    pathname: string,
-    id: Id,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
@@ -279,21 +149,6 @@ export default class MockRequestor<E extends string = any>
     belongingPath: RuffResourcePath,
     aid: IdOrKeys,
     bid: IdOrKeys,
-    config?: AxiosRequestConfig<D>
-  ) {
-    return MockResponse.resolve(
-      {
-        data: {},
-        message: "OK",
-        status: 200,
-      },
-      config
-    );
-  }
-
-  $getEnumerableData<T extends RuffDataModel = any, D = any>(
-    pathname: string,
-    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return MockResponse.resolve(
@@ -364,30 +219,15 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  $getPageableResources<T extends RuffDataModel = any, D = any>(
-    pathname: string,
-    query?: RuffPageableResourcesQueryModel,
-    config?: AxiosRequestConfig<D>
-  ) {
-    return MockResponse.resolve(
-      {
-        data: {},
-        message: "OK",
-        status: 200,
-      },
-      config
-    );
-  }
-
   $getEntitys<T extends RuffDataModel = any, D = any>(
     entityPath: RuffResourcePath,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    const apiId = `${joinPath(entityPath)}:${M.LIST}`
-    const random = this._randoms[apiId]
+    const apiId = `${joinPath(entityPath)}:${M.LIST}`;
+    const random = this._randoms[apiId];
     // console.log(random)
-    if (typeof random === 'function') {
+    if (typeof random === "function") {
       return MockResponse.resolve(
         {
           data: random(query, {}, config),
@@ -428,21 +268,6 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  $getPeriodData<T extends RuffPeriodDataItem = any, D = any>(
-    pathname: string,
-    query?: RuffPeriodDataQueryModel,
-    config?: AxiosRequestConfig<D>
-  ) {
-    return MockResponse.resolve(
-      {
-        data: {},
-        message: "OK",
-        status: 200,
-      },
-      config
-    );
-  }
-
   $getPeriodBelonging<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
@@ -452,23 +277,6 @@ export default class MockRequestor<E extends string = any>
     aidOrAkeys: IdOrKeys,
     query?: RuffPeriodDataQueryModel,
     config?: AxiosRequestConfig<D>
-  ) {
-    return MockResponse.resolve(
-      {
-        data: {},
-        message: "OK",
-        status: 200,
-      },
-      config
-    );
-  }
-
-  /** 写入资源 **/
-  $setResource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
-    pathname: string,
-    model: D,
-    config?: AxiosRequestConfig<D>,
-    patially = false
   ) {
     return MockResponse.resolve(
       {
@@ -532,53 +340,13 @@ export default class MockRequestor<E extends string = any>
       config
     );
   }
-  $setBelongingPatially<
-    T extends RuffDataModel = any,
-    D extends RuffDataModel = any
-  >(
-    entityPath: RuffResourcePath,
-    belongingPath: RuffResourcePath,
-    aidOrAkeys: IdOrKeys,
-    model: D,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
-  ) {
-    return MockResponse.resolve(
-      {
-        data: {},
-        message: "OK",
-        status: 200,
-      },
-      config
-    );
-  }
-
-  /** 删除资源 **/
-  $delResource<T extends RuffDataModel = any, D = any>(
-    pathname: string,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
-  ) {
-    return MockResponse.resolve(
-      {
-        data: {},
-        message: "OK",
-        status: 200,
-      },
-      config
-    );
-  }
 
   $removeEntityById<T extends RuffDataModel = any, D = any>(
     entityPath: RuffResourcePath,
     id: Id,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$delResource<T, D>(
-      joinPath([joinPath(entityPath), joinPath(id)]),
-      undefined,
-      config
-    );
+    return {} as any;
   }
 
   $removeEntityByKeys<T extends RuffDataModel = any, D = any>(
@@ -636,7 +404,6 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  /** RPC风格接口 **/
   $runCommand<T extends RuffDataModel = any, A extends AnyRecord = any>(
     entityPath: RuffResourcePath,
     command: string,
@@ -654,7 +421,6 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  // /api/v1/device/{devicaId}/acquisition/refresh
   $takeAction<T extends RuffDataModel = any, A extends AnyRecord = any>(
     entityPath: RuffResourcePath,
     command: string,

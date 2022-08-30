@@ -1,4 +1,4 @@
-import Client from "@ruff-web/http/src/Client/Client";
+import Client from "@ruff-web/http/src/Client";
 
 import userApis from "@ruff-web/entities/src/presets/user/user.http";
 import userMock from "@ruff-web/entities/src/presets/user/user.mock";

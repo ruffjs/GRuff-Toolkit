@@ -1,7 +1,7 @@
 import { ResourceMethod as M } from "@ruff-web/http/src/resource/ResourceMethod";
 
 export default {
-  prefix: 'api/v1',
+  prefix: "api/v1",
   methods: [M.POST, M.LIST, M.PUT, M.DELETE],
   [M.POST]: () => {
     console.log("11111");
@@ -9,15 +9,19 @@ export default {
   [M.LIST]: () => {
     // console.log("22222");
     return {
-      content: [{
-        foo: 'bar1'
-      }, {
-        foo: 'bar2'
-      }, {
-        foo: 'bar3'
-      }],
-      totalCount: 10
-    }
+      content: [
+        {
+          foo: "bar1",
+        },
+        {
+          foo: "bar2",
+        },
+        {
+          foo: "bar3",
+        },
+      ],
+      totalCount: 10,
+    };
   },
   [M.PUT]: () => {
     console.log("33333");
@@ -64,25 +68,25 @@ export default {
     profile: {
       methods: [M.READ, M.PUT],
       [M.READ]: () => {
-        console.log("eeeee");
+        console.log("99999");
       },
       [M.PUT]: () => {
-        console.log("eeeee");
+        console.log("aaaaa");
       },
     },
     password: {
       methods: [M.MOD],
       [M.MOD]: () => {
-        console.log("eeeee");
+        console.log("bbbbb");
       },
     },
     bindPhone: {
       methods: [M.WRITE, M.DROP],
       [M.WRITE]: () => {
-        console.log("eeeee");
+        console.log("ccccc");
       },
       [M.DROP]: () => {
-        console.log("eeeee");
+        console.log("ddddd");
       },
     },
   },

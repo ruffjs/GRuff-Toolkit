@@ -4,11 +4,10 @@ import Requestor from "./Requestor";
 
 export default class RESTfulRequestor
   extends Requestor
-  implements RuffResourceRequestor {
-
+  implements RuffResourceMethods, RuffResourceRequestor
+{
   withQuery = withQuery;
 
-  /** 创建资源 **/
   $addResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     model: D,
@@ -65,10 +64,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $createBelonging<
-    T extends RuffDataModel = any,
-    D extends RuffDataModel = any
-  >(
+  $addBelonging<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
     id: Id,
@@ -84,7 +80,6 @@ export default class RESTfulRequestor
     );
   }
 
-  /** 获取资源 **/
   $getResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     query?: RuffHttpQueryCondition,
@@ -137,13 +132,17 @@ export default class RESTfulRequestor
   >(
     entityPath: RuffResourcePath,
     belongingPath: RuffResourcePath,
-    aid: IdOrKeys,
-    bid: IdOrKeys,
+    aidOrAkeys: IdOrKeys,
+    bidOrAkeys: IdOrKeys,
     config?: AxiosRequestConfig<D>
   ) {
     return this.$getIdentifiableData<T, D>(
-      joinPath([joinPath(entityPath), joinPath(aid), joinPath(belongingPath)]),
-      joinPath(bid),
+      joinPath([
+        joinPath(entityPath),
+        joinPath(aidOrAkeys),
+        joinPath(belongingPath),
+      ]),
+      joinPath(bidOrAkeys),
       config
     );
   }
@@ -164,7 +163,7 @@ export default class RESTfulRequestor
     return this.$getEnumerableData<T, D>(joinPath(entityPath), query, config);
   }
 
-  $getEnumerableBelongings<
+  $getEnumerableBelonging<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -185,7 +184,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $getEnumerableBelonging = this.$getEnumerableBelongings;
+  $getEnumerableBelongings = this.$getEnumerableBelonging.bind(this);
 
   $getEnumerableAndIdentifiableBelonging<
     T extends RuffDataModel = any,
@@ -259,10 +258,7 @@ export default class RESTfulRequestor
     query?: RuffPeriodDataQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.get<RuffPeriodData<T>, D>(
-      pathname + withQuery(query),
-      config
-    );
+    return this.get<RuffPeriodData<T>, D>(pathname + withQuery(query), config);
   }
 
   $getPeriodBelonging<
@@ -286,7 +282,6 @@ export default class RESTfulRequestor
     );
   }
 
-  /** 写入资源 **/
   $setResource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     pathname: string,
     model: D,
@@ -347,30 +342,7 @@ export default class RESTfulRequestor
       config
     );
   }
-  $setBelongingPatially<
-    T extends RuffDataModel = any,
-    D extends RuffDataModel = any
-  >(
-    entityPath: RuffResourcePath,
-    belongingPath: RuffResourcePath,
-    aidOrAkeys: IdOrKeys,
-    model: D,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
-  ) {
-    return this.$setResource<T, D>(
-      joinPath([
-        joinPath(entityPath),
-        joinPath(aidOrAkeys),
-        joinPath(belongingPath),
-      ]) + withQuery(query),
-      model,
-      config,
-      true
-    );
-  }
 
-  /** 删除资源 **/
   $delResource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     query?: RuffHttpQueryCondition,
@@ -443,7 +415,6 @@ export default class RESTfulRequestor
     });
   }
 
-  /** RPC风格接口 **/
   $runCommand<T extends RuffDataModel = any, A extends AnyRecord = any>(
     entityPath: RuffResourcePath,
     command: string,
@@ -459,7 +430,6 @@ export default class RESTfulRequestor
     });
   }
 
-  // /api/v1/device/{devicaId}/acquisition/refresh
   $takeAction<T extends RuffDataModel = any, A extends AnyRecord = any>(
     entityPath: RuffResourcePath,
     command: string,

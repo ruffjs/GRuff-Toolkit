@@ -1,7 +1,7 @@
 export enum ResourceMethod {
   /** POSTLIKE **/
   /**
-   * 创建实体资源
+   * ### 创建实体资源
    *
    * http method: post
    *
@@ -10,7 +10,7 @@ export enum ResourceMethod {
   POST = 1,
 
   /**
-   * 创建包含附件的实体资源
+   * ### 创建包含附件的实体资源
    * POST的一个变种
    *
    * http method: post
@@ -20,21 +20,11 @@ export enum ResourceMethod {
   UPLOAD,
 
   /**
-   * 创建实体关系（关系亦看做一种特殊的实体）
-   * 批量接口
+   * ### 为实体添加附属资源
    *
    * http method: post
    *
-   * sample: /api/v1/tagRef
-   */
-  REFER,
-
-  /**
-   * 为实体添加附属资源
-   *
-   * http method: post
-   *
-   * params: eid
+   * params: id // 实体ID
    *
    * sample: /api/v1/device/{id}/property
    */
@@ -42,7 +32,7 @@ export enum ResourceMethod {
 
   /** GETLIKE - LIST **/
   /**
-   * 查询实体资源，并以通用列表的形式返回
+   * ### 查询多个实体资源，并以分页列表的形式返回
    *
    * http method: get
    *
@@ -51,17 +41,28 @@ export enum ResourceMethod {
   LIST,
 
   /**
-   * 查询实体资源，并以通用列表的形式返回
+   * ### 查询实体资源，并以分页列表的形式返回
    * LIST的一种语法糖
    *
    * http method: get
+   *
+   * params: id // 实体ID
    *
    * sample: /api/v1/device
    */
   PICK,
 
   /**
-   * 查询记录型附属资源，并以日志列表的形式返回
+   * ### 查询附属资源，并以分页列表的形式返回
+   *
+   * http method: get
+   *
+   * sample: /api/v1/device/{id}/attrs
+   */
+  TAKE,
+
+  /**
+   * ### 查询记录型附属资源，并以日志列表的形式返回
    *
    * http method: get
    *
@@ -72,8 +73,10 @@ export enum ResourceMethod {
   LOG,
 
   /**
-   * 查询可枚举资源，并以枚举列表的形式返回
+   * ### 查询可枚举资源，并以枚举列表的形式返回
+   *
    * 主要为指标列表、配置项列表等可枚举资源
+   *
    * 同时适用于实体资源和附属资源
    *
    * http method: get
@@ -83,9 +86,20 @@ export enum ResourceMethod {
    */
   ENUM,
 
+  /**
+   * ### 查询可枚举附属资源，并以枚举列表的形式返回
+   *
+   * 适用于可标识附属资源
+   *
+   * http method: get
+   *
+   * sample: /api/v1/device/{id}/attrs/{subid}
+   */
+  ENUM_BY_IDS,
+
   /** GETLIKE - ITEM **/
   /**
-   * 查询单个实体资源
+   * ### 查询单个实体资源
    *
    * http method: get
    *
@@ -96,7 +110,7 @@ export enum ResourceMethod {
   GET,
 
   /**
-   * 查询单个实体资源
+   * ### 查询单个实体资源
    *
    * http method: get
    *
@@ -107,15 +121,26 @@ export enum ResourceMethod {
   GET_BY_KEYS,
 
   /**
-   * 读取一般附属资源
+   * ### 读取一般附属资源
    *
    * http method: get
    *
-   * params: eid
+   * params: id
    *
    * sample: /api/v1/device/{id}/status
    */
   READ,
+
+  /**
+   * 读取可标识附属资源
+   *
+   * http method: get
+   *
+   * params: id, subid
+   *
+   * sample: /api/v1/device/{id}/attrs/{subid}
+   */
+  READ_BY_IDS,
 
   /** PUTLIKE **/
   /**
@@ -197,6 +222,16 @@ export enum ResourceMethod {
   DROP,
 
   /**
+   * ### 创建实体关系（关系亦看做一种特殊的实体）
+   * 批量接口
+   *
+   * http method: post
+   *
+   * sample: /api/v1/tagRef
+   */
+  REFER,
+
+  /**
    * 接触实体关系（关系亦看做一种特殊的实体）
    * 批量接口
    *
@@ -207,12 +242,36 @@ export enum ResourceMethod {
   UNREF, //          delete
 }
 
+console.log(ResourceMethod);
+
 export type CommandMethod =
   | ResourceMethod.POST
   | ResourceMethod.GET
   | ResourceMethod.PUT
   | ResourceMethod.DELETE
   | ResourceMethod.PATCH;
+
+export type SetterMethod =
+  | ResourceMethod.POST
+  | ResourceMethod.UPLOAD
+  | ResourceMethod.REFER
+  | ResourceMethod.WRITE
+  | ResourceMethod.PUT
+  | ResourceMethod.PUT_BY_KEYS
+  | ResourceMethod.MOD
+  | ResourceMethod.PATCH;
+
+export type GetterMethod =
+  | ResourceMethod.LIST
+  | ResourceMethod.PICK
+  | ResourceMethod.TAKE
+  | ResourceMethod.LOG
+  | ResourceMethod.ENUM
+  | ResourceMethod.ENUM_BY_IDS
+  | ResourceMethod.GET
+  | ResourceMethod.GET_BY_KEYS
+  | ResourceMethod.READ
+  | ResourceMethod.READ_BY_IDS;
 
 export type EntityResourceMethod =
   | CommandMethod
@@ -228,7 +287,9 @@ export type BelongingMethod =
   | ResourceMethod.WRITE
   | ResourceMethod.MOD
   | ResourceMethod.READ
+  | ResourceMethod.READ_BY_IDS
   | ResourceMethod.DROP
   | ResourceMethod.ENUM
-  | ResourceMethod.LIST
-  | ResourceMethod.LOG;
+  | ResourceMethod.ENUM_BY_IDS
+  | ResourceMethod.LOG
+  | ResourceMethod.TAKE;
