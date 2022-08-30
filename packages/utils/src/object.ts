@@ -1,4 +1,4 @@
-export function extend(this: any, ...args: any[]) {
+export function extend<T extends Object = any>(this: T | void, ...args: any[]) {
   var target = arguments[0] || {},
     i = 1,
     length = arguments.length,
@@ -55,8 +55,13 @@ export function each(obj: any, iterator: AnyFn, context: any) {
 }
 
 export function type(obj: any) {
-  return (obj === null || obj === undefined) ? String(obj) : ((Object.prototype.toString.call(obj).match(/\[object (\w+)\]/) as string[])[1])
-    .toLowerCase();
+  return obj === null || obj === undefined
+    ? String(obj)
+    : (
+        Object.prototype.toString
+          .call(obj)
+          .match(/\[object (\w+)\]/) as string[]
+      )[1].toLowerCase();
 }
 
 export function isString(obj: any) {
@@ -115,6 +120,6 @@ export function heredoc(fn: any) {
     .replace(/[\s\xA0]+$/, ""); // .trim()
 }
 
-export function noop() { }
+export function noop() {}
 
 export default {};
