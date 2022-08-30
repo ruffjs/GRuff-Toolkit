@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { Component, onMounted, useSlots, watch } from "vue";
+import { Component, watch } from "vue";
 
 import useConfigurations from "../../traits/useConfigurations";
 import logoSrc from "../../assets/images/logo.png";

@@ -41,11 +41,8 @@
     "packages/**/*.jsx",
     "packages/**/*.tsx",
     "packages/**/*.vue",
-    "demos/**/*.ts",
-    "demos/**/*.d.ts",
-    "demos/**/*.jsx",
-    "demos/**/*.tsx",
-    "demos/**/*.vue"
+    "src/**/*.ts",
+    "types/**/*.d.ts",
   ],
   "references": [
     {
