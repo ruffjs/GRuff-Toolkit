@@ -18,7 +18,6 @@ export default function combineRoutes({
       Home = {
         path: "",
         name: "-home-page",
-        alias: home,
         redirect: ("/" + home).replace("//", "/"),
       };
       break;
@@ -28,14 +27,12 @@ export default function combineRoutes({
       if (home?.render) {
         Home = {
           path: "",
-          alias: "/",
           name: "-home-page",
           component: home,
         };
       } else {
         Home = {
           path: "",
-          alias: "/",
           name: "-home-page",
           component: HomePage,
         };
@@ -46,7 +43,6 @@ export default function combineRoutes({
       // console.log(home);
       Home = {
         path: "",
-        alias: "/",
         name: "-home-page",
         component: home,
       };

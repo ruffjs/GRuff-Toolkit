@@ -68,7 +68,7 @@ export default [
     children: [
       {
         path: "calibration",
-        alias: "calibration",
+        // alias: "calibration", 重名的别名会被标准化函数移除
         component: PlaceholderPage,
         accessDesc: {
           roles: ["PM2"],

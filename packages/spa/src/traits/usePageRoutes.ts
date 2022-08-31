@@ -49,9 +49,45 @@ export default function usePageRoutes() {
     }
   };
 
+  const appendPage = (
+    path: string,
+    newPage: string | DefineComponent | Function
+  ) => {
+    const route = getRoutes().find(({ name }) => (name = `workspace/${path}`));
+    if (route) return false;
+
+    switch (typeof newPage) {
+      case "string":
+        router.addRoute("workspace", {
+          path,
+          name: `workspace/${path}`,
+          redirect: newPage,
+        });
+        return true;
+
+      case "object":
+        router.addRoute("workspace", {
+          path,
+          name: `workspace/${path}`,
+          component: defineComponent(newPage),
+        });
+        return true;
+
+      case "function":
+        router.addRoute("workspace", {
+          path,
+          name: `workspace/${path}`,
+          component: newPage as AnyFn<any, VNode>,
+        });
+        return true;
+    }
+    return false;
+  };
+
   return {
     getRoutes,
     findRoute,
     resetHomePage,
+    appendPage,
   };
 }

@@ -16,9 +16,9 @@ export default createRuntime({
   //   signInView: ViewSignIn,
   //   notFoundView: ViewNotFound,
   pages: withDefaults(pages, {
-    // home: "/monitor/history",
+    home: "/monitor/history",
     // home: PlaceholderPage,
-    home: defineComponent(PlaceholderPage as {}),
+    // home: defineComponent(PlaceholderPage as {}),
     // home: () => createVNode("div", {}, "Hello, world"), // FunctionalComponent
     // forbidden: PageForbidden,
     // default: PageNotFound,

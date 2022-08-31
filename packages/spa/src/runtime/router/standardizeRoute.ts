@@ -1,9 +1,4 @@
-export default function standardizeRoute(
-  this: any,
-  item: RuffSPAPageConfig,
-  index: number,
-  arr: RuffSPAPageConfig[]
-) {
+export default function standardizeRoute(this: any, item: RuffSPAPageConfig) {
   // console.log(this.name)
   if (typeof item.path !== "string") {
     throw new TypeError("type of path must be string");
@@ -36,6 +31,13 @@ export default function standardizeRoute(
   }
   if (item.path) {
     item.path = pathPrefix + item.path;
+    if (item.alias) {
+      if (item.alias instanceof Array && item.alias.length) {
+        item.alias = item.alias.filter((alias: string) => alias !== item.path);
+      } else {
+        delete item.alias;
+      }
+    }
   } else if (item.alias) {
     if (item.alias instanceof Array && item.alias.length) {
       item.alias = item.alias.map((alias: string) => pathPrefix + alias);
