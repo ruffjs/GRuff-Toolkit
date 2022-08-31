@@ -7,7 +7,6 @@ export default class DataMapping<
     K extends string = any,
     OK extends string = any
   >(options: MappingOptions<T[K], K, OK>, target?: MappingData<OK>) {
-    console.log(options);
     const keys = Object.keys(options) as K[];
     const formatted = {} as Record<K, MappingOption<T[K], K, OK>>;
     keys.forEach((key) => {
@@ -52,8 +51,6 @@ export default class DataMapping<
     options: Record<K, MappingOption<any, K, OK>>,
     target?: MappingData<OK>
   ) {
-    console.log(options);
-
     this._targetData = target || ({} as MappingData<OK>);
     this._computedData = {} as Record<K, any>;
 

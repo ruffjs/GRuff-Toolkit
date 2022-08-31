@@ -1,3 +1,4 @@
+import { defineMapping } from "@ruff-web/data-mapping";
 import { GetterMethod, ResourceMethod } from "../resource/ResourceMethod";
 
 export default class DataView<
@@ -15,7 +16,6 @@ export default class DataView<
   static GET_BY_KEYS = ResourceMethod.GET_BY_KEYS as GetterMethod;
   static READ = ResourceMethod.READ as GetterMethod;
   static READ_BY_IDS = ResourceMethod.READ_BY_IDS as GetterMethod;
-  // static Methods = getterMethods;
 
   private _entityPath: string;
   private _belongingPath: string;
@@ -55,11 +55,41 @@ export default class DataView<
   getData(idOrAkeys: IdOrKeys, query: RuffHttpQueryModel): T;
   getData(query: RuffHttpQueryModel): T[];
   getData(...args: unknown[]): T | T[] {
-    const { _randomRules } = this._client as any;
-    if (_randomRules[this.getApiId()]) {
-      // console.log(_randomRules[this.getApiId()]);
-      return _randomRules[this.getApiId()]();
+    switch (this._method) {
+      case ResourceMethod.LIST:
+      case ResourceMethod.PICK:
+      case ResourceMethod.TAKE:
+      case ResourceMethod.LOG:
+      case ResourceMethod.ENUM:
+      case ResourceMethod.ENUM_BY_IDS:
+        return this._getArray();
+
+      case ResourceMethod.GET:
+      case ResourceMethod.GET_BY_KEYS:
+      case ResourceMethod.READ:
+      case ResourceMethod.READ_BY_IDS:
+      default:
+        return this._getElement();
     }
-    return [];
+  }
+
+  private _getArray(): T[] {
+    const { _randomRules } = this._client as any;
+    let rawList = [];
+    if (_randomRules[this.getApiId()]) {
+      rawList = _randomRules[this.getApiId()]().content;
+    }
+    return rawList.map((element: any) =>
+      defineMapping<T>(this._rules, element)
+    );
+  }
+
+  private _getElement(): T {
+    const apiId = this.getApiId();
+    const { _randomRules } = this._client as any;
+    if (_randomRules[apiId]) {
+      return defineMapping(this._rules, _randomRules[apiId]());
+    }
+    return defineMapping<T>(this._rules, {});
   }
 }
