@@ -8,6 +8,24 @@ $varuff-layout-colors: map-merge($varuff-default-layout-colors, $varuff-custom-l
   font-size: 100px;
   box-sizing: border-box;
 
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba($color: #888888, $alpha: 0.4);
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track-piece,
+  ::-webkit-scrollbar-corner,
+  ::-webkit-scrollbar-button,
+  ::-webkit-resizer {
+    display: none;
+  }
+
   body {
     width: 100vw;
     height: 100vh;

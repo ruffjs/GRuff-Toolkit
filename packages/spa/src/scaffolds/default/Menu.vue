@@ -15,22 +15,15 @@
 import useScreenInfos from "../../traits/useScreenInfos";
 import useColorTheme from "../../traits/useColorTheme";
 import useMenuSettings from "../../traits/useMenuSettings";
-import { onMounted, reactive, watch } from "vue";
+import { reactive, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import MenuItem from "./MenuItem.vue";
-import usePageRoutes from "../../traits/usePageRoutes";
 
 const route = useRoute();
 const router = useRouter();
 const { isDesktopDevice } = useScreenInfos();
 const { computedTheme } = useColorTheme();
 const { isMenuCollapsed, setMenuStatus, menuItems, memuKeyTargetMap } = useMenuSettings();
-
-const { getRoutes, resetHomePage } = usePageRoutes();
-
-onMounted(() => {
-  console.log(getRoutes());
-});
 
 const state = reactive<any>({
   selectedKeys: [],

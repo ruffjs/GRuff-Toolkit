@@ -2,27 +2,26 @@ import { AxiosRequestConfig } from "axios";
 import { ExtendedEntity } from "../resource/Entity";
 import MockClient from "../mock/MockClient";
 import registerEntities from "../utils/registerEntities";
-// import "./httphook";
 import WithHooks from "./WithHooks";
 import formatMockConfigs from "../utils/formatMockConfigs";
 
-interface IClientHelper {
-  [x: string]: AnyFn;
-}
+// interface IClientHelper {
+//   [x: string]: AnyFn;
+// }
 
-interface ExtendsEntityOption {
-  name: string;
-}
+// interface ExtendsEntityOption {
+//   name: string;
+// }
 
-interface ExtendsMethodOption {
-  name: string;
-  f: AnyFn;
-}
+// interface ExtendsMethodOption {
+//   name: string;
+//   f: AnyFn;
+// }
 
-interface ExtendsObjectOption {
-  name: string;
-  target: Object;
-}
+// interface ExtendsObjectOption {
+//   name: string;
+//   target: Object;
+// }
 
 export enum ExtendsType {
   Entity,

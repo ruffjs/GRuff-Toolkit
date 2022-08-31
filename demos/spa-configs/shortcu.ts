@@ -11,29 +11,37 @@ export default [
   },
   {
     type: "dropdown",
-    name: "Test",
+    name: "自定义下拉",
     icon: "bell-outlined",
     selected: "",
     items: [
       {
         key: "a",
-        onclick: () => {},
-        name: "Item A",
+        onclick: () => {
+          alert("点击了按钮 1");
+        },
+        name: "按钮 1",
       },
       {
         key: "b",
-        onclick: () => {},
-        name: "Item B",
+        onclick: () => {
+          alert("点击了按钮 2");
+        },
+        name: "按钮 2",
       },
       {
         key: "c",
-        onclick: () => {},
-        name: "Item C",
+        onclick: () => {
+          alert("点击了按钮 3");
+        },
+        name: "按钮 3",
       },
       {
         key: "d",
-        onclick: () => {},
-        name: "Item D",
+        onclick: () => {
+          alert("点击了按钮 4");
+        },
+        name: "按钮 4",
       },
     ],
   },
