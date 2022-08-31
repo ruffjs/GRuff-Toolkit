@@ -1,5 +1,10 @@
+import { RandomInstance } from "./../../../data-random/index";
+import { createRandom } from "@ruff-web/data-random";
+
 import { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from "axios";
 import HTTP_STATUS_CODES, { StatusCode } from "./status-codes";
+import { delay } from "@ruff-web/utils/src/async";
+import { interceptors } from "../utils/hooks-mixins";
 
 class MockRequestInfo<D> {
   method: string;
@@ -12,6 +17,7 @@ class MockRequestInfo<D> {
     this.payload = payload;
   }
 }
+
 class MockResponse<T, D = any> implements AxiosResponse {
   data: T;
   status: number;
@@ -38,14 +44,34 @@ class MockResponse<T, D = any> implements AxiosResponse {
 }
 
 export default class MockResponsor {
+  private _durationRange = [200, 2000];
+
+  private _random: RandomInstance;
+  private _delay: number;
+  private _client: RuffClientWithHooks;
+
+  constructor(client: RuffClientWithHooks) {
+    this._client = client;
+
+    this._random = createRandom();
+    this._delay = this._random.natural(
+      this._durationRange[0],
+      this._durationRange[1]
+    );
+    console.log("模拟请求等待时间", this._delay);
+  }
+
   async resolve<T, D = any>(
     data: T,
     config: AxiosRequestConfig<D> = {},
     status: StatusCode = 200
   ) {
+    await delay(this._delay);
     const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
+    const res = new MockResponse(data, status, statusText, config);
+    console.log(res);
     return await Promise.resolve(
-      new MockResponse(data, status, statusText, config)
+      interceptors.__responseFulfilledInterceptor.call(this._client, res)
     );
   }
 }

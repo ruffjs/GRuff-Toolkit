@@ -53,21 +53,21 @@ export default class Client<E extends string = any>
       | RuffMockClientConfigs<E>
       | RuffRandomsClientConfigs<E> = {}
   ) {
-    const { axios, mock, randoms, entitis } =
+    const { axios, withMock, rules, entitis } =
       configs as RuffMockClientConfigs<E> & RuffRandomsClientConfigs<E>;
-    if (randoms || mock) {
-      const _randoms: Record<string, RuffMockRandom> = {};
-      if (mock) {
-        Object.assign(_randoms, formatMockConfigs(mock, "api/v1"));
+    if (withMock || rules) {
+      const randomRules: Record<string, RuffMockRandom> = {};
+      if (withMock) {
+        Object.assign(randomRules, formatMockConfigs(entitis, "api/v1"));
       }
-      if (randoms) {
-        Object.assign(_randoms, randoms);
+      if (rules) {
+        Object.assign(randomRules, rules);
       }
       const client = new MockClient<E>(
         options,
         axios,
         entitis || ({} as RuffClientEntitisConfigs<E>),
-        _randoms
+        randomRules
       );
       return client;
     }

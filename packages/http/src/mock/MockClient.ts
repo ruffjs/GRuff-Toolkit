@@ -3,9 +3,10 @@ import { withQuery } from "../utils";
 import { defaultHooks, hooksProps } from "../utils/hooks-mixins";
 import MockRequestor from "./MockRequestor";
 
-export default class MockClient<
-  E extends string = any
-  > extends MockRequestor<E> implements RuffClientHooks {
+export default class MockClient<E extends string = any>
+  extends MockRequestor<E>
+  implements RuffClientHooks
+{
   private _endpoint: string = "mock://";
   private _timeout = 0;
 
@@ -15,20 +16,24 @@ export default class MockClient<
     options: (RuffClientOptions & RuffClientHooks) | string,
     config: AxiosRequestConfig<any> = {},
     entitis: RuffClientEntitisConfigs<E>,
-    randoms: Record<string, RuffMockRandom> = {}
+    randomRules: Record<string, RuffMockRandom> = {}
   ) {
-    super(options, config, entitis, randoms);
-    Object.assign(this.__hooks, defaultHooks)
+    super(options, config, entitis, randomRules);
+    Object.assign(this.__hooks, defaultHooks);
+
     Object.defineProperties(this, {
-      ...hooksProps(this as unknown as RuffClientWithHooks)
-    })
+      ...hooksProps(this as unknown as RuffClientWithHooks),
+    });
 
     if (options && typeof options === "object") {
-      (Object.keys(defaultHooks) as (keyof RuffClientHooks)[]).forEach((hook) => {
-        this[hook] = options[hook] as any
-      })
+      (Object.keys(defaultHooks) as (keyof RuffClientHooks)[]).forEach(
+        (hook) => {
+          this[hook] = options[hook] as any;
+        }
+      );
     }
   }
+
   onTokenRequired(req: RuffRequestConfig): string | null {
     throw new Error("Method not implemented.");
   }
@@ -65,11 +70,13 @@ export default class MockClient<
   withQuery = withQuery;
 
   request(): Promise<Error> {
-    throw new Error("You cannot invock this method of a Mock Client, please use an Http Client instead.");
+    throw new Error(
+      "You cannot invock this method of a Mock Client, please use an Http Client instead."
+    );
   }
-  get = this.request.bind(this)
-  post = this.request.bind(this)
-  put = this.request.bind(this)
-  patch = this.request.bind(this)
-  delete = this.request.bind(this)
+  get = this.request.bind(this);
+  post = this.request.bind(this);
+  put = this.request.bind(this);
+  patch = this.request.bind(this);
+  delete = this.request.bind(this);
 }

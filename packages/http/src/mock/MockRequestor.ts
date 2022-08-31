@@ -1,20 +1,23 @@
+import { createRandom } from "@ruff-web/data-random";
 import { AxiosRequestConfig } from "axios";
 import { ResourceMethod as M } from "../resource/ResourceMethod";
 import { joinPath, withQuery } from "../utils";
+import { interceptors } from "../utils/hooks-mixins";
 import registerEntities from "../utils/registerEntities";
 import MockResponsor from "./MockResponsor";
 
 export default class MockRequestor<E extends string = any>
-  implements RuffResourceRequestor {
+  implements RuffResourceRequestor
+{
   private _mockResponsor: MockResponsor;
   private _config: AxiosRequestConfig<any>;
-  private _randoms: Record<string, RuffMockRandom>;
+  private _randomRules: Record<string, RuffMockRandom>;
 
   protected constructor(
     options: (RuffClientOptions & RuffClientHooks) | string,
     config: AxiosRequestConfig<any> = {},
     entitis: RuffClientEntitisConfigs<E>,
-    randoms: Record<string, RuffMockRandom> = {}
+    randomRules: Record<string, RuffMockRandom> = {}
   ) {
     if (options) {
     }
@@ -22,9 +25,11 @@ export default class MockRequestor<E extends string = any>
     registerEntities(entitis, this as any);
 
     this._config = config || {};
-    this._randoms = randoms;
-    this._mockResponsor = new MockResponsor
-    console.log(this._randoms);
+    this._randomRules = randomRules;
+    this._mockResponsor = new MockResponsor(
+      this as unknown as RuffClientWithHooks
+    );
+    console.log(this._randomRules);
   }
 
   $createEntity<T extends RuffDataModel = any, D extends RuffDataModel = any>(
@@ -226,7 +231,7 @@ export default class MockRequestor<E extends string = any>
     config?: AxiosRequestConfig<D>
   ) {
     const apiId = `${joinPath(entityPath)}:${M.LIST}`;
-    const random = this._randoms[apiId];
+    const random = this._randomRules[apiId];
     // console.log(random)
     if (typeof random === "function") {
       return this._mockResponsor.resolve(

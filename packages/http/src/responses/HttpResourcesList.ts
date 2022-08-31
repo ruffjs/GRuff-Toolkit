@@ -1,12 +1,12 @@
 export default class HttpResourcesList<T extends RuffHttpResource = any>
-  extends Array
+  extends Array<T>
   implements RuffHttpResourcesList<T>
 {
   private _raw: any;
 
   constructor(raw: any) {
     super();
-    this._raw = raw || {};
+    this._raw = raw || { content: [] };
   }
 
   get rawData(): RuffDataRecords<T> {

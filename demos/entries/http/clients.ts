@@ -6,7 +6,7 @@ import { formatMockConfig } from "@ruff-web/http/src/utils/formatMockConfigs";
 
 const userMockConfig = formatMockConfig("user", userMock);
 
-export default {
+const clients = {
   main: Client.createClient("/test-dev-svc"),
   user: Client.createClient("/test-user-svc", {
     entitis: {
@@ -20,11 +20,16 @@ export default {
     entitis: {
       user: userMock,
     },
-    // mock: {
-    //   user: userMock
-    // }
-    randoms: {
+    // withMock: true,
+    rules: {
       ...userMockConfig,
     },
   }),
 };
+
+clients.mock.onResponseFulfilled = (res: any) => {
+  console.log(res.status, res);
+  return res.data;
+};
+
+export default clients;

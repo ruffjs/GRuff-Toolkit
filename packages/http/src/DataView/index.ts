@@ -55,10 +55,10 @@ export default class DataView<
   getData(idOrAkeys: IdOrKeys, query: RuffHttpQueryModel): T;
   getData(query: RuffHttpQueryModel): T[];
   getData(...args: unknown[]): T | T[] {
-    const { _randoms } = this._client as any;
-    if (_randoms[this.getApiId()]) {
-      // console.log(_randoms[this.getApiId()]);
-      return _randoms[this.getApiId()]();
+    const { _randomRules } = this._client as any;
+    if (_randomRules[this.getApiId()]) {
+      // console.log(_randomRules[this.getApiId()]);
+      return _randomRules[this.getApiId()]();
     }
     return [];
   }

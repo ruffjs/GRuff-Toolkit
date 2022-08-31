@@ -102,8 +102,8 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 }
 
-type RuffRequestConfig<T = any> = AxiosRequestConfig<T> | {}
-type RuffResponse<T = any, D = any> = AxiosResponse<T, D> | {}
+type RuffRequestConfig<T = any> = AxiosRequestConfig<T> | {};
+type RuffResponse<T = any, D = any> = AxiosResponse<T, D> | {};
 interface RuffClientHooks {
   // 请求需要授权时
   onTokenRequired(req: RuffRequestConfig): string | null;
@@ -122,10 +122,10 @@ interface RuffClientHooks {
   onServiceError(error: AnyError): boolean;
 }
 interface RuffClientWithHooks {
-  private __hooks: RuffClientHooks,
+  __hooks: RuffClientHooks;
 }
 
-interface RuffHttpClient extends RuffResourceRequestor, RuffClientHooks { }
+interface RuffHttpClient extends RuffResourceRequestor, RuffClientHooks {}
 
 interface RuffClientOptions {
   host?: string;
@@ -145,15 +145,18 @@ interface RuffClientConfigs<E extends string = any> {
 
 type RuffClientMocksConfigs<E extends string = any> = Record<
   E,
-  RuffMockConfiguration
+  RuffMockConfiguration & RuffEntityConfiguration & { prefix: string }
 >;
 
 interface RuffMockClientConfigs<E extends string = any>
   extends RuffClientConfigs<E> {
-  mock: RuffClientMocksConfigs<E>;
+  entitis: RuffClientMocksConfigs<E>;
+  withMock: boolean;
 }
 
 interface RuffRandomsClientConfigs<E extends string = any>
   extends RuffClientConfigs<E> {
-  randoms: Record<string, RuffMockRandom>;
+  entitis: RuffClientEntitisConfigs<E> | RuffClientMocksConfigs<E>;
+  withMock?: boolean;
+  rules: Record<string, RuffMockRandom>;
 }

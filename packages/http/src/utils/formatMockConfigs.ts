@@ -4,13 +4,13 @@ const formatMockRPCConfigs = (
   commands: Record<string, RuffMockRPCConfiguration>,
   prefix: string
 ) => {
-  const randoms = {} as Record<string, RuffMockRandom>;
+  const randomRules = {} as Record<string, RuffMockRandom>;
   Object.keys(commands).forEach((commandName) => {
     const { dirname, random } = commands[commandName];
     const path = prefix + (dirname ? joinPath(dirname) : commandName) + ":0";
-    randoms[path] = random;
+    randomRules[path] = random;
   });
-  return randoms;
+  return randomRules;
 };
 
 export const formatMockConfig = (
@@ -18,7 +18,7 @@ export const formatMockConfig = (
   config: RuffMockConfiguration & { prefix: string }
 ) => {
   const { prefix, dirname, children, commands, attrs, acts, ...rest } = config;
-  const randoms = {} as Record<string, RuffMockRandom>;
+  const randomRules = {} as Record<string, RuffMockRandom>;
   const path = joinPath([
     prefix || "api/v1",
     dirname ? joinPath(dirname) : name,
@@ -26,7 +26,7 @@ export const formatMockConfig = (
   Object.keys(rest).forEach((m) => {
     const port = parseInt(m);
     if (isNaN(port) === false) {
-      randoms[path + ":" + port] = rest[port];
+      randomRules[path + ":" + port] = rest[port];
     }
   });
 
@@ -36,7 +36,7 @@ export const formatMockConfig = (
         ...children[childName],
         prefix: path,
       });
-      Object.assign(randoms, r);
+      Object.assign(randomRules, r);
     });
   }
 
@@ -46,31 +46,31 @@ export const formatMockConfig = (
         ...attrs[attrName],
         prefix: path + "/@",
       });
-      Object.assign(randoms, r);
+      Object.assign(randomRules, r);
     });
   }
   if (commands) {
-    Object.assign(randoms, formatMockRPCConfigs(commands, path + "/"));
+    Object.assign(randomRules, formatMockRPCConfigs(commands, path + "/"));
   }
   if (acts) {
-    Object.assign(randoms, formatMockRPCConfigs(acts, path + "/@/"));
+    Object.assign(randomRules, formatMockRPCConfigs(acts, path + "/@/"));
   }
-  return randoms;
+  return randomRules;
 };
 
 export default function formatMockConfigs(
   configs: RuffClientMocksConfigs,
   prefix: string
 ) {
-  const randoms = {} as Record<string, RuffMockRandom>;
+  const randomRules = {} as Record<string, RuffMockRandom>;
   Object.keys(configs).forEach((name) => {
     Object.assign(
-      randoms,
+      randomRules,
       formatMockConfig(name, {
         prefix,
         ...configs[name],
       })
     );
   });
-  return randoms;
+  return randomRules;
 }
