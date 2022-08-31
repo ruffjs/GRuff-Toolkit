@@ -12,18 +12,7 @@ class MockRequestInfo<D> {
     this.payload = payload;
   }
 }
-export default class MockResponse<T, D = any> implements AxiosResponse {
-  static async resolve<T, D = any>(
-    data: T,
-    config: AxiosRequestConfig<D> = {},
-    status: StatusCode = 200
-  ) {
-    const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
-    return await Promise.resolve(
-      new MockResponse(data, status, statusText, config)
-    );
-  }
-
+class MockResponse<T, D = any> implements AxiosResponse {
   data: T;
   status: number;
   statusText: string;
@@ -31,7 +20,7 @@ export default class MockResponse<T, D = any> implements AxiosResponse {
   config: AxiosRequestConfig<D>;
   request: MockRequestInfo<D>;
 
-  private constructor(
+  constructor(
     data: T,
     status: number,
     statusText: string,
@@ -45,5 +34,18 @@ export default class MockResponse<T, D = any> implements AxiosResponse {
     this.config = config;
     const { method, url, data: payload } = config;
     this.request = new MockRequestInfo(method || "get", url || "/", payload);
+  }
+}
+
+export default class MockResponsor {
+  async resolve<T, D = any>(
+    data: T,
+    config: AxiosRequestConfig<D> = {},
+    status: StatusCode = 200
+  ) {
+    const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
+    return await Promise.resolve(
+      new MockResponse(data, status, statusText, config)
+    );
   }
 }

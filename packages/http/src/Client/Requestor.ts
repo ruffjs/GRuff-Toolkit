@@ -3,6 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 const DefaultServer: RuffClientOptions = {
   host: "/",
   timeout: 1000 * 30,
+  prefix: ""
 };
 
 export default abstract class Requestor {

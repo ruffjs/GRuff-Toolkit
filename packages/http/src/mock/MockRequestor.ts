@@ -2,11 +2,11 @@ import { AxiosRequestConfig } from "axios";
 import { ResourceMethod as M } from "../resource/ResourceMethod";
 import { joinPath, withQuery } from "../utils";
 import registerEntities from "../utils/registerEntities";
-import MockResponse from "./MockResponse";
+import MockResponsor from "./MockResponsor";
 
 export default class MockRequestor<E extends string = any>
-  implements RuffResourceRequestor
-{
+  implements RuffResourceRequestor {
+  private _mockResponsor: MockResponsor;
   private _config: AxiosRequestConfig<any>;
   private _randoms: Record<string, RuffMockRandom>;
 
@@ -23,6 +23,7 @@ export default class MockRequestor<E extends string = any>
 
     this._config = config || {};
     this._randoms = randoms;
+    this._mockResponsor = new MockResponsor
     console.log(this._randoms);
   }
 
@@ -35,7 +36,7 @@ export default class MockRequestor<E extends string = any>
     const apiId = `${entityPath}`;
     console.log("apiId:", apiId);
 
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: model,
         message: "OK",
@@ -63,7 +64,7 @@ export default class MockRequestor<E extends string = any>
     for (let [key, value] of Object.entries(model || {})) {
       body.append(key, value);
     }
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -82,7 +83,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -100,7 +101,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -115,7 +116,7 @@ export default class MockRequestor<E extends string = any>
     id: Id,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -131,7 +132,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -151,7 +152,7 @@ export default class MockRequestor<E extends string = any>
     bid: IdOrKeys,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -166,7 +167,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -186,7 +187,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -209,7 +210,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -228,7 +229,7 @@ export default class MockRequestor<E extends string = any>
     const random = this._randoms[apiId];
     // console.log(random)
     if (typeof random === "function") {
-      return MockResponse.resolve(
+      return this._mockResponsor.resolve(
         {
           data: random(query, {}, config),
           message: "OK",
@@ -238,7 +239,7 @@ export default class MockRequestor<E extends string = any>
       );
     }
 
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -258,7 +259,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -278,7 +279,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffPeriodDataQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -294,7 +295,7 @@ export default class MockRequestor<E extends string = any>
     model: D,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -313,7 +314,7 @@ export default class MockRequestor<E extends string = any>
     model: D,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -331,7 +332,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -355,7 +356,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -375,7 +376,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -394,7 +395,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -411,7 +412,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<A>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",
@@ -429,7 +430,7 @@ export default class MockRequestor<E extends string = any>
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<A>
   ) {
-    return MockResponse.resolve(
+    return this._mockResponsor.resolve(
       {
         data: {},
         message: "OK",

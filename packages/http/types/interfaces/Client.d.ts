@@ -102,26 +102,30 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 }
 
+type RuffRequestConfig<T = any> = AxiosRequestConfig<T> | {}
+type RuffResponse<T = any, D = any> = AxiosResponse<T, D> | {}
 interface RuffClientHooks {
   // 请求需要授权时
-  onTokenRequired(req: AxiosRequestConfig<any>): void;
+  onTokenRequired(req: RuffRequestConfig): string | null;
   // 请求即将开启时
-  onBeforeRequest(req: AxiosRequestConfig<any>): void;
-  // 请求过程中发生错误
-  onRequestError(error: AnyError): void;
+  onBeforeRequest(req: RuffRequestConfig): void;
   // 请求成功
-  onResponseFulfilled(res: AxiosResponse<any, any>): void;
-  // 请求成功，但响应不符合预期
-  onResponseUnexpected(res: AxiosResponse<any, any>): void;
+  onResponseFulfilled(res: RuffResponse): any;
+
+  // 请求过程中发生错误
+  onRequestError(error: AnyError): boolean;
   // 请求失败
-  onResponseRejected(error: AnyError): void;
+  onResponseRejected(error: AnyError): boolean;
   // 因为未授权而请求失败
-  onResponseUnauthorized(error: AnyError, signed: boolean): void;
+  onResponseUnauthorized(error: AnyError, signed: boolean): boolean;
   // 因服务更新重启而请求失败
-  onServiceError(error: AnyError): void;
+  onServiceError(error: AnyError): boolean;
+}
+interface RuffClientWithHooks {
+  private __hooks: RuffClientHooks,
 }
 
-interface RuffHttpClient extends RuffResourceRequestor, RuffClientHooks {}
+interface RuffHttpClient extends RuffResourceRequestor, RuffClientHooks { }
 
 interface RuffClientOptions {
   host?: string;
