@@ -58,7 +58,6 @@ export default class MockResponsor {
       this._durationRange[0],
       this._durationRange[1]
     );
-    console.log("模拟请求等待时间", this._delay);
   }
 
   async resolve<T, D = any>(
@@ -69,7 +68,7 @@ export default class MockResponsor {
     await delay(this._delay);
     const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
     const res = new MockResponse(data, status, statusText, config);
-    console.log(res);
+    console.log("模拟请求:", `duration: ${this._delay}ms`, "RawData:", res);
     return await Promise.resolve(
       interceptors.__responseFulfilledInterceptor.call(this._client, res)
     );
