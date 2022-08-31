@@ -5,6 +5,8 @@ import { globalState, extendedGetters } from "./states";
 import pages from "./pages";
 
 import "../styles/index.scss";
+import { PlaceholderPage } from "@ruff-web/spa";
+import { createVNode, defineComponent } from "vue";
 
 export default createRuntime({
   anonymousAccess: false,
@@ -14,7 +16,10 @@ export default createRuntime({
   //   signInView: ViewSignIn,
   //   notFoundView: ViewNotFound,
   pages: withDefaults(pages, {
-    home: "/monitor/history",
+    // home: "/monitor/history",
+    // home: PlaceholderPage,
+    home: defineComponent(PlaceholderPage as {}),
+    // home: () => createVNode("div", {}, "Hello, world"), // FunctionalComponent
     // forbidden: PageForbidden,
     // default: PageNotFound,
   }),

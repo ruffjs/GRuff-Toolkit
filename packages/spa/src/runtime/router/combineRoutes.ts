@@ -1,66 +1,76 @@
-import PageRouter from "./components/PageRouter.vue"
-import Workspace from "./components/Workspace.vue"
-import HomePage from "../../views/HomePage.vue"
-import NotFoundPage from "../../views/NotFoundSigned.vue"
-import ForbiddenPage from "../../views/Forbidden.vue"
+import PageRouter from "./components/PageRouter.vue";
+import Workspace from "./components/Workspace.vue";
+import HomePage from "../../views/HomePage.vue";
+import NotFoundPage from "../../views/NotFoundSigned.vue";
+import ForbiddenPage from "../../views/Forbidden.vue";
 
-import { Component } from "vue"
+import { Component } from "vue";
 
 export default function combineRoutes({
   anonymousAccess,
   commonViews: { sign, notFound },
   pages,
 }: Record<string, any> = {}) {
-  const { home, forbidden: forbiddenPage, default: notFoundPage } = pages || {}
-  let Home: Component
+  const { home, forbidden: forbiddenPage, default: notFoundPage } = pages || {};
+  let Home: Component;
   switch (typeof home) {
     case "string":
       Home = {
         path: "",
-        name: "home",
+        name: "-home-page",
         alias: home,
         redirect: ("/" + home).replace("//", "/"),
-      }
-      break
+      };
+      break;
 
     case "object":
       // console.log(home);
-      if (home?.__name) {
+      if (home?.render) {
         Home = {
           path: "",
-          alias: "home",
-          name: "home",
+          alias: "/",
+          name: "-home-page",
           component: home,
-        }
+        };
       } else {
         Home = {
           path: "",
-          alias: "home",
-          name: "home",
+          alias: "/",
+          name: "-home-page",
           component: HomePage,
-        }
+        };
       }
-      break
+      break;
+
+    case "function":
+      // console.log(home);
+      Home = {
+        path: "",
+        alias: "/",
+        name: "-home-page",
+        component: home,
+      };
+      break;
 
     default:
       Home = {
         path: "",
-        alias: "home",
-        name: "home",
+        // alias: "home",
+        name: "-home-page",
         component: HomePage,
-      }
+      };
   }
 
   const unsignedRoutes: any[] = [
     { name: "interface-not-found", path: "404", component: notFound },
-  ]
-  const signedRoutes: any[] = []
+  ];
+  const signedRoutes: any[] = [];
   if (!anonymousAccess) {
     unsignedRoutes.push({
       name: "interface-sign-in",
       path: "sign-in",
       component: sign,
-    })
+    });
     signedRoutes.push({
       path: "unexpected",
       component: PageRouter,
@@ -76,7 +86,7 @@ export default function combineRoutes({
           component: notFoundPage || NotFoundPage,
         },
       ],
-    })
+    });
   }
 
   return [
@@ -87,5 +97,5 @@ export default function combineRoutes({
       component: Workspace,
       children: [...signedRoutes, ...pages, Home],
     },
-  ]
+  ];
 }

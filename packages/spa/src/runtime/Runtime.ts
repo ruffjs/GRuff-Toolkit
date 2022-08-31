@@ -2,6 +2,8 @@ import { Router } from "vue-router";
 import {
   App as VueApp,
   ComponentInternalInstance,
+  createVNode,
+  defineComponent,
   getCurrentInstance,
 } from "vue";
 import Antd from "ant-design-vue";
@@ -137,6 +139,10 @@ export default class Runtime implements RIRuntime {
           : store.commit("app/assignState", states)
     );
     Runtime.currentInstance = this;
+
+    // console.log(this._router.hasRoute("workspace/home"));
+    // const routes = this._router.getRoutes();
+    // console.log(routes);
   }
 
   private _onPermissionCheck(
