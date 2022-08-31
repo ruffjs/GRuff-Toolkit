@@ -1,16 +1,16 @@
 import { joinPath } from "../utils";
-import { ResourceMethod } from "./ResourceMethod";
+import { ResourceMethod } from "../utils/resource-methods";
 
 type CreateRPCApiOptions = {
-  client: RuffResourceRequestor;
+  client: RuffClientBasicMethods;
   prefix: string;
   command: RuffHttpRPCConfiguration;
 };
 
-export default class Callables {
+export default class CallableAPI {
   static createApi(name: string, options: CreateRPCApiOptions) {
     const method = ResourceMethod[options.command.method] || "POST";
-    const callables = new Callables(name, options) as unknown as Record<
+    const callables = new CallableAPI(name, options) as unknown as Record<
       typeof ResourceMethod[number],
       (args?: AnyRecord) => Promise<any>
     >;
@@ -20,7 +20,7 @@ export default class Callables {
     );
   }
 
-  private _client: RuffResourceRequestor;
+  private _client: RuffClientBasicMethods;
   private _url: string;
   private _options: CreateRPCApiOptions;
 
@@ -28,18 +28,18 @@ export default class Callables {
     const {
       client,
       prefix,
-      command: { dirname },
+      command: { path },
     } = options;
     this._client = client;
-    this._url = joinPath([prefix, dirname || name]);
+    this._url = joinPath([prefix, path || name]);
     this._options = options;
   }
 
   async POST(args?: AnyRecord) {
     this._client.post(this._url, args);
   }
-  async LIST(args?: AnyRecord) {}
-  async GET(args?: AnyRecord) {}
-  async PUT(args?: AnyRecord) {}
-  async DELETE(args?: AnyRecord) {}
+  async LIST(args?: AnyRecord) { }
+  async GET(args?: AnyRecord) { }
+  async PUT(args?: AnyRecord) { }
+  async DELETE(args?: AnyRecord) { }
 }

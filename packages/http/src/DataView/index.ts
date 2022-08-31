@@ -1,76 +1,54 @@
 import { defineMapping } from "@ruff-web/data-mapping";
-import { GetterMethod, ResourceMethod } from "../resource/ResourceMethod";
+import { GetterMethod, ResourceMethod } from "../utils/resource-methods";
 
 export default class DataView<
   T extends Record<K, any>,
   K extends string = any,
   OK extends string = any
-> {
+  > {
   static LIST = ResourceMethod.LIST as GetterMethod;
-  static PICK = ResourceMethod.PICK as GetterMethod;
-  static TAKE = ResourceMethod.TAKE as GetterMethod;
-  static LOG = ResourceMethod.LOG as GetterMethod;
-  static ENUM = ResourceMethod.ENUM as GetterMethod;
-  static ENUM_BY_IDS = ResourceMethod.ENUM_BY_IDS as GetterMethod;
   static GET = ResourceMethod.GET as GetterMethod;
-  static GET_BY_KEYS = ResourceMethod.GET_BY_KEYS as GetterMethod;
-  static READ = ResourceMethod.READ as GetterMethod;
-  static READ_BY_IDS = ResourceMethod.READ_BY_IDS as GetterMethod;
 
-  private _entityPath: string;
-  private _belongingPath: string;
+  private _path: string;
+  private _subPath: string;
   private _method: GetterMethod;
-  private _client: RuffResourceRequestor;
+  private _client: RuffResourceRequestors;
   private _rules: MappingOptions<T[K], K, OK>;
 
   constructor(options: {
     apiId: string;
     method: GetterMethod;
-    client: RuffResourceRequestor;
+    client: RuffResourceRequestors;
     rules: MappingOptions<T[K], K, OK>;
   }) {
     const { apiId, method, client, rules } = options;
-    const [entityPath, belongingPath] = apiId.split("/@/");
+    const [path, subPath] = apiId.split("/@/");
 
-    console.log(entityPath, belongingPath, method, client);
-    this._entityPath = entityPath;
-    this._belongingPath = belongingPath;
+    console.log(path, subPath, method, client);
+    this._path = path;
+    this._subPath = subPath;
     this._method = method;
     this._client = client;
     this._rules = rules;
   }
 
   getApiId() {
-    if (this._belongingPath) {
-      return `${this._entityPath}/@/${this._belongingPath}:${this._method}`;
+    if (this._subPath) {
+      return `${this._path}/@/${this._subPath}:${this._method}`;
     }
-    return `${this._entityPath}:${this._method}`;
+    return `${this._path}:${this._method}`;
   }
 
   getData(
-    aidOrAkeys: IdOrKeys,
-    bidOrAkeys: IdOrKeys,
+    idOrkeys: IdOrKeys,
+    subIdOrkeys: IdOrKeys,
     query: RuffHttpQueryModel
   ): T;
-  getData(idOrAkeys: IdOrKeys, query: RuffHttpQueryModel): T;
+  getData(idOrkeys: IdOrKeys, query: RuffHttpQueryModel): T;
   getData(query: RuffHttpQueryModel): T[];
   getData(...args: unknown[]): T | T[] {
-    switch (this._method) {
-      case ResourceMethod.LIST:
-      case ResourceMethod.PICK:
-      case ResourceMethod.TAKE:
-      case ResourceMethod.LOG:
-      case ResourceMethod.ENUM:
-      case ResourceMethod.ENUM_BY_IDS:
-        return this._getArray();
-
-      case ResourceMethod.GET:
-      case ResourceMethod.GET_BY_KEYS:
-      case ResourceMethod.READ:
-      case ResourceMethod.READ_BY_IDS:
-      default:
-        return this._getElement();
-    }
+    if (this._method === ResourceMethod.LIST) return this._getArray();
+    else return this._get();
   }
 
   private _getArray(): T[] {
@@ -84,7 +62,7 @@ export default class DataView<
     );
   }
 
-  private _getElement(): T {
+  private _get(): T {
     const apiId = this.getApiId();
     const { _randomRules } = this._client as any;
     if (_randomRules[apiId]) {

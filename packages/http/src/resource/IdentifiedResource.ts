@@ -1,30 +1,30 @@
 import { joinPath } from "../utils";
-import AbsoluteBase from "./AbsoluteBase";
-import Belonging from "./Belonging";
-import Callables from "./Callables";
+import AbstractBase from "./AbstractBase";
+import AffiliatedResource from "./AffiliatedResource";
+import Callables from "./CallableAPI";
 
-export type ExtendedEntityRef<
+export type ExtendedIdentifiedResource<
   B extends string = any,
   A extends string = any
-> = EntityRef & Record<B, CallableBelonging & Belonging> & Record<A, Command>;
+  > = IdentifiedResource & Record<B, AffiliatedResourceGetter & AffiliatedResource> & Record<A, Callable>;
 
-export default class EntityRef<
+export default class IdentifiedResource<
   B extends string = any,
   A extends string = any
-> extends AbsoluteBase {
-  static createRef<B extends string = any, A extends string = any>(
+  > extends AbstractBase {
+  static createResource<B extends string = any, A extends string = any>(
     name: string,
     idOrKeys: IdOrKeys,
-    options: Readonly<RuffEntityOptions<never, never, B, A>>,
+    options: Readonly<RuffCreateResourceOptions<never, never, B, A>>,
     query: RuffPageableResourcesQueryModel
   ) {
-    const ref = new EntityRef(name, idOrKeys, options, query);
+    const ref = new IdentifiedResource(name, idOrKeys, options, query);
     const { client, resource, config } = options;
     const { attrs, acts } = resource;
     // console.log(attrs);
     if (attrs !== undefined) {
       (Object.keys(attrs) as B[]).forEach((attrname) => {
-        (ref as AnyRecord)[attrname] = Belonging.createBelonging(
+        (ref as AnyRecord)[attrname] = AffiliatedResource.create_affiliated_resource(
           attrname,
           ref,
           options
@@ -35,7 +35,7 @@ export default class EntityRef<
       (Object.keys(acts) as A[]).forEach((actionname) => {
         (ref as AnyRecord)[actionname] = Callables.createApi(actionname, {
           client,
-          prefix: ref.getBelongingsPrefix(),
+          prefix: ref.getFullPath(),
           command: acts[actionname],
         });
       });
@@ -48,10 +48,10 @@ export default class EntityRef<
   private constructor(
     name: string,
     idOrKeys: IdOrKeys,
-    options: RuffEntityOptions<B, A>,
+    options: RuffCreateResourceOptions<B, A>,
     query: RuffPageableResourcesQueryModel
   ) {
-    // console.log("Create Entity Ref", name, idOrKeys);
+
     super(name, options, query);
     this._idOrKeys =
       typeof idOrKeys === "object" && idOrKeys instanceof Array
@@ -59,14 +59,14 @@ export default class EntityRef<
         : [idOrKeys];
   }
 
-  getBelongingsPrefix() {
-    return joinPath([this._prefix, this._dirname, joinPath(this._idOrKeys)]);
+  getFullPath() {
+    return joinPath([this._prefix, this._path, joinPath(this._idOrKeys)]);
   }
 
   async get() {
     try {
-      const { data } = await this._client.$getEntityByKeys(
-        joinPath([this._prefix, this._dirname]),
+      const { data } = await this._client.$get_main_resource(
+        [this._prefix, this._path],
         this._idOrKeys,
         this._query
       );

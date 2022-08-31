@@ -1,25 +1,17 @@
-import { AxiosInstance, AxiosRequestConfig } from "axios";
-import { withQuery } from "../utils";
 import * as mixins from "../utils/interceptors-mixins";
-import MockRequestor from "./WithMockRequestors";
+import RESTfulRequestor from "./WithResourceRequestors";
 
-export default class MockClient<E extends string = any>
-  extends MockRequestor<E>
+export default class WithInterceptors
+  extends RESTfulRequestor
   implements RuffClientInterceptors {
-  private _endpoint: string = "mock://";
-  private _timeout = 0;
-
   private __hooks: RuffClientInterceptors = {} as RuffClientInterceptors;
 
-  public constructor(
+  constructor(
     options: (RuffClientOptions & RuffClientInterceptors) | string,
-    config: AxiosRequestConfig<any> = {},
-    resources: RuffClientResourcesConfigs<E>,
-    randomRules: Record<string, RuffMockRandom> = {}
+    config: RuffRequestConfig = {}
   ) {
-    super(options, config, resources, randomRules);
+    super(options, config);
     Object.assign(this.__hooks, mixins.defaults);
-
     Object.defineProperties(this, {
       ...mixins.publics(this as unknown as RuffClientWithInterceptors),
     });
@@ -31,6 +23,24 @@ export default class MockClient<E extends string = any>
         }
       );
     }
+
+    const axiosInstance = this.axiosInstance;
+    axiosInstance.interceptors.request.use(
+      mixins.privates.__requestFulfilled.bind(
+        this as unknown as RuffClientWithInterceptors
+      ),
+      mixins.privates.__requestRejected.bind(
+        this as unknown as RuffClientWithInterceptors
+      )
+    );
+    axiosInstance.interceptors.response.use(
+      mixins.privates.__responseFulfilled.bind(
+        this as unknown as RuffClientWithInterceptors
+      ),
+      mixins.privates.__responseRejected.bind(
+        this as unknown as RuffClientWithInterceptors
+      )
+    );
   }
 
   onTokenRequired(req: any): string | null { throw new Error("Method not implemented.") }
@@ -40,28 +50,4 @@ export default class MockClient<E extends string = any>
   onResponseRejected(error: AnyError): boolean { throw new Error("Method not implemented.") }
   onResponseUnauthorized(error: AnyError, signed: boolean): boolean { throw new Error("Method not implemented.") }
   onServiceError(error: AnyError): boolean { throw new Error("Method not implemented.") }
-
-  get network() {
-    return {
-      timeout: this._timeout,
-      endpoint: this._endpoint,
-    };
-  }
-
-  get axiosInstance(): AxiosInstance {
-    return {} as AxiosInstance;
-  }
-
-  withQuery = withQuery;
-
-  request(): Promise<Error> {
-    throw new Error(
-      "You cannot invock this method of a Mock Client, please use an Http Client instead."
-    );
-  }
-  get = this.request.bind(this);
-  post = this.request.bind(this);
-  put = this.request.bind(this);
-  patch = this.request.bind(this);
-  delete = this.request.bind(this);
 }

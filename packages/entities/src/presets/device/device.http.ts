@@ -1,4 +1,4 @@
-import { ResourceMethod as M } from "@ruff-web/http/src/resource/ResourceMethod";
+import { ResourceMethod as M } from "@ruff-web/http/src/utils/resource-methods";
 
 export default {
   methods: [M.POST, M.LIST, M.PUT, M.DELETE],
@@ -20,13 +20,13 @@ export default {
   },
   attrs: {
     profile: {
-      methods: [M.READ, M.PUT],
+      methods: [M.GET, M.PUT],
     },
     password: {
-      methods: [M.MOD],
+      methods: [M.PUT],
     },
     bindPhone: {
-      methods: [M.WRITE, M.DROP],
+      methods: [M.POST, M.DELETE],
     },
   },
   acts: {},

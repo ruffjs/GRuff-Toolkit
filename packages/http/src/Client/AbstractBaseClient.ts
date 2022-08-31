@@ -6,7 +6,7 @@ const DefaultServer: RuffClientOptions = {
   prefix: ""
 };
 
-export default abstract class Requestor {
+export default abstract class AbstractBaseClient {
   // 与前端静态文件同域的服务器
   static readonly DefaultServer: RuffClientOptions = {
     ...DefaultServer,

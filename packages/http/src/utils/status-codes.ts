@@ -40,7 +40,7 @@ const HTTP_STATUS_CODES = {
   503: "Service Unavailable",
   504: "Gateway Timeout",
   505: "HTTP Version Not Supported",
-};
+} as const;
 
 export default HTTP_STATUS_CODES;
 export type StatusCode = keyof typeof HTTP_STATUS_CODES;

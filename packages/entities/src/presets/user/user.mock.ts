@@ -1,4 +1,4 @@
-import { ResourceMethod as M } from "@ruff-web/http/src/resource/ResourceMethod";
+import { ResourceMethod as M } from "@ruff-web/http/src/utils/resource-methods";
 
 export default {
   prefix: "api/v1",
@@ -66,8 +66,8 @@ export default {
   },
   attrs: {
     profile: {
-      methods: [M.READ, M.PUT],
-      [M.READ]: () => {
+      methods: [M.GET, M.PUT],
+      [M.GET]: () => {
         console.log("99999");
       },
       [M.PUT]: () => {
@@ -75,17 +75,17 @@ export default {
       },
     },
     password: {
-      methods: [M.MOD],
-      [M.MOD]: () => {
+      methods: [M.PUT],
+      [M.PUT]: () => {
         console.log("bbbbb");
       },
     },
     bindPhone: {
-      methods: [M.WRITE, M.DROP],
-      [M.WRITE]: () => {
+      methods: [M.POST, M.DELETE],
+      [M.POST]: () => {
         console.log("ccccc");
       },
-      [M.DROP]: () => {
+      [M.DELETE]: () => {
         console.log("ddddd");
       },
     },
@@ -93,7 +93,7 @@ export default {
   acts: {
     doSth: {
       method: M.POST,
-      dirname: "fetch404",
+      path: "fetch404",
       random: () => {
         console.log("eeeee");
       },

@@ -1,4 +1,4 @@
-import { ResourceMethod as M } from "@ruff-web/http/src/resource/ResourceMethod";
+import { ResourceMethod as M } from "@ruff-web/http/src/utils/resource-methods";
 
 export default {
   prefix: 'api/v1',
@@ -26,19 +26,19 @@ export default {
   },
   attrs: {
     profile: {
-      methods: [M.READ, M.PUT],
+      methods: [M.GET, M.PUT],
     },
     password: {
-      methods: [M.MOD],
+      methods: [M.PUT],
     },
     bindPhone: {
-      methods: [M.WRITE, M.DROP],
+      methods: [M.POST, M.DELETE],
     },
   },
   acts: {
     doSth: {
       method: M.POST,
-      dirname: "fetch404",
+      path: "fetch404",
     },
   },
 };

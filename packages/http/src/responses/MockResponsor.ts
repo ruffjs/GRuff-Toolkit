@@ -1,10 +1,10 @@
-import { RandomInstance } from "./../../../data-random/index";
+import { RandomInstance } from "../../../data-random/index";
 import { createRandom } from "@ruff-web/data-random";
 
 import { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from "axios";
-import HTTP_STATUS_CODES, { StatusCode } from "./status-codes";
+import HTTP_STATUS_CODES, { StatusCode } from "../utils/status-codes";
 import { delay } from "@ruff-web/utils/src/async";
-import { interceptors } from "../utils/hooks-mixins";
+import * as mixins from "../utils/interceptors-mixins";
 
 class MockRequestInfo<D> {
   method: string;
@@ -48,9 +48,9 @@ export default class MockResponsor {
 
   private _random: RandomInstance;
   private _delay: number;
-  private _client: RuffClientWithHooks;
+  private _client: RuffClientWithInterceptors;
 
-  constructor(client: RuffClientWithHooks) {
+  constructor(client: RuffClientWithInterceptors) {
     this._client = client;
 
     this._random = createRandom();
@@ -70,7 +70,7 @@ export default class MockResponsor {
     const res = new MockResponse(data, status, statusText, config);
     console.log("模拟请求:", `duration: ${this._delay}ms`, "RawData:", res);
     return await Promise.resolve(
-      interceptors.__responseFulfilledInterceptor.call(this._client, res)
+      mixins.privates.__responseFulfilled.call(this._client, res)
     );
   }
 }

@@ -2,27 +2,27 @@ import { formatQueryCondition } from "../utils/index";
 import HttpPackagedResource from "../responses/HttpPackagedResource";
 import HttpResourcesList from "../responses/HttpResourcesList";
 import { joinPath } from "../utils";
-import EntityRef from "./EntityRef";
-import AbsoluteBase from "./AbsoluteBase";
+import IdentifiedResource from "./IdentifiedResource";
+import AbstractBase from "./AbstractBase";
 import { AxiosResponse } from "axios";
 
-export default class WithQueryEntity<
+export default class ModifiedResource<
   B extends string = any,
   A extends string = any
-  > extends AbsoluteBase {
+  > extends AbstractBase {
   protected static pageIndex = 1;
   protected static pageSize = 10;
 
   static set defaultpageSize(size: number) {
-    WithQueryEntity.pageSize = size;
+    ModifiedResource.pageSize = size;
   }
 
-  static createEntity<B extends string = any, A extends string = any>(
+  static createResource<B extends string = any, A extends string = any>(
     name: string,
-    options: Readonly<RuffEntityOptions<any, any, B, A>>,
+    options: Readonly<RuffCreateResourceOptions<any, any, B, A>>,
     query: RuffPageableResourcesQueryModel
   ) {
-    return new WithQueryEntity(name, options, query);
+    return new ModifiedResource(name, options, query);
   }
 
   setPrefix(prefix: string) {
@@ -35,13 +35,13 @@ export default class WithQueryEntity<
 
   protected constructor(
     name: string,
-    options: RuffEntityOptions<any, any, B, A>,
+    options: RuffCreateResourceOptions<any, any, B, A>,
     query: RuffPageableResourcesQueryModel
   ) {
     super(name, options, query);
   }
 
-  query(...qs: RuffHttpQueryCondition[]): WithQueryEntity {
+  query(...qs: RuffHttpQueryCondition[]): ModifiedResource {
     const condition = formatQueryCondition(...qs);
     this._query = {
       ...this._query,
@@ -50,10 +50,10 @@ export default class WithQueryEntity<
     return this;
   }
 
-  async list(pageSize: number = WithQueryEntity.pageSize, pageIndex: number = WithQueryEntity.pageIndex) {
+  async list(pageSize: number = ModifiedResource.pageSize, pageIndex: number = ModifiedResource.pageIndex) {
     // console.log("this._query", this._query);
-    const { data } = await this._client.$getEntitys(
-      joinPath([this._prefix, this._dirname]),
+    const { data } = await this._client.$get_main_resources(
+      joinPath([this._prefix, this._path]),
       {
         ...this._query,
         pageSize,
@@ -63,8 +63,8 @@ export default class WithQueryEntity<
     console.log(data);
     const list = new HttpResourcesList(data);
     data?.content?.forEach((item: any) => {
-      const ref: any = EntityRef.createRef(
-        this._dirname,
+      const ref: any = IdentifiedResource.createResource(
+        this._path,
         item.id,
         this._options,
         this._query

@@ -42,7 +42,7 @@ interface RuffClientBasicMethods {
 
 interface RuffResourceMethods extends RuffClientBasicMethods {
   /** 创建资源 */
-  $addResource<T extends RuffDataModel = any, D = any>(
+  $create_resource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     model: D,
     query?: RuffHttpQueryCondition,
@@ -50,52 +50,29 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
   ): Promise<AxiosResponse<RuffHttpResponse<T>, any>>;
 
   /** 获取资源 */
-  $getResource<T extends RuffDataModel = any, D = any>(
+  $get_resource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
-  $getData<T extends RuffDataModel = any, D = any>(
-    pathname: string,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
-
-  $getIdentifiableData<T extends RuffDataModel = any, D = any>(
-    pathname: string,
-    id: Id,
-    config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
-
-  $getEnumerableData<T extends RuffDataModel = any, D = any>(
-    pathname: string,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<RuffDataRecords<T>>, D>>;
-
-  $getPageableResources<T extends RuffDataModel = any, D = any>(
+  $get_pageable_resource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<RuffHttpResourcesList<T>>, D>>;
 
-  $getPeriodData<T extends RuffPeriodDataItem = any, D = any>(
-    pathname: string,
-    query?: RuffPeriodDataQueryModel,
-    config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<RuffPeriodData<T>>, D>>;
-
   /** 写入资源 */
-  $setResource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     pathname: string,
-    model: D,
+    data: Partial<D>,
+    query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>,
     patially = false
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
   /** 删除资源 */
-  $delResource<T extends RuffDataModel = any, D = any>(
+  $remove_resource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
@@ -104,7 +81,7 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
 
 type RuffRequestConfig<T = any> = AxiosRequestConfig<T> | {};
 type RuffResponse<T = any, D = any> = AxiosResponse<T, D> | {};
-interface RuffClientHooks {
+interface RuffClientInterceptors {
   // 请求需要授权时
   onTokenRequired(req: RuffRequestConfig): string | null;
   // 请求即将开启时
@@ -121,11 +98,11 @@ interface RuffClientHooks {
   // 因服务更新重启而请求失败
   onServiceError(error: AnyError): boolean;
 }
-interface RuffClientWithHooks {
-  __hooks: RuffClientHooks;
+interface RuffClientWithInterceptors {
+  __hooks: RuffClientInterceptors;
 }
 
-interface RuffHttpClient extends RuffResourceRequestor, RuffClientHooks {}
+interface RuffHttpClient extends RuffResourceRequestors, RuffClientInterceptors { }
 
 interface RuffClientOptions {
   host?: string;
@@ -133,30 +110,30 @@ interface RuffClientOptions {
   prefix: string;
 }
 
-type RuffClientEntitisConfigs<E extends string = any> = Record<
+type RuffClientResourcesConfigs<E extends string = any> = Record<
   E,
-  RuffEntityConfiguration & { prefix: string }
+  RuffResourceConfiguration & { prefix: string }
 >;
 
 interface RuffClientConfigs<E extends string = any> {
   axios?: AxiosRequestConfig<any>;
-  entitis?: RuffClientEntitisConfigs<E>;
+  resources?: RuffClientResourcesConfigs<E>;
 }
 
 type RuffClientMocksConfigs<E extends string = any> = Record<
   E,
-  RuffMockConfiguration & RuffEntityConfiguration & { prefix: string }
+  RuffMockConfiguration & RuffResourceConfiguration & { prefix: string }
 >;
 
-interface RuffMockClientConfigs<E extends string = any>
+interface RuffMockClientSimpleConfigs<E extends string = any>
   extends RuffClientConfigs<E> {
-  entitis: RuffClientMocksConfigs<E>;
+  resources: RuffClientMocksConfigs<E>;
   withMock: boolean;
 }
 
-interface RuffRandomsClientConfigs<E extends string = any>
+interface RuffMockClientWithRandomsConfigs<E extends string = any>
   extends RuffClientConfigs<E> {
-  entitis: RuffClientEntitisConfigs<E> | RuffClientMocksConfigs<E>;
+  resources: RuffClientResourcesConfigs<E> | RuffClientMocksConfigs<E>;
   withMock?: boolean;
   rules: Record<string, RuffMockRandom>;
 }

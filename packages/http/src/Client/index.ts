@@ -1,63 +1,38 @@
 import { AxiosRequestConfig } from "axios";
-import { ExtendedEntity } from "../resource/Entity";
+import { ExtendedMainResource } from "../resource/MainResource";
 import MockClient from "../mock/MockClient";
-import registerEntities from "../utils/registerEntities";
-import WithHooks from "./WithHooks";
+import { registerResources } from "../utils/resources-helper";
+import WithInterceptors from "./WithInterceptors";
 import formatMockConfigs from "../utils/formatMockConfigs";
 
-// interface IClientHelper {
-//   [x: string]: AnyFn;
-// }
-
-// interface ExtendsEntityOption {
-//   name: string;
-// }
-
-// interface ExtendsMethodOption {
-//   name: string;
-//   f: AnyFn;
-// }
-
-// interface ExtendsObjectOption {
-//   name: string;
-//   target: Object;
-// }
-
-export enum ExtendsType {
-  Entity,
-  method,
-  object,
-}
-
 export default class Client<E extends string = any>
-  extends WithHooks
-  implements RuffHttpClient
-{
+  extends WithInterceptors
+  implements RuffHttpClient {
   static createClient<E extends string = any>(
-    options: (RuffClientOptions & RuffClientHooks) | string,
+    options: (RuffClientOptions & RuffClientInterceptors) | string,
     configs?: RuffClientConfigs<E>
-  ): Client<E> & Record<E, ExtendedEntity>;
+  ): Client<E> & Record<E, ExtendedMainResource>;
   static createClient<E extends string = any>(
-    options: (RuffClientOptions & RuffClientHooks) | string,
-    configs: RuffMockClientConfigs<E>
-  ): MockClient<E> & Record<E, ExtendedEntity>;
+    options: (RuffClientOptions & RuffClientInterceptors) | string,
+    configs: RuffMockClientSimpleConfigs<E>
+  ): MockClient<E> & Record<E, ExtendedMainResource>;
   static createClient<E extends string = any>(
-    options: (RuffClientOptions & RuffClientHooks) | string,
-    configs: RuffRandomsClientConfigs<E>
-  ): MockClient<E> & Record<E, ExtendedEntity>;
+    options: (RuffClientOptions & RuffClientInterceptors) | string,
+    configs: RuffMockClientWithRandomsConfigs<E>
+  ): MockClient<E> & Record<E, ExtendedMainResource>;
   static createClient<E extends string = any>(
-    options: (RuffClientOptions & RuffClientHooks) | string,
+    options: (RuffClientOptions & RuffClientInterceptors) | string,
     configs:
       | RuffClientConfigs<E>
-      | RuffMockClientConfigs<E>
-      | RuffRandomsClientConfigs<E> = {}
+      | RuffMockClientSimpleConfigs<E>
+      | RuffMockClientWithRandomsConfigs<E> = {}
   ) {
-    const { axios, withMock, rules, entitis } =
-      configs as RuffMockClientConfigs<E> & RuffRandomsClientConfigs<E>;
+    const { axios, withMock, rules, resources } =
+      configs as RuffMockClientSimpleConfigs<E> & RuffMockClientWithRandomsConfigs<E>;
     if (withMock || rules) {
       const randomRules: Record<string, RuffMockRandom> = {};
       if (withMock) {
-        Object.assign(randomRules, formatMockConfigs(entitis, "api/v1"));
+        Object.assign(randomRules, formatMockConfigs(resources, "api/v1"));
       }
       if (rules) {
         Object.assign(randomRules, rules);
@@ -65,24 +40,24 @@ export default class Client<E extends string = any>
       const client = new MockClient<E>(
         options,
         axios,
-        entitis || ({} as RuffClientEntitisConfigs<E>),
+        resources || ({} as RuffClientResourcesConfigs<E>),
         randomRules
       );
       return client;
     }
-    // console.log(entitis);
-    const client = new Client<E>(options, axios, entitis);
+    // console.log(resources);
+    const client = new Client<E>(options, axios, resources);
     return client;
   }
 
   private constructor(
-    options: (RuffClientOptions & RuffClientHooks) | string,
+    options: (RuffClientOptions & RuffClientInterceptors) | string,
     config: AxiosRequestConfig<any> = {},
-    entitis?: RuffClientEntitisConfigs<E>
+    resources?: RuffClientResourcesConfigs<E>
   ) {
     super(options, config);
-    registerEntities(
-      entitis || ({} as RuffClientEntitisConfigs<E>),
+    registerResources(
+      resources || ({} as RuffClientResourcesConfigs<E>),
       this as any
     );
   }

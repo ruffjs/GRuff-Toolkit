@@ -164,7 +164,7 @@ export default class Runtime implements RIRuntime {
       vueApp.config.errorHandler = (err, vm, info) => {
         console.log(err, vm, info);
       };
-      vueApp.config.warnHandler = (err, vm, info) => {};
+      vueApp.config.warnHandler = (err, vm, info) => { };
 
       vueApp
         .use(Antd)

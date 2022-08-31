@@ -9,7 +9,7 @@ const userMockConfig = formatMockConfig("user", userMock);
 const clients = {
   main: Client.createClient("/test-dev-svc"),
   user: Client.createClient("/test-user-svc", {
-    entitis: {
+    resources: {
       user: userApis,
     },
   }),
@@ -17,7 +17,7 @@ const clients = {
   bsmm: Client.createClient("/test-bsm-svc"),
   bsmu: Client.createClient("/test-bsm-user-svc/"),
   mock: Client.createClient("/test-user-svc", {
-    entitis: {
+    resources: {
       user: userMock,
     },
     // withMock: true,

@@ -3,12 +3,12 @@ type Method = number;
 type RuffMockRandom = ((...args?: AnyArray) => any) | ScalarValue | AnyRecord
 
 interface RuffMockRPCConfiguration {
-    dirname?: string;
+    path?: string;
     random: RuffMockRandom,
 }
 
 interface RuffMockRESTConfiguration {
-    dirname?: string;
+    path?: string;
     methods?: Method[];
     [x: Method]: RuffMockRandom,
     children?: Record<string, RuffMockRESTConfiguration>;

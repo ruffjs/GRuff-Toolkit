@@ -1,8 +1,8 @@
-export const defaultHooks: RuffClientHooks = {
+export const defaults: RuffClientInterceptors = {
   onTokenRequired(req: RuffRequestConfig): string | null {
     return null;
   },
-  onBeforeRequest(req: RuffRequestConfig): void {},
+  onBeforeRequest(req: RuffRequestConfig): void { },
   onResponseFulfilled(res: RuffResponse): any {
     console.log("onResponseFulfilled");
     return res;
@@ -21,9 +21,9 @@ export const defaultHooks: RuffClientHooks = {
   },
 } as const;
 
-export const interceptors = {
-  __requestFulfilledInterceptor(
-    this: RuffClientWithHooks,
+export const privates = {
+  __requestFulfilled(
+    this: RuffClientWithInterceptors,
     req: RuffRequestConfig
   ) {
     const token = this.__hooks.onTokenRequired(req);
@@ -35,16 +35,16 @@ export const interceptors = {
     this.__hooks.onBeforeRequest(req);
     return req;
   },
-  __responseFulfilledInterceptor(this: RuffClientWithHooks, res: RuffResponse) {
+  __responseFulfilled(this: RuffClientWithInterceptors, res: RuffResponse) {
     return this.__hooks.onResponseFulfilled(res) || res;
   },
 
-  __requestRejectedInterceptor(this: RuffClientWithHooks, error: AnyError) {
+  __requestRejected(this: RuffClientWithInterceptors, error: AnyError) {
     if (this.__hooks.onRequestError(error)) {
       throw error;
     }
   },
-  __responseRejectedInterceptor(this: RuffClientWithHooks, error: any) {
+  __responseRejected(this: RuffClientWithInterceptors, error: any) {
     try {
       let intercepted = false;
       if (error?.response?.status >= 500) {
@@ -72,7 +72,7 @@ export const interceptors = {
   },
 } as const;
 
-export const hooksProps = ({ __hooks }: RuffClientWithHooks) => ({
+export const publics = ({ __hooks }: RuffClientWithInterceptors) => ({
   onTokenRequired: {
     get() {
       return __hooks.onTokenRequired;
