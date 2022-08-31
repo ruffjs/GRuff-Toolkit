@@ -2,7 +2,7 @@ import Client from "@ruff-web/http/src/Client";
 
 import userApis from "@ruff-web/entities/src/presets/user/user.http";
 import userMock from "@ruff-web/entities/src/presets/user/user.mock";
-import { formatMockConfig } from "@ruff-web/http/src/utils/formatMockConfigs";
+import { formatMockConfig } from "@ruff-web/http/src/utils/configs-helper";
 
 const userMockConfig = formatMockConfig("user", userMock);
 

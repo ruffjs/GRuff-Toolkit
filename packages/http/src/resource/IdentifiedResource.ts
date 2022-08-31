@@ -1,5 +1,5 @@
 import { joinPath } from "../utils";
-import AbstractBase from "./AbstractBase";
+import AbstractBaseResource from "./AbstractBaseResource";
 import AffiliatedResource from "./AffiliatedResource";
 import Callables from "./CallableAPI";
 
@@ -11,7 +11,7 @@ export type ExtendedIdentifiedResource<
 export default class IdentifiedResource<
   B extends string = any,
   A extends string = any
-  > extends AbstractBase {
+  > extends AbstractBaseResource {
   static createResource<B extends string = any, A extends string = any>(
     name: string,
     idOrKeys: IdOrKeys,

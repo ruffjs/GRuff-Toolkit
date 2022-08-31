@@ -3,7 +3,7 @@ import { ExtendedMainResource } from "../resource/MainResource";
 import MockClient from "../mock/MockClient";
 import { registerResources } from "../utils/resources-helper";
 import WithInterceptors from "./WithInterceptors";
-import formatMockConfigs from "../utils/formatMockConfigs";
+import formatMockConfigs from "../utils/configs-helper";
 
 export default class Client<E extends string = any>
   extends WithInterceptors

@@ -1,6 +1,6 @@
 import { formatQueryCondition } from "../utils";
 
-export default abstract class AbstractBase {
+export default abstract class AbstractBaseResource {
   protected _client: RuffResourceRequestors;
   protected _prefix;
   protected _path: string;
@@ -32,7 +32,7 @@ export default abstract class AbstractBase {
     this._query = query;
   }
 
-  query(...qs: RuffHttpQueryCondition[]): AbstractBase {
+  query(...qs: RuffHttpQueryCondition[]): AbstractBaseResource {
     const condition = formatQueryCondition(...qs);
     this._query = {
       ...this._query,

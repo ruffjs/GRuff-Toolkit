@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { formatQueryCondition, joinPath } from "../utils/index";
-import AbstractBase from "./AbstractBase";
+import AbstractBase from "./AbstractBaseResource";
 
 export default class AffiliatedResource<
   CH extends string = any,

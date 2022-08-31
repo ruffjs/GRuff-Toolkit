@@ -3,13 +3,13 @@ import HttpPackagedResource from "../responses/HttpPackagedResource";
 import HttpResourcesList from "../responses/HttpResourcesList";
 import { joinPath } from "../utils";
 import IdentifiedResource from "./IdentifiedResource";
-import AbstractBase from "./AbstractBase";
+import AbstractBaseResource from "./AbstractBaseResource";
 import { AxiosResponse } from "axios";
 
 export default class ModifiedResource<
   B extends string = any,
   A extends string = any
-  > extends AbstractBase {
+  > extends AbstractBaseResource {
   protected static pageIndex = 1;
   protected static pageSize = 10;
 
