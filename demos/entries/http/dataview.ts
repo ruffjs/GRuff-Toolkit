@@ -9,8 +9,8 @@ const dataview1 = new DataView({
 });
 
 const dataview2 = new DataView({
-  apiId: "api/v1/user/@/profile",
-  method: DataView.READ,
+  apiId: "api/v1/user/**/profile",
+  method: DataView.GET,
   client: clients.user,
   rules: {},
 });

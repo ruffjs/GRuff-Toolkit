@@ -19,14 +19,14 @@ export const formatMockConfig = (
 ) => {
   const { prefix, path, children, commands, attrs, acts, ...rest } = config;
   const randomRules = {} as Record<string, RuffMockRandom>;
-  const apiId = joinPath([
+  const dirname = joinPath([
     prefix || "api/v1",
     path ? joinPath(path) : name,
   ]);
   Object.keys(rest).forEach((m) => {
     const port = parseInt(m);
     if (isNaN(port) === false) {
-      randomRules[apiId + ":" + port] = rest[port];
+      randomRules[dirname + ":" + port] = rest[port];
     }
   });
 
@@ -34,7 +34,7 @@ export const formatMockConfig = (
     Object.keys(children).forEach((childName) => {
       const r = formatMockConfig(childName, {
         ...children[childName],
-        prefix: apiId,
+        prefix: dirname,
       });
       Object.assign(randomRules, r);
     });
@@ -44,16 +44,16 @@ export const formatMockConfig = (
     Object.keys(attrs).forEach((attrName) => {
       const r = formatMockConfig(attrName, {
         ...attrs[attrName],
-        prefix: path + "/@",
+        prefix: dirname + "/**",
       });
       Object.assign(randomRules, r);
     });
   }
   if (commands) {
-    Object.assign(randomRules, formatMockRPCConfigs(commands, path + "/"));
+    Object.assign(randomRules, formatMockRPCConfigs(commands, dirname + "/"));
   }
   if (acts) {
-    Object.assign(randomRules, formatMockRPCConfigs(acts, path + "/@/"));
+    Object.assign(randomRules, formatMockRPCConfigs(acts, dirname + "/**/"));
   }
   return randomRules;
 };

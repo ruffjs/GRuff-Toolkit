@@ -97,6 +97,9 @@ export default {
       random: () => {
         console.log("eeeee");
       },
+      0: () => {
+        console.log("eeeee");
+      },
     },
   },
 };

@@ -22,7 +22,7 @@ export default class DataView<
     rules: MappingOptions<T[K], K, OK>;
   }) {
     const { apiId, method, client, rules } = options;
-    const [path, subPath] = apiId.split("/@/");
+    const [path, subPath] = apiId.split("/**/");
 
     console.log(path, subPath, method, client);
     this._path = path;
@@ -34,7 +34,7 @@ export default class DataView<
 
   getApiId() {
     if (this._subPath) {
-      return `${this._path}/@/${this._subPath}:${this._method}`;
+      return `${this._path}/**/${this._subPath}:${this._method}`;
     }
     return `${this._path}:${this._method}`;
   }
