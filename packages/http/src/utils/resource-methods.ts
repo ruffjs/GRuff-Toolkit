@@ -85,12 +85,12 @@ export enum ResourceMethod {
   DELETE,
 }
 
-export type CallableMethod =
+export type StandardMethod =
   | ResourceMethod.POST
   | ResourceMethod.GET
   | ResourceMethod.PUT
-  | ResourceMethod.DELETE
-  | ResourceMethod.PATCH;
+  | ResourceMethod.PATCH
+  | ResourceMethod.DELETE;
 
 export type SetterMethod =
   | ResourceMethod.POST
@@ -98,6 +98,4 @@ export type SetterMethod =
   | ResourceMethod.PUT
   | ResourceMethod.PATCH;
 
-export type GetterMethod =
-  | ResourceMethod.LIST
-  | ResourceMethod.GET
+export type GetterMethod = ResourceMethod.LIST | ResourceMethod.GET;

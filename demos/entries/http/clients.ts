@@ -1,6 +1,8 @@
 import Client from "@ruff-web/http/src/Client";
 
-import userApis from "@ruff-web/entities/src/presets/user/user.resource";
+import userApis, {
+  login,
+} from "@ruff-web/entities/src/presets/user/user.resource";
 import userMock from "@ruff-web/entities/src/presets/user/user.resource.withmock";
 import { formatMockConfig } from "@ruff-web/http/src/utils/configs-helper";
 
@@ -11,6 +13,9 @@ const clients = {
   user: Client.createClient("/test-user-svc", {
     resources: {
       user: userApis,
+    },
+    calls: {
+      login: login,
     },
   }),
   tank: Client.createClient("/test-tank-svc"),

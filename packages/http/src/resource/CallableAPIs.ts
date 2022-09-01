@@ -32,32 +32,32 @@ export default class CallableAPIs<T = any, P extends AnyRecord = any> {
     this._options = options;
   }
 
-  async POST({
+  async POST<T2 = any, P2 extends AnyRecord = any>({
     payload,
     query,
-  }: CallArguments<P>): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  }: CallArguments<P2 | P>): Promise<AxiosResponse<RuffHttpResponse<T2 | T>>> {
     return this._client.post(this._url + withQuery(query), payload);
   }
-  async GET({
+  async GET<T2 = any, P2 extends AnyRecord = any>({
     query,
-  }: CallArguments<P>): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  }: CallArguments<P2 | P>): Promise<AxiosResponse<RuffHttpResponse<T2 | T>>> {
     return this._client.get(this._url + withQuery(query));
   }
-  async PUT({
+  async PUT<T2 = any, P2 extends AnyRecord = any>({
     payload,
     query,
-  }: CallArguments<P>): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  }: CallArguments<P2 | P>): Promise<AxiosResponse<RuffHttpResponse<T2 | T>>> {
     return this._client.put(this._url + withQuery(query), payload);
   }
-  async PATCH({
+  async PATCH<T2 = any, P2 extends AnyRecord = any>({
     payload,
     query,
-  }: CallArguments<P>): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  }: CallArguments<P2 | P>): Promise<AxiosResponse<RuffHttpResponse<T2 | T>>> {
     return this._client.patch(this._url + withQuery(query), payload);
   }
-  async DELETE({
+  async DELETE<T2 = any, P2 extends AnyRecord = any>({
     query,
-  }: CallArguments<P>): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  }: CallArguments<P2 | P>): Promise<AxiosResponse<RuffHttpResponse<T2 | T>>> {
     return this._client.delete(this._url + withQuery(query));
   }
 }

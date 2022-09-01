@@ -6,7 +6,7 @@ interface RuffHttpRPCConfiguration<T = any, P extends AnyRecord = any> {
   path?: string;
   method: Method;
   type?: T;
-  Model?: P;
+  model?: P;
 }
 
 interface RuffAffiliatedResourceConfiguration<T = any> {

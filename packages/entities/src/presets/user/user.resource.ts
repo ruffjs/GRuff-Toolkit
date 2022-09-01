@@ -38,3 +38,9 @@ export default {
     },
   },
 };
+
+export const login = {
+  prefix: "api/v1",
+  method: M.POST,
+  path: "user/login",
+};

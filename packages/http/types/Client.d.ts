@@ -112,20 +112,27 @@ interface RuffClientOptions {
   prefix: string;
 }
 
-type RuffClientResourcesConfigs<E extends string = any> = Record<
-  E,
+type RuffClientResourcesConfigs<R extends string = any> = Record<
+  R,
   RuffResourceConfiguration & { prefix: string }
 >;
 
-interface RuffClientConfigs<E extends string = any> {
+type RuffClientRPCConfigs<C extends string = any> = Record<
+  C,
+  RuffHttpRPCConfiguration & { prefix: string }
+>;
+
+interface RuffClientConfigs<R extends string = any, C extends string = any> {
   axios?: AxiosRequestConfig<any>;
-  resources?: RuffClientResourcesConfigs<E>;
+  resources?: RuffClientResourcesConfigs<R>;
+  calls?: RuffClientRPCConfigs<C>;
 }
 
 type RuffClientMocksConfigs<E extends string = any> = Record<
   E,
-  RuffMockConfiguration & RuffResourceConfiguration & { prefix: string }
->;
+  RuffMockConfiguration
+> &
+  RuffClientResourcesConfigs<E>;
 
 interface RuffMockClientSimpleConfigs<E extends string = any>
   extends RuffClientConfigs<E> {

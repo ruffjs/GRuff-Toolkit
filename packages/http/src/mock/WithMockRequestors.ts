@@ -5,8 +5,10 @@ import { joinPath as $, withQuery as q } from "../utils";
 import { registerResources } from "../utils/resources-helper";
 import MockResponsor from "../responses/MockResponsor";
 
-export default class MockRequestor<E extends string = any>
-  implements RuffResourceRequestors
+export default class MockRequestor<
+  R extends string = any,
+  C extends string = any
+> implements RuffResourceRequestors
 {
   private _mockResponsor: MockResponsor;
   private _config: AxiosRequestConfig<any>;
@@ -17,13 +19,14 @@ export default class MockRequestor<E extends string = any>
   protected constructor(
     options: (RuffClientOptions & RuffClientInterceptors) | string,
     config: AxiosRequestConfig<any> = {},
-    resources: RuffClientResourcesConfigs<E>,
+    resources: RuffClientResourcesConfigs<R>,
+    calls: RuffClientRPCConfigs<C>,
     randomRules: Record<string, RuffMockRandom> = {}
   ) {
     if (options) {
     }
 
-    registerResources(resources, this as any);
+    registerResources(resources, calls, this as any);
 
     this._config = config || {};
     this._randomRules = randomRules;

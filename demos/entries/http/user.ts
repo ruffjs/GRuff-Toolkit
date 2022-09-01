@@ -55,10 +55,20 @@ ref.profile.get();
 
 userHttp.login({
   payload: {
-    loginName: "string",
-    password: "string",
+    loginName: "string1",
+    password: "string1",
     clientType: "Web",
   },
 });
 
 ref.doSth({ foo: "bar" });
+
+console.log(
+  await clients.user.login({
+    payload: {
+      loginName: "string2",
+      password: "string2",
+      clientType: "Web",
+    },
+  })
+);
