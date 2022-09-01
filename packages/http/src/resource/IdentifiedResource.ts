@@ -1,57 +1,60 @@
+import { AxiosResponse } from "axios";
 import { joinPath } from "../utils";
 import AbstractBaseResource from "./AbstractBaseResource";
 import AffiliatedResource from "./AffiliatedResource";
-import Callables from "./CallableAPI";
+import Callables from "./CallableAPIs";
 
 export type ExtendedIdentifiedResource<
-  B extends string = any,
+  T = any,
   A extends string = any
-  > = IdentifiedResource & Record<B, AffiliatedResourceGetter & AffiliatedResource> & Record<A, Callable>;
+> = IdentifiedResource<T, A> &
+  Record<A, AffiliatedResourceGetter & AffiliatedResource> &
+  Record<A, CallableAPI>;
 
 export default class IdentifiedResource<
-  B extends string = any,
+  T = any,
   A extends string = any
-  > extends AbstractBaseResource {
-  static createResource<B extends string = any, A extends string = any>(
+> extends AbstractBaseResource {
+  static createResource<T = any, A extends string = any>(
     name: string,
     idOrKeys: IdOrKeys,
-    options: Readonly<RuffCreateResourceOptions<never, never, B, A>>,
+    options: Readonly<RuffCreateResourceOptions<T, never, A>>,
     query: RuffPageableResourcesQueryModel
   ) {
-    const ref = new IdentifiedResource(name, idOrKeys, options, query);
+    const ref = new IdentifiedResource<T, A>(name, idOrKeys, options, query);
     const { client, resource, config } = options;
-    const { attrs, acts } = resource;
-    // console.log(attrs);
-    if (attrs !== undefined) {
-      (Object.keys(attrs) as B[]).forEach((attrname) => {
-        (ref as AnyRecord)[attrname] = AffiliatedResource.create_affiliated_resource(
-          attrname,
-          ref,
-          options
-        );
+    const props = resource["/**/"];
+
+    if (props !== undefined) {
+      (Object.keys(props) as A[]).forEach((propname) => {
+        const propConf = props[propname];
+        if ("method" in propConf) {
+          (ref as AnyRecord)[propname] = Callables.createApi(propname, {
+            client,
+            prefix: ref.getFullPath(),
+            call: propConf,
+          });
+        } else {
+          (ref as AnyRecord)[propname] =
+            AffiliatedResource.createAffiliatedResource(
+              propname,
+              ref,
+              propConf
+            );
+        }
       });
     }
-    if (acts !== undefined) {
-      (Object.keys(acts) as A[]).forEach((actionname) => {
-        (ref as AnyRecord)[actionname] = Callables.createApi(actionname, {
-          client,
-          prefix: ref.getFullPath(),
-          command: acts[actionname],
-        });
-      });
-    }
-    return ref;
+    return ref as ExtendedIdentifiedResource<T, A>;
   }
 
-  private _idOrKeys: identity[];
+  private _idOrKeys: IdOrKeys;
 
   private constructor(
     name: string,
     idOrKeys: IdOrKeys,
-    options: RuffCreateResourceOptions<B, A>,
+    options: RuffCreateResourceOptions<T, never, A>,
     query: RuffPageableResourcesQueryModel
   ) {
-
     super(name, options, query);
     this._idOrKeys =
       typeof idOrKeys === "object" && idOrKeys instanceof Array
@@ -63,16 +66,12 @@ export default class IdentifiedResource<
     return joinPath([this._prefix, this._path, joinPath(this._idOrKeys)]);
   }
 
-  async get() {
-    try {
-      const { data } = await this._client.$get_main_resource(
-        [this._prefix, this._path],
-        this._idOrKeys,
-        this._query
-      );
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+  async get(): Promise<AxiosResponse<RuffHttpResponse<T>, any>> {
+    const { data } = await this._client.$get_main_resource(
+      [this._prefix, this._path],
+      this._idOrKeys,
+      this._query
+    );
+    return data;
   }
 }

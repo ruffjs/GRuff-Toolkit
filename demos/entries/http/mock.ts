@@ -2,15 +2,14 @@ import Resource from "@ruff-web/http/src/resource/MainResource";
 import userResource from "@ruff-web/entities/src/presets/user/user.mock";
 import clients from "./clients";
 
-const userHttp = Resource.idealize(clients.mock.user, userResource);
+const userHttp = clients.mock.user.idealize();
 
-console.log(await userHttp.list(3))
+console.log(await userHttp.list(3));
 
 // for (const user of await userHttp.list(3)) {
 //   console.log(user.name, user, user.rawData);
 //   console.log(await user.profile());
 // }
-
 
 // const tmpls = {
 //   告警类型: "@alertType",
@@ -83,7 +82,6 @@ console.log(await userHttp.list(3))
 //   client: clients.mock,
 //   prefix: "api/v1",
 // });
-
 
 // const res = await userHttp.post({
 //   name: "string",

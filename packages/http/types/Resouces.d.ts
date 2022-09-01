@@ -1,50 +1,59 @@
 type Method = number;
 
-interface RuffHttpApiConfiguration { }
+interface RuffHttpApiConfiguration {}
 
-interface RuffHttpRPCConfiguration {
+interface RuffHttpRPCConfiguration<T = any, P extends AnyRecord = any> {
   path?: string;
   method: Method;
-  // children?: Record<string, RuffResourceConfiguration>; 不接受这种设定
+  type?: T;
+  Model?: P;
 }
 
-interface RuffAffiliatedResourceConfiguration {
+interface RuffAffiliatedResourceConfiguration<T = any> {
   path?: string;
-  methods?: Method[];
+  methods: Method[];
+  type?: T;
   config?: RuffHttpApiConfiguration;
-  children?: Record<string, RuffAffiliatedResourceConfiguration>;
 }
 
 interface RuffResourceConfiguration<
-  C extends string = any,
-  X extends string = any,
-  B extends string = any,
+  T = any,
+  M extends string = any,
   A extends string = any
-  > extends RuffAffiliatedResourceConfiguration {
-  children?: Record<C, RuffResourceConfiguration>;
-  commands?: Record<X, RuffHttpRPCConfiguration>;
-  attrs?: Record<B, RuffAffiliatedResourceConfiguration>;
-  acts?: Record<A, RuffHttpRPCConfiguration>;
+> extends RuffAffiliatedResourceConfiguration<T> {
+  "/"?: Record<M, RuffResourceConfiguration | RuffHttpRPCConfiguration>;
+  "/**/"?: Record<
+    A,
+    RuffAffiliatedResourceConfiguration | RuffHttpRPCConfiguration
+  >;
 }
 
 interface RuffCreateResourceOptions<
-  C extends string = any,
-  X extends string = any,
-  B extends string = any,
+  T = any,
+  M extends string = any,
   A extends string = any
-  > {
-  resource: RuffResourceConfiguration<C, X, B, A>;
+> {
+  resource: RuffResourceConfiguration<T, M, A>;
   prefix: string;
   client: RuffClientBasicMethods & RuffResourceRequestors;
   config?: RuffHttpApiConfiguration;
 }
 
-type Callable<T extends RuffDataModel = any> = (
-  args?: AnyRecord
-) => Promise<AxiosResponse<RuffHttpResponse<T>>>;
-
 type AffiliatedResourceGetter<T extends RuffDataModel = any> = (
   condition?: RuffHttpQueryCondition
 ) => Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
+type CreateRPCApiOptions = {
+  client: RuffClientBasicMethods;
+  prefix: string;
+  call: RuffHttpRPCConfiguration;
+};
 
+type CallArguments<P extends AnyRecord = any> = {
+  payload?: P;
+  query?: RuffHttpQueryCondition;
+};
+
+type CallableAPI<T = any, P extends AnyRecord = any> = (
+  args: CallArguments<P>
+) => Promise<AxiosResponse<RuffHttpResponse<T>>>;

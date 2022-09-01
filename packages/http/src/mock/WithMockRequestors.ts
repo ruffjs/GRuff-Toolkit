@@ -1,3 +1,4 @@
+import { Payload } from "./../../../../node_modules/vuex/types/index.d";
 import { AxiosRequestConfig } from "axios";
 import { ResourceMethod as M } from "../utils/resource-methods";
 import { joinPath as $, withQuery as q } from "../utils";
@@ -5,7 +6,8 @@ import { registerResources } from "../utils/resources-helper";
 import MockResponsor from "../responses/MockResponsor";
 
 export default class MockRequestor<E extends string = any>
-  implements RuffResourceRequestors {
+  implements RuffResourceRequestors
+{
   private _mockResponsor: MockResponsor;
   private _config: AxiosRequestConfig<any>;
   private _randomRules: Record<string, RuffMockRandom>;
@@ -31,7 +33,10 @@ export default class MockRequestor<E extends string = any>
     console.log(this._randomRules);
   }
 
-  $create_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $create_main_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     data: D,
     query?: RuffHttpQueryCondition,
@@ -78,7 +83,10 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  $create_affiliated_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $create_affiliated_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     id: Id,
@@ -202,7 +210,10 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  $set_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_main_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     data: D,
@@ -219,7 +230,10 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  $set_affiliated_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_affiliated_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     idOrkeys: IdOrKeys,
@@ -237,7 +251,10 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  $set_identifiable_affiliated_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_identifiable_affiliated_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     idOrkeys: IdOrKeys,
@@ -313,12 +330,12 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  $call<T extends RuffDataModel = any, A extends AnyRecord = any>(
+  $call<T extends RuffDataModel = any, P extends AnyRecord = any>(
     path: RuffResourcePath,
     callPath: RuffResourcePath,
-    args: A,
+    Payload: P,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<A>
+    config?: AxiosRequestConfig<P>
   ) {
     return this._mockResponsor.resolve(
       {
@@ -330,13 +347,13 @@ export default class MockRequestor<E extends string = any>
     );
   }
 
-  $call_by_id_or_keys<T extends RuffDataModel = any, A extends AnyRecord = any>(
+  $call_by_id_or_keys<T extends RuffDataModel = any, P extends AnyRecord = any>(
     path: RuffResourcePath,
     callPath: RuffResourcePath,
     idOrKeys: IdOrKeys,
-    args: A,
+    Payload: P,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<A>
+    config?: AxiosRequestConfig<P>
   ) {
     return this._mockResponsor.resolve(
       {

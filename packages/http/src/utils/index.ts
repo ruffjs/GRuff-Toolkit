@@ -4,14 +4,19 @@ export const isEmptyObject = (obj: any) => JSON.stringify(obj) === "{}";
 
 export const isNotEmpty = (obj: any) => obj !== null && !isEmptyObject(obj);
 
-type joinable = string | number;
+type joinable = RuffResourcePath | IdOrKeys;
 
-export const joinPath = (path: joinable[] | joinable) => {
+export const joinPath = (path: joinable) => {
   if (typeof path === "object" && path instanceof Array) {
-    return path.filter(dir => !!dir).join("/").replace(/\/+/, '/') || "/";
+    return (
+      path
+        .filter((dir) => !!dir)
+        .join("/")
+        .replace(/\/+/, "/") || "/"
+    );
   }
   if (typeof path === "string") {
-    return path.replace(/\/+/, '/') || "/";
+    return path.replace(/\/+/, "/") || "/";
   }
   if (typeof path === "number") {
     return String(path) || "/";
@@ -27,7 +32,7 @@ export const withQuery = (query?: RuffHttpQueryCondition) => {
   return "";
 };
 
-class _MultipleValues extends Array { }
+class _MultipleValues extends Array {}
 const formatQueryConditionUnit = (query: RuffHttpQueryCondition) => {
   if (query) {
     if (typeof query === "object") return query;

@@ -1,6 +1,7 @@
 type identity = number | string;
 type Id = identity;
-type IdOrKeys = identity | identity[];
+type UnionIdentity = identity[]; // Union keys as identity
+type IdOrKeys = identity | UnionIdentity;
 
 type RuffResourcePath = string[] | string;
 

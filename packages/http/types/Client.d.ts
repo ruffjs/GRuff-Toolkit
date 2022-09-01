@@ -102,7 +102,9 @@ interface RuffClientWithInterceptors {
   __hooks: RuffClientInterceptors;
 }
 
-interface RuffHttpClient extends RuffResourceRequestors, RuffClientInterceptors { }
+interface RuffHttpClient
+  extends RuffResourceRequestors,
+    RuffClientInterceptors {}
 
 interface RuffClientOptions {
   host?: string;

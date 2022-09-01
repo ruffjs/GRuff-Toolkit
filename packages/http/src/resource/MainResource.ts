@@ -1,99 +1,126 @@
 import { ResourceMethod } from "../utils/resource-methods";
 import { formatQueryCondition, joinPath } from "../utils/index";
-import IdentifiedResource, { ExtendedIdentifiedResource } from "./IdentifiedResource";
+import IdentifiedResource, {
+  ExtendedIdentifiedResource,
+} from "./IdentifiedResource";
 import ModifiedResource from "./ModifiedResource";
-import Callables from "./CallableAPI";
+import Callables from "./CallableAPIs";
 
-type CallableResource<B extends string = any, A extends string = any> = (
+type CallableResource<T = any, A extends string = any> = (
   idOrKeys: IdOrKeys
-) => ExtendedIdentifiedResource<B, A>;
+) => ExtendedIdentifiedResource<T, A>;
 
 export type ExtendedMainResource<
-  C extends string = any,
-  X extends string = any,
-  B extends string = any,
+  T = any,
+  M extends string = any,
   A extends string = any
-  > = CallableResource<B, A> &
-  MainResource &
-  Record<C, CallableResource & MainResource> &
-  Record<X, Callable>;
+> = CallableResource<T, A> &
+  MainResource<T, M, A> &
+  Record<M, CallableResource<T, A> & MainResource<T, M, A> & CallableAPI<T>>;
+
+type FriendlyMainResource<
+  MR extends string = any,
+  MC extends string = any,
+  AR extends string = any,
+  AC extends string = any,
+  T = any
+> = CallableResource<T, AR | AC> &
+  MainResource<T> &
+  Record<MR, ExtendedMainResource> &
+  Record<MC, CallableAPI>;
 
 export default class MainResource<
-  C extends string = any,
-  X extends string = any,
-  B extends string = any,
+  T = any,
+  M extends string = any,
   A extends string = any
-  > extends ModifiedResource<B, A> {
+> extends ModifiedResource<T, A> {
   static createResource<
-    C extends string = any,
-    X extends string = any,
-    B extends string = any,
+    T = any,
+    M extends string = any,
     A extends string = any
-  >(name: string, options: Readonly<RuffCreateResourceOptions<C, X, B, A>>) {
+  >(name: string, options: Readonly<RuffCreateResourceOptions<T, M, A>>) {
     const res = new MainResource(name, options);
     const callable = function CallableResource(idOrKeys: IdOrKeys) {
-      return IdentifiedResource.createResource(
+      return IdentifiedResource.createResource<T, A>(
         name,
         idOrKeys,
         options,
         {} as RuffPageableResourcesQueryModel
       );
-    } as unknown as ExtendedMainResource<C, X, B, A>;
+    };
     const { client, resource, config } = options;
 
-    const { methods, children, commands } = resource;
+    const methods = resource.methods;
+    const children = resource["/"];
+    const attrs = {} as Record<M, any>;
     if (children !== undefined) {
-      (Object.keys(children) as C[]).forEach((childname) => {
-        (callable as AnyRecord)[childname] = (res as AnyRecord)[childname] =
-          MainResource.createResource(childname, {
+      (Object.keys(children) as M[]).forEach((childname) => {
+        const opts = children[childname];
+        if ("method" in opts) {
+          attrs[childname] = Callables.createApi(childname, {
+            client,
+            prefix: res.getFullPath(),
+            call: opts,
+          });
+        } else {
+          attrs[childname] = MainResource.createResource(childname, {
             client,
             config,
             prefix: res.getFullPath(),
-            resource: children[childname],
+            resource: opts,
           });
-      });
-    }
-    if (commands !== undefined) {
-      (Object.keys(commands) as X[]).forEach((commandname) => {
-        (callable as AnyRecord)[commandname] = (res as AnyRecord)[
-          commandname
-        ] = Callables.createApi(commandname, {
-          client,
-          prefix: res.getFullPath(),
-          command: commands[commandname],
-        });
+        }
       });
     }
 
     const bounds = {
-      setPrefix: res.setPrefix.bind(res),
-      getPrefix: res.getPrefix.bind(res),
-      list: res.list.bind(res),
-      query: res.query.bind(res),
+      setPrefix: res.setPrefix.bind(callable),
+      getPrefix: res.getPrefix.bind(callable),
+      getFullPath: res.getFullPath.bind(callable),
+      idealize: res.idealize.bind(callable),
+      query: res.query.bind(callable),
     } as MainResource;
 
     if (methods?.includes(ResourceMethod.GET)) {
-      bounds.get = res.get.bind(res);
+      bounds.get = res.get.bind(callable);
     }
 
     if (methods?.includes(ResourceMethod.POST)) {
-      bounds.post = res.post.bind(res);
+      bounds.post = res.post.bind(callable);
     }
 
-    return Object.assign(callable, bounds);
+    if (methods?.includes(ResourceMethod.LIST)) {
+      bounds.list = res.list.bind(callable);
+    }
+
+    if (methods?.includes(ResourceMethod.POST)) {
+      bounds.post = res.post.bind(callable);
+    }
+
+    // Object.assign(res, attrs);
+    return Object.assign(
+      callable,
+      res,
+      attrs,
+      bounds
+    ) as unknown as ExtendedMainResource<T, M, A>;
   }
 
-  static idealize<
-    CI extends string = any,
-    XI extends string = any,
-    BI extends string = any,
-    AI extends string = any
-  >(res: MainResource, options: RuffResourceConfiguration<CI, XI, BI, AI>) {
-    return res as ExtendedMainResource<CI, XI, BI, AI>;
-  }
-
-  private constructor(name: string, options: RuffCreateResourceOptions<C, X, B, A>) {
+  private constructor(
+    name: string,
+    options: RuffCreateResourceOptions<T, M, A>
+  ) {
     super(name, options, {} as RuffPageableResourcesQueryModel);
+  }
+
+  idealize<
+    MR extends string = any,
+    MC extends string = any,
+    AR extends string = any,
+    AC extends string = any,
+    TI = any
+  >(): FriendlyMainResource<MR, MC, AR, AC, TI> {
+    return this as unknown as FriendlyMainResource<MR, MC, AR, AC, TI>;
   }
 
   getFullPath(): string {
@@ -102,7 +129,7 @@ export default class MainResource<
 
   query(...qs: RuffHttpQueryCondition[]): ModifiedResource {
     const condition = formatQueryCondition(...qs);
-    return ModifiedResource.createResource(
+    return ModifiedResource.createResource<T, A>(
       this._path,
       this._options,
       condition as RuffPageableResourcesQueryModel

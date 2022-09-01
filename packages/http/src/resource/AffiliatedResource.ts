@@ -2,22 +2,19 @@ import { AxiosResponse } from "axios";
 import { formatQueryCondition, joinPath } from "../utils/index";
 import AbstractBase from "./AbstractBaseResource";
 
-export default class AffiliatedResource<
-  CH extends string = any,
-  CO extends string = any
-  > {
-  static create_affiliated_resource<CH extends string = any, CO extends string = any>(
+export default class AffiliatedResource<T = any> {
+  static createAffiliatedResource<T = any>(
     name: string,
     ref: AbstractBase,
-    options: Readonly<RuffAffiliatedResourceConfiguration>
+    options: RuffAffiliatedResourceConfiguration<T>
   ) {
-    const resource = new AffiliatedResource(name, ref, options);
+    const resource = new AffiliatedResource<T>(name, ref, options);
     const callable = function AffiliatedResourceGetter() {
       return resource.get();
     };
     return Object.assign(callable, {
       get: resource.get.bind(AffiliatedResource),
-    } as AffiliatedResource<CH, CO> & Record<CO, AnyFn>);
+    });
   }
 
   private _ref: AbstractBase;
@@ -26,7 +23,7 @@ export default class AffiliatedResource<
   private constructor(
     name: string,
     ref: AbstractBase,
-    options: Readonly<RuffAffiliatedResourceConfiguration>
+    options: RuffAffiliatedResourceConfiguration<T>
   ) {
     this._ref = ref;
     this._name = name;
@@ -42,7 +39,7 @@ export default class AffiliatedResource<
     return this;
   }
 
-  async get<T extends RuffDataModel = any, D = any>(
+  async get(
     condition?: RuffHttpQueryCondition
   ): Promise<AxiosResponse<RuffHttpResponse<T>, any>> {
     // try {
@@ -57,6 +54,6 @@ export default class AffiliatedResource<
     //     this._query
     //   );
     // return data;
-    return {} as any
+    return {} as any;
   }
 }

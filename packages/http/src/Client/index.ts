@@ -7,7 +7,8 @@ import formatMockConfigs from "../utils/configs-helper";
 
 export default class Client<E extends string = any>
   extends WithInterceptors
-  implements RuffHttpClient {
+  implements RuffHttpClient
+{
   static createClient<E extends string = any>(
     options: (RuffClientOptions & RuffClientInterceptors) | string,
     configs?: RuffClientConfigs<E>
@@ -28,7 +29,8 @@ export default class Client<E extends string = any>
       | RuffMockClientWithRandomsConfigs<E> = {}
   ) {
     const { axios, withMock, rules, resources } =
-      configs as RuffMockClientSimpleConfigs<E> & RuffMockClientWithRandomsConfigs<E>;
+      configs as RuffMockClientSimpleConfigs<E> &
+        RuffMockClientWithRandomsConfigs<E>;
     if (withMock || rules) {
       const randomRules: Record<string, RuffMockRandom> = {};
       if (withMock) {
@@ -48,6 +50,12 @@ export default class Client<E extends string = any>
     // console.log(resources);
     const client = new Client<E>(options, axios, resources);
     return client;
+  }
+
+  static idealizeCall<PI extends object = any, TI = any>(
+    call: CallableAPI
+  ): CallableAPI<TI, PI> {
+    return call as CallableAPI<TI, PI>;
   }
 
   private constructor(

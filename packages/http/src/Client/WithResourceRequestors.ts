@@ -4,7 +4,8 @@ import AbstractBaseClient from "./AbstractBaseClient";
 
 export default class RESTfulRequestor
   extends AbstractBaseClient
-  implements RuffResourceMethods, RuffResourceRequestors {
+  implements RuffResourceMethods, RuffResourceRequestors
+{
   withQuery = q;
 
   $create_resource<T extends RuffDataModel = any, D = any>(
@@ -16,7 +17,10 @@ export default class RESTfulRequestor
     return this.post<T, D>(pathname + q(query), data, config);
   }
 
-  $create_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $create_main_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     data: D,
     query?: RuffHttpQueryCondition,
@@ -38,15 +42,13 @@ export default class RESTfulRequestor
     for (let [key, value] of Object.entries(data || {})) {
       body.append(key, value);
     }
-    return this.$create_resource<T, FormData>(
-      $(path),
-      body,
-      query,
-      config
-    );
+    return this.$create_resource<T, FormData>($(path), body, query, config);
   }
 
-  $create_affiliated_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $create_affiliated_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     idOrkeys: IdOrKeys,
@@ -98,8 +100,11 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$get_resource<T, D>($([$(path), $(idOrkeys),
-    $(subPath)]), query, config);
+    return this.$get_resource<T, D>(
+      $([$(path), $(idOrkeys), $(subPath)]),
+      query,
+      config
+    );
   }
 
   $get_identifiable_affiliated_resource<
@@ -113,8 +118,11 @@ export default class RESTfulRequestor
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$get_resource<T, D>($([$(path), $(idOrkeys),
-    $(subPath), $(subIdOrkeys)]), query, config);
+    return this.$get_resource<T, D>(
+      $([$(path), $(idOrkeys), $(subPath), $(subIdOrkeys)]),
+      query,
+      config
+    );
   }
 
   $get_pageable_resource<T extends RuffDataModel = any, D = any>(
@@ -122,10 +130,7 @@ export default class RESTfulRequestor
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.get<RuffHttpResourcesList<T>, D>(
-      pathname + q(query),
-      config
-    );
+    return this.get<RuffHttpResourcesList<T>, D>(pathname + q(query), config);
   }
 
   $get_main_resources<T extends RuffDataModel = any, D = any>(
@@ -133,11 +138,7 @@ export default class RESTfulRequestor
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
-    return this.$get_pageable_resource<T, D>(
-      $(path),
-      query,
-      config
-    );
+    return this.$get_pageable_resource<T, D>($(path), query, config);
   }
 
   $get_pageable_affiliated_resource<
@@ -151,11 +152,7 @@ export default class RESTfulRequestor
     config?: AxiosRequestConfig<D>
   ) {
     return this.$get_pageable_resource<T, D>(
-      $([
-        $(path),
-        $(idOrkeys),
-        $(subPath),
-      ]),
+      $([$(path), $(idOrkeys), $(subPath)]),
       query,
       config
     );
@@ -174,7 +171,10 @@ export default class RESTfulRequestor
     return this.put<T, D>(pathname + q(query), data as D, config);
   }
 
-  $set_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_main_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     data: D,
@@ -190,7 +190,10 @@ export default class RESTfulRequestor
     );
   }
 
-  $set_affiliated_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_affiliated_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     idOrkeys: IdOrKeys,
@@ -199,11 +202,7 @@ export default class RESTfulRequestor
     config?: AxiosRequestConfig<D>
   ) {
     return this.$set_resource<T, D>(
-      $([
-        $(path),
-        $(idOrkeys),
-        $(subPath),
-      ]),
+      $([$(path), $(idOrkeys), $(subPath)]),
       data,
       query,
       config,
@@ -211,7 +210,10 @@ export default class RESTfulRequestor
     );
   }
 
-  $set_identifiable_affiliated_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_identifiable_affiliated_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     idOrkeys: IdOrKeys,
@@ -221,12 +223,7 @@ export default class RESTfulRequestor
     config?: AxiosRequestConfig<D>
   ) {
     return this.$set_resource<T, D>(
-      $([
-        $(path),
-        $(idOrkeys),
-        $(subPath),
-        $(subIdOrkeys),
-      ]),
+      $([$(path), $(idOrkeys), $(subPath), $(subIdOrkeys)]),
       data,
       query,
       config,
@@ -266,11 +263,7 @@ export default class RESTfulRequestor
     config?: AxiosRequestConfig<D>
   ) {
     return this.$remove_resource<T, D>(
-      $([
-        $(path),
-        $(idOrkeys),
-        $(subPath),
-      ]),
+      $([$(path), $(idOrkeys), $(subPath)]),
       query,
       config
     );
@@ -288,47 +281,40 @@ export default class RESTfulRequestor
     config?: AxiosRequestConfig<D>
   ) {
     return this.$remove_resource<T, D>(
-      $([
-        $(path),
-        $(idOrkeys),
-        $(subPath),
-        $(subIdOrkeys),
-      ]),
+      $([$(path), $(idOrkeys), $(subPath), $(subIdOrkeys)]),
       query,
       config
     );
   }
 
-  $call<T extends RuffDataModel = any, A extends AnyRecord = any>(
+  $call<T extends RuffDataModel = any, P extends AnyRecord = any>(
     path: RuffResourcePath,
     callPath: RuffResourcePath,
-    args: A,
+    payload: P,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<A>
+    config?: AxiosRequestConfig<P>
   ) {
-    return this.request<T, A>({
+    return this.request<T, P>({
       method: "post",
       ...config,
       url: $([$(path), $(callPath)]) + q(query),
-      data: args,
+      data: payload,
     });
   }
 
-  $call_by_id_or_keys<T extends RuffDataModel = any, A extends AnyRecord = any>(
+  $call_by_id_or_keys<T extends RuffDataModel = any, P extends AnyRecord = any>(
     path: RuffResourcePath,
     callPath: RuffResourcePath,
     idOrKeys: IdOrKeys,
-    args: A,
+    payload: P,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<A>
+    config?: AxiosRequestConfig<P>
   ) {
-    return this.request<T, A>({
+    return this.request<T, P>({
       method: "post",
       ...config,
-      url:
-        $([$(path), $(idOrKeys), $(callPath)]) +
-        q(query),
-      data: args,
+      url: $([$(path), $(idOrKeys), $(callPath)]) + q(query),
+      data: payload,
     });
   }
 }

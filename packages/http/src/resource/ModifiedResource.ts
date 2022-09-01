@@ -7,9 +7,9 @@ import AbstractBaseResource from "./AbstractBaseResource";
 import { AxiosResponse } from "axios";
 
 export default class ModifiedResource<
-  B extends string = any,
+  T = any,
   A extends string = any
-  > extends AbstractBaseResource {
+> extends AbstractBaseResource {
   protected static pageIndex = 1;
   protected static pageSize = 10;
 
@@ -17,12 +17,12 @@ export default class ModifiedResource<
     ModifiedResource.pageSize = size;
   }
 
-  static createResource<B extends string = any, A extends string = any>(
+  static createResource<T = any, A extends string = any>(
     name: string,
-    options: Readonly<RuffCreateResourceOptions<any, any, B, A>>,
+    options: Readonly<RuffCreateResourceOptions<T, never, A>>,
     query: RuffPageableResourcesQueryModel
   ) {
-    return new ModifiedResource(name, options, query);
+    return new ModifiedResource<T, A>(name, options, query);
   }
 
   setPrefix(prefix: string) {
@@ -35,7 +35,7 @@ export default class ModifiedResource<
 
   protected constructor(
     name: string,
-    options: RuffCreateResourceOptions<any, any, B, A>,
+    options: RuffCreateResourceOptions<T, never, A>,
     query: RuffPageableResourcesQueryModel
   ) {
     super(name, options, query);
@@ -50,7 +50,10 @@ export default class ModifiedResource<
     return this;
   }
 
-  async list(pageSize: number = ModifiedResource.pageSize, pageIndex: number = ModifiedResource.pageIndex) {
+  async list(
+    pageSize: number = ModifiedResource.pageSize,
+    pageIndex: number = ModifiedResource.pageIndex
+  ) {
     // console.log("this._query", this._query);
     const { data } = await this._client.$get_main_resources(
       joinPath([this._prefix, this._path]),
@@ -89,9 +92,7 @@ export default class ModifiedResource<
     return list;
   }
 
-  get<T extends RuffDataModel = any>(): Promise<
-    AxiosResponse<RuffHttpResponse<T>, any>
-  > {
+  get(): Promise<AxiosResponse<RuffHttpResponse<T>, any>> {
     throw new Error("Method not implemented.");
   }
 }

@@ -2,7 +2,7 @@ export const defaults: RuffClientInterceptors = {
   onTokenRequired(req: RuffRequestConfig): string | null {
     return null;
   },
-  onBeforeRequest(req: RuffRequestConfig): void { },
+  onBeforeRequest(req: RuffRequestConfig): void {},
   onResponseFulfilled(res: RuffResponse): any {
     console.log("onResponseFulfilled");
     return res;
@@ -22,10 +22,7 @@ export const defaults: RuffClientInterceptors = {
 } as const;
 
 export const privates = {
-  __requestFulfilled(
-    this: RuffClientWithInterceptors,
-    req: RuffRequestConfig
-  ) {
+  __requestFulfilled(this: RuffClientWithInterceptors, req: RuffRequestConfig) {
     const token = this.__hooks.onTokenRequired(req);
     if (token) {
       Object.assign(req.headers || {}, {
@@ -63,10 +60,10 @@ export const privates = {
         intercepted = !this.__hooks.onResponseRejected(error);
       }
       if (intercepted) return;
-      console.log(error);
+      // console.log(error);
       throw error;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw error;
     }
   },

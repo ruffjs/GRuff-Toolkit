@@ -5,7 +5,10 @@ interface RuffResourceRequestors {
    * ### 创建实体资源
    * #### ResourceMethod.POST
    */
-  $create_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $create_main_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     data: D,
     query?: RuffHttpQueryCondition,
@@ -28,7 +31,10 @@ interface RuffResourceRequestors {
   /**
    * #### ResourceMethod.POST
    */
-  $create_affiliated_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $create_affiliated_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     idOrkeys: IdOrKeys,
@@ -105,7 +111,10 @@ interface RuffResourceRequestors {
    * #### ResourceMethod.PUT
    * #### ResourceMethod.PATCH
    */
-  $set_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_main_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     data: D,
@@ -117,7 +126,10 @@ interface RuffResourceRequestors {
    * #### ResourceMethod.PUT
    * #### ResourceMethod.PATCH
    */
-  $set_affiliated_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_affiliated_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     idOrkeys: IdOrKeys,
@@ -130,7 +142,10 @@ interface RuffResourceRequestors {
    * #### ResourceMethod.PUT
    * #### ResourceMethod.PATCH
    */
-  $set_identifiable_affiliated_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $set_identifiable_affiliated_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     idOrkeys: IdOrKeys,
@@ -167,8 +182,8 @@ interface RuffResourceRequestors {
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
   /**
-    * #### ResourceMethod.DELETE
-    */
+   * #### ResourceMethod.DELETE
+   */
   $remove_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
@@ -185,17 +200,17 @@ interface RuffResourceRequestors {
    * ### 主RPC风格接口
    * @param path
    * @param command
-   * @param args
+   * @param payload
    * @param query
    * @param config
    */
   $call<T extends RuffDataModel = any, A extends AnyRecord = any>(
     path: RuffResourcePath,
     callPath: RuffResourcePath,
-    args: A,
+    payload: P,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<A>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, A>>;
+    config?: AxiosRequestConfig<P>
+  ): Promise<AxiosResponse<RuffHttpResponse<T>, P>>;
 
   /**
    * ### 附属RPC风格接口
@@ -203,16 +218,16 @@ interface RuffResourceRequestors {
    * @param path
    * @param command
    * @param idOrKeys
-   * @param args
+   * @param payload
    * @param query
    * @param config
    */
-  $call_by_id_or_keys<T extends RuffDataModel = any, A extends AnyRecord = any>(
+  $call_by_id_or_keys<T extends RuffDataModel = any, P extends AnyRecord = any>(
     path: RuffResourcePath,
     callPath: RuffResourcePath,
     idOrKeys: IdOrKeys,
-    args: A,
+    payload: P,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<A>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, A>>;
+    config?: AxiosRequestConfig<P>
+  ): Promise<AxiosResponse<RuffHttpResponse<T>, P>>;
 }
