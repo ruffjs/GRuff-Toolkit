@@ -8,10 +8,10 @@ console.log(clients, clients.user.network);
 clients.user.onTokenRequired = () =>
   "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ0eXBlIjoiUGxhdGZvcm0iLCJsZXZlbCI6IkFkbWluIiwidGVuYW50SWQiOjEsImVtYWlsIjoiZGVtbyIsInBob25lIjoiMTgyMTczOTQwNjUiLCJuYW1lIjoi5Y2X5r2uIiwicm9sZXMiOltdLCJwcm9qZWN0cyI6Wy0xXX0sImV4cGlyZUF0IjoxNjU1NzgzMDc5LCJpc3N1ZUF0IjoxNjU1Njk2Njc5LCJpYXQiOjE2NTU2OTY2NzksImlzcyI6InJ1ZmYifQ._g_W-IX97Rqwplaz5zOB1ctodtO2Nh7hDUbRVKS25n9edBS7K5HkhZeFdz5S2UDr5i7uvVdgVZDCQ-Mm0SRtNQ";
 
-class AType {}
+class AType { }
 
 console.log([clients.user.user]);
-const userHttp = clients.user.user.idealize<
+const userHttp = clients.user.user.$typify<
   "loginLog" | "token",
   "login" | "loginBySmsCode",
   "profile" | "password" | "bindPhone",
@@ -45,9 +45,9 @@ console.log(
 );
 
 console.log(await userHttp.loginLog.list());
-const idealizedUserLoginLogResource = userHttp.loginLog.idealize();
+const $typifydUserLoginLogResource = userHttp.loginLog.$typify();
 
-console.log(await idealizedUserLoginLogResource.list());
+console.log(await $typifydUserLoginLogResource.list());
 
 const ref = userHttp(10);
 ref.profile({});

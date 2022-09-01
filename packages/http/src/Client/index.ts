@@ -4,11 +4,11 @@ import MockClient from "../mock/MockClient";
 import { registerResources } from "../utils/resources-helper";
 import WithInterceptors from "./WithInterceptors";
 import formatMockConfigs from "../utils/configs-helper";
+import { createApiHub, CreateApiHubConfiguration } from "../utils/api-hub";
 
 export default class Client<R extends string = any, C extends string = any>
   extends WithInterceptors
-  implements RuffHttpClient
-{
+  implements RuffHttpClient {
   static createClient<R extends string = any, C extends string = any>(
     options: (RuffClientOptions & RuffClientInterceptors) | string,
     configs?: RuffClientConfigs<R, C>
@@ -30,7 +30,7 @@ export default class Client<R extends string = any, C extends string = any>
   ) {
     const { axios, withMock, rules, resources, calls } =
       configs as RuffMockClientSimpleConfigs<R> &
-        RuffMockClientWithRandomsConfigs<R>;
+      RuffMockClientWithRandomsConfigs<R>;
     if (withMock || rules) {
       const randomRules: Record<string, RuffMockRandom> = {};
       if (withMock) {
@@ -65,5 +65,9 @@ export default class Client<R extends string = any, C extends string = any>
       calls || ({} as RuffClientRPCConfigs<C>),
       this as any
     );
+  }
+
+  createApiHub<T extends object = any, P extends Record<keyof T, any> = any>(prefix: string, config: CreateApiHubConfiguration<T>) {
+    return createApiHub<T, P>(prefix, this, config)
   }
 }

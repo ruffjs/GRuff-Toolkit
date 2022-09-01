@@ -2,7 +2,7 @@ import Resource from "@ruff-web/http/src/resource/MainResource";
 import userResource from "@ruff-web/entities/src/presets/user/user.mock";
 import clients from "./clients";
 
-const userHttp = clients.mock.user.idealize();
+const userHttp = clients.mock.user.$typify();
 
 console.log(await userHttp.list(3));
 

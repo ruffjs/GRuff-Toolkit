@@ -44,7 +44,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
               "/test-user-svc",
               path,
               "to",
-              path.replace("/test-user-svc", "")
+              "https://test-user-svc.ruffcorp.com" + path.replace("/test-user-svc", "")
             );
             return path.replace("/test-user-svc", "");
           },

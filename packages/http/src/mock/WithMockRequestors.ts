@@ -8,8 +8,7 @@ import MockResponsor from "../responses/MockResponsor";
 export default class MockRequestor<
   R extends string = any,
   C extends string = any
-> implements RuffResourceRequestors
-{
+  > implements RuffResourceRequestors {
   private _mockResponsor: MockResponsor;
   private _config: AxiosRequestConfig<any>;
   private _randomRules: Record<string, RuffMockRandom>;

@@ -14,7 +14,7 @@ export type ExtendedMainResource<
   T = any,
   M extends string = any,
   A extends string = any
-> = CallableResource<T, A> &
+  > = CallableResource<T, A> &
   MainResource<T, M, A> &
   Record<M, CallableResource<T, A> & MainResource<T, M, A> & CallableAPI<T>>;
 
@@ -24,7 +24,7 @@ type FriendlyMainResource<
   AR extends string = any,
   AC extends string = any,
   T = any
-> = CallableResource<T, AR | AC> &
+  > = CallableResource<T, AR | AC> &
   MainResource<T> &
   Record<MR, ExtendedMainResource> &
   Record<MC, CallableAPI>;
@@ -33,7 +33,7 @@ export default class MainResource<
   T = any,
   M extends string = any,
   A extends string = any
-> extends ModifiedResource<T, A> {
+  > extends ModifiedResource<T, A> {
   static createResource<
     T = any,
     M extends string = any,
@@ -77,7 +77,7 @@ export default class MainResource<
       setPrefix: res.setPrefix.bind(callable),
       getPrefix: res.getPrefix.bind(callable),
       getFullPath: res.getFullPath.bind(callable),
-      idealize: res.idealize.bind(callable),
+      $typify: res.$typify.bind(callable),
       query: res.query.bind(callable),
     } as MainResource;
 
@@ -113,7 +113,7 @@ export default class MainResource<
     super(name, options, {} as RuffPageableResourcesQueryModel);
   }
 
-  idealize<
+  $typify<
     MR extends string = any,
     MC extends string = any,
     AR extends string = any,

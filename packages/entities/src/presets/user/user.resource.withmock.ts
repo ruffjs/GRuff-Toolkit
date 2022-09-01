@@ -7,7 +7,6 @@ export default {
         console.log("11111");
     },
     [M.LIST]: () => {
-        // console.log("22222");
         return {
             content: [
                 {
