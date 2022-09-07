@@ -1,33 +1,33 @@
 interface RuffClientBasicMethods {
   // 请求需要授权时
-  request<T = any, D = any>(
+  request<T extends RuffHttpResource = any, D = any>(
     config: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
-  get<T = any, D = any>(
+  get<T extends RuffHttpResource = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
-  post<T = any, D = any>(
-    url: string,
-    data?: D,
-    config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
-
-  put<T = any, D = any>(
+  post<T extends RuffHttpResource = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
-  patch<T = any, D = any>(
+  put<T extends RuffHttpResource = any, D = any>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig<D>
+  ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
+
+  patch<T extends RuffHttpResource = any, D = any>(
     url: string,
     data?: Partial<D>,
     config?: AxiosRequestConfig<Partial<D>>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
-  delete<T = any, D = any>(
+  delete<T extends RuffHttpResource = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
@@ -68,7 +68,7 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
     data: Partial<D>,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>,
-    patially = false
+    partially = false
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
   /** 删除资源 */
@@ -80,7 +80,7 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
 }
 
 type RuffRequestConfig<T = any> = AxiosRequestConfig<T> | {};
-type RuffResponse<T = any, D = any> = AxiosResponse<T, D> | {};
+type RuffResponse<T extends RuffHttpResource = any, D = any> = AxiosResponse<T, D> | {};
 interface RuffClientInterceptors {
   // 请求需要授权时
   onTokenRequired(req: RuffRequestConfig): string | null;
@@ -104,7 +104,7 @@ interface RuffClientWithInterceptors {
 
 interface RuffHttpClient
   extends RuffResourceRequestors,
-    RuffClientInterceptors {}
+  RuffClientInterceptors { }
 
 interface RuffClientOptions {
   host?: string;

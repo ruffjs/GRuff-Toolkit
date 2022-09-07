@@ -23,7 +23,7 @@
  */
 
 import { RE_KEY, RE_RANGE } from "./constant";
-import Random from "../../../../data-random/src";
+import Random from "../../packages/data-random/src";
 
 const { integer } = Random;
 /* jshint -W041 */

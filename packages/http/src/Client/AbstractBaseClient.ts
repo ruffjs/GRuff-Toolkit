@@ -44,7 +44,7 @@ export default abstract class AbstractBaseClient {
     });
   }
 
-  request<T = any, D = any>(
+  request<T extends RuffHttpResource = any, D = any>(
     config: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
     if (this._axiosInstance)
@@ -55,7 +55,7 @@ export default abstract class AbstractBaseClient {
       >(config);
     return Promise.reject("Axios Instance not found.");
   }
-  get<T = any, D = any>(
+  get<T extends RuffHttpResource = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
@@ -67,7 +67,7 @@ export default abstract class AbstractBaseClient {
       >(url, config);
     return Promise.reject("Axios Instance not found.");
   }
-  post<T = any, D = any>(
+  post<T extends RuffHttpResource = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>
@@ -76,7 +76,7 @@ export default abstract class AbstractBaseClient {
       return (this._axiosInstance as AxiosInstance).post(url, data, config);
     return Promise.reject("Axios Instance not found.");
   }
-  put<T = any, D = any>(
+  put<T extends RuffHttpResource = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>
@@ -85,7 +85,7 @@ export default abstract class AbstractBaseClient {
       return (this._axiosInstance as AxiosInstance).put(url, data, config);
     return Promise.reject("Axios Instance not found.");
   }
-  patch<T = any, D = any>(
+  patch<T extends RuffHttpResource = any, D = any>(
     url: string,
     data?: Partial<D>,
     config?: AxiosRequestConfig<Partial<D>>
@@ -94,7 +94,7 @@ export default abstract class AbstractBaseClient {
       return (this._axiosInstance as AxiosInstance).patch(url, data, config);
     return Promise.reject("Axios Instance not found.");
   }
-  delete<T = any, D = any>(
+  delete<T extends RuffHttpResource = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {

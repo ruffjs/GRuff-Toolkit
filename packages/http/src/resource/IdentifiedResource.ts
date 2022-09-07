@@ -2,26 +2,31 @@ import { AxiosResponse } from "axios";
 import { joinPath } from "../utils";
 import AbstractBaseResource from "./AbstractBaseResource";
 import AffiliatedResource from "./AffiliatedResource";
-import Callables from "./CallableAPIs";
+import CallableAPIs from "./CallableAPIs";
+import ModifiedResource from "./ModifiedResource";
 
 export type ExtendedIdentifiedResource<
-  T = any,
+  T extends RuffHttpResource = any,
   A extends string = any
 > = IdentifiedResource<T, A> &
-  Record<A, AffiliatedResourceGetter & AffiliatedResource> &
-  Record<A, CallableAPI>;
+  Record<A, RuffAffiliatedResourceGetter & AffiliatedResource> &
+  Record<A, RuffCallableAPI>;
+
+export type CallableResource<T extends RuffHttpResource = any, A extends string = any> = (
+  idOrKeys: IdOrKeys
+) => ExtendedIdentifiedResource<T, A>;
 
 export default class IdentifiedResource<
-  T = any,
+  T extends RuffHttpResource = any,
   A extends string = any
 > extends AbstractBaseResource {
-  static createResource<T = any, A extends string = any>(
+  static defineResource<T extends RuffHttpResource = any, A extends string = any>(
     name: string,
     idOrKeys: IdOrKeys,
-    options: Readonly<RuffCreateResourceOptions<T, never, A>>,
-    query: RuffPageableResourcesQueryModel
+    options: Readonly<RuffResourceDefinationOptions<T, never, A>>,
+    query: RuffHttpQueryModel
   ) {
-    const ref = new IdentifiedResource<T, A>(name, idOrKeys, options, query);
+    const ref = new IdentifiedResource<T, A>(name, idOrKeys, options, query) as ExtendedIdentifiedResource<T, A>;
     const { client, resource, config } = options;
     const props = resource["/**/"];
 
@@ -29,14 +34,14 @@ export default class IdentifiedResource<
       (Object.keys(props) as A[]).forEach((propname) => {
         const propConf = props[propname];
         if ("method" in propConf) {
-          (ref as AnyRecord)[propname] = Callables.createApi(propname, {
+          (ref as AnyRecord)[propname] = CallableAPIs.defineApi(propname, {
             client,
             prefix: ref.getFullPath(),
             call: propConf,
           });
         } else {
           (ref as AnyRecord)[propname] =
-            AffiliatedResource.createAffiliatedResource(
+            AffiliatedResource.defineResource(
               propname,
               ref,
               propConf
@@ -44,7 +49,7 @@ export default class IdentifiedResource<
         }
       });
     }
-    return ref as ExtendedIdentifiedResource<T, A>;
+    return ref;
   }
 
   private _idOrKeys: IdOrKeys;
@@ -52,8 +57,8 @@ export default class IdentifiedResource<
   private constructor(
     name: string,
     idOrKeys: IdOrKeys,
-    options: RuffCreateResourceOptions<T, never, A>,
-    query: RuffPageableResourcesQueryModel
+    options: RuffResourceDefinationOptions<T, never, A>,
+    query: RuffHttpQueryModel
   ) {
     super(name, options, query);
     this._idOrKeys =
@@ -62,16 +67,27 @@ export default class IdentifiedResource<
         : [idOrKeys];
   }
 
+  getPathAndIdentity(): [string, string] {
+    return [joinPath([this._prefix, this._path]), joinPath(this._idOrKeys)];
+  }
+
   getFullPath() {
     return joinPath([this._prefix, this._path, joinPath(this._idOrKeys)]);
   }
 
+  query(...qs: RuffHttpQueryCondition[]): IdentifiedResource {
+    return ModifiedResource.prototype.query.apply(this, qs) as unknown as IdentifiedResource
+  }
+
   async get(): Promise<AxiosResponse<RuffHttpResponse<T>, any>> {
-    const { data } = await this._client.$get_main_resource(
-      [this._prefix, this._path],
-      this._idOrKeys,
-      this._query
-    );
-    return data;
+    return ModifiedResource.prototype.get.call(this, this._idOrKeys)
+  }
+
+  async set(payload: T, partially: boolean) {
+    return ModifiedResource.prototype.set.call(this, this._idOrKeys, payload, partially)
+  }
+
+  async drop() {
+    return ModifiedResource.prototype.drop.call(this, this._idOrKeys)
   }
 }

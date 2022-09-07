@@ -5,7 +5,7 @@ export default class DataView<
   T extends Record<K, any>,
   K extends string = any,
   OK extends string = any
-> {
+  > {
   static LIST = ResourceMethod.LIST as GetterMethod;
   static GET = ResourceMethod.GET as GetterMethod;
 
@@ -40,11 +40,11 @@ export default class DataView<
   }
 
   getData(
-    idOrkeys: IdOrKeys,
-    subIdOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
+    subIdOrKeys: IdOrKeys,
     query: RuffHttpQueryModel
   ): T;
-  getData(idOrkeys: IdOrKeys, query: RuffHttpQueryModel): T;
+  getData(idOrKeys: IdOrKeys, query: RuffHttpQueryModel): T;
   getData(query: RuffHttpQueryModel): T[];
   getData(...a: any[]): T | T[] {
     if (this._method === ResourceMethod.LIST) return this._getArray();

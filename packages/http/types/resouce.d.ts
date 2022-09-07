@@ -1,15 +1,15 @@
 type Method = number;
 
-interface RuffHttpApiConfiguration {}
+interface RuffHttpApiConfiguration { }
 
-interface RuffHttpRPCConfiguration<T = any, P extends AnyRecord = any> {
+interface RuffHttpRPCConfiguration<T extends RuffHttpResource = any, P extends AnyRecord = any> {
   path?: string;
   method: Method;
   type?: T;
   model?: P;
 }
 
-interface RuffAffiliatedResourceConfiguration<T = any> {
+interface RuffAffiliatedResourceConfiguration<T extends RuffHttpResource = any> {
   path?: string;
   methods: Method[];
   type?: T;
@@ -17,10 +17,11 @@ interface RuffAffiliatedResourceConfiguration<T = any> {
 }
 
 interface RuffResourceConfiguration<
-  T = any,
+  T extends RuffHttpResource = any,
   M extends string = any,
   A extends string = any
 > extends RuffAffiliatedResourceConfiguration<T> {
+  pickable?: boolean | string
   "/"?: Record<M, RuffResourceConfiguration | RuffHttpRPCConfiguration>;
   "/**/"?: Record<
     A,
@@ -28,8 +29,8 @@ interface RuffResourceConfiguration<
   >;
 }
 
-interface RuffCreateResourceOptions<
-  T = any,
+interface RuffResourceDefinationOptions<
+  T extends RuffHttpResource = any,
   M extends string = any,
   A extends string = any
 > {
@@ -39,21 +40,17 @@ interface RuffCreateResourceOptions<
   config?: RuffHttpApiConfiguration;
 }
 
-type AffiliatedResourceGetter<T extends RuffDataModel = any> = (
+type RuffAffiliatedResourceGetter<T extends RuffDataModel = any> = (
   condition?: RuffHttpQueryCondition
 ) => Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
-type CreateRPCApiOptions = {
+type RuffCreateRPCApiOptions = {
   client: RuffClientBasicMethods;
   prefix: string;
   call: RuffHttpRPCConfiguration;
 };
 
-type CallArguments<P extends AnyRecord = any> = {
-  payload?: P;
-  query?: RuffHttpQueryCondition;
-};
 
-type CallableAPI<T = any, P extends AnyRecord = any> = (
-  args: CallArguments<P>
+type RuffCallableAPI<T extends RuffHttpResource = any, P extends AnyRecord = any> = (
+  args: RuffCallArguments<P>
 ) => Promise<AxiosResponse<RuffHttpResponse<T>>>;

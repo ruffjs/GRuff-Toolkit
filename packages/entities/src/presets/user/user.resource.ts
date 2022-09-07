@@ -3,6 +3,7 @@ import { ResourceMethod as M } from "@ruff-web/http/src/utils/resource-methods";
 export default {
     prefix: "api/v1",
     methods: [M.POST, M.LIST, M.PUT, M.DELETE],
+    pickable: false,
     "/": {
         loginLog: {
             methods: [M.LIST],

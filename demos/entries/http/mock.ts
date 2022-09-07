@@ -77,7 +77,7 @@ console.log(await userHttp.list(3));
 //   },
 // });
 
-// const userHttp = Resource.createResource("user", {
+// const userHttp = Resource.defineResource("user", {
 //   resource: userResource,
 //   client: clients.mock,
 //   prefix: "api/v1",

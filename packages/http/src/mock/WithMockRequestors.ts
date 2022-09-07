@@ -8,7 +8,7 @@ import MockResponsor from "../responses/MockResponsor";
 export default class MockRequestor<
   R extends string = any,
   C extends string = any
-  > implements RuffResourceRequestors {
+> implements RuffResourceRequestors {
   private _mockResponsor: MockResponsor;
   private _config: AxiosRequestConfig<any>;
   private _randomRules: Record<string, RuffMockRandom>;
@@ -32,7 +32,7 @@ export default class MockRequestor<
     this._mockResponsor = new MockResponsor(
       this as unknown as RuffClientWithInterceptors
     );
-    console.log(this._randomRules);
+    // console.log(this._randomRules);
   }
 
   $create_main_resource<
@@ -40,7 +40,7 @@ export default class MockRequestor<
     D extends RuffDataModel = any
   >(
     path: RuffResourcePath,
-    data: D,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
@@ -49,7 +49,7 @@ export default class MockRequestor<
 
     return this._mockResponsor.resolve(
       {
-        data,
+        data: payload,
         message: "OK",
         status: 200,
       },
@@ -57,7 +57,7 @@ export default class MockRequestor<
         ...config,
         method: "post",
         url: $(path) + q(query),
-        data,
+        data: payload,
       }
     );
   }
@@ -67,12 +67,12 @@ export default class MockRequestor<
     D extends RuffDataModel = any
   >(
     path: RuffResourcePath,
-    data: D,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<FormData>
   ) {
     const body = new FormData();
-    for (let [key, value] of Object.entries(data || {})) {
+    for (let [key, value] of Object.entries(payload || {})) {
       body.append(key, value);
     }
     return this._mockResponsor.resolve(
@@ -92,7 +92,7 @@ export default class MockRequestor<
     path: RuffResourcePath,
     subPath: RuffResourcePath,
     id: Id,
-    data: D,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
@@ -108,7 +108,7 @@ export default class MockRequestor<
 
   $get_main_resource<T extends RuffDataModel = any, D = any>(
     path: RuffResourcePath,
-    idOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
@@ -128,7 +128,7 @@ export default class MockRequestor<
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
@@ -148,8 +148,8 @@ export default class MockRequestor<
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
-    subIdOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
+    subIdOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
@@ -198,7 +198,7 @@ export default class MockRequestor<
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ) {
@@ -218,13 +218,13 @@ export default class MockRequestor<
   >(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
-    data: D,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
     return this._mockResponsor.resolve(
       {
-        data,
+        payload,
         message: "OK",
         status: 200,
       },
@@ -238,8 +238,8 @@ export default class MockRequestor<
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
-    data: D,
+    idOrKeys: IdOrKeys,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
@@ -259,9 +259,9 @@ export default class MockRequestor<
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
-    subIdOrkeys: IdOrKeys,
-    data: D,
+    idOrKeys: IdOrKeys,
+    subIdOrKeys: IdOrKeys,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
@@ -297,7 +297,7 @@ export default class MockRequestor<
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {
@@ -317,8 +317,8 @@ export default class MockRequestor<
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
-    subIdOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
+    subIdOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ) {

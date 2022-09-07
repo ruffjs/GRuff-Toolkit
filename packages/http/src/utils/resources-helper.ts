@@ -7,11 +7,11 @@ export function registerResources<
 >(
   resources: RuffClientResourcesConfigs<R>,
   calls: RuffClientRPCConfigs<C>,
-  client: Record<R | C, MainResource | CallableAPI>
+  client: Record<R | C, MainResource | RuffCallableAPI>
 ) {
   (Object.keys(calls) as C[]).forEach((callname) => {
     const { prefix, ...call } = calls[callname];
-    client[callname] = CallableAPIs.createApi(callname, {
+    client[callname] = CallableAPIs.defineApi(callname, {
       call,
       prefix,
       client: client as unknown as RuffClientBasicMethods &
@@ -20,7 +20,7 @@ export function registerResources<
   });
   (Object.keys(resources) as R[]).forEach((resourcename) => {
     const { prefix, ...resource } = resources[resourcename];
-    client[resourcename] = MainResource.createResource(resourcename, {
+    client[resourcename] = MainResource.defineResource(resourcename, {
       resource,
       prefix,
       client: client as unknown as RuffClientBasicMethods &

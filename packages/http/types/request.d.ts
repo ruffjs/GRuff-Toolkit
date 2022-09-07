@@ -10,7 +10,7 @@ interface RuffResourceRequestors {
     D extends RuffDataModel = any
   >(
     path: RuffResourcePath,
-    data: D,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, any>>;
@@ -23,7 +23,7 @@ interface RuffResourceRequestors {
     D extends RuffDataModel = any
   >(
     path: RuffResourcePath,
-    data: D,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<FormData>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, FormData>>;
@@ -37,8 +37,8 @@ interface RuffResourceRequestors {
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
-    data: D,
+    idOrKeys: IdOrKeys,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -48,7 +48,7 @@ interface RuffResourceRequestors {
    */
   $get_main_resource<T extends RuffDataModel = any, D = any>(
     path: RuffResourcePath,
-    idOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -62,7 +62,7 @@ interface RuffResourceRequestors {
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -76,8 +76,8 @@ interface RuffResourceRequestors {
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
-    subIdOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
+    subIdOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -100,7 +100,7 @@ interface RuffResourceRequestors {
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<RuffHttpResourcesList<T>>, D>>;
@@ -117,7 +117,7 @@ interface RuffResourceRequestors {
   >(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
-    data: D,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -132,8 +132,8 @@ interface RuffResourceRequestors {
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
-    data: D,
+    idOrKeys: IdOrKeys,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -148,9 +148,9 @@ interface RuffResourceRequestors {
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
-    subIdOrkeys: IdOrKeys,
-    data: D,
+    idOrKeys: IdOrKeys,
+    subIdOrKeys: IdOrKeys,
+    payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -176,7 +176,7 @@ interface RuffResourceRequestors {
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
@@ -190,8 +190,8 @@ interface RuffResourceRequestors {
   >(
     path: RuffResourcePath,
     subPath: RuffResourcePath,
-    idOrkeys: IdOrKeys,
-    subIdOrkeys: IdOrKeys,
+    idOrKeys: IdOrKeys,
+    subIdOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;

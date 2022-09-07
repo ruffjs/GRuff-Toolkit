@@ -4,7 +4,7 @@ import MockClient from "../mock/MockClient";
 import { registerResources } from "../utils/resources-helper";
 import WithInterceptors from "./WithInterceptors";
 import formatMockConfigs from "../utils/configs-helper";
-import { createApiHub, CreateApiHubConfiguration } from "../utils/api-hub";
+import { defineApiHub, CreateApiHubConfiguration } from "../utils/api-hub";
 
 export default class Client<R extends string = any, C extends string = any>
   extends WithInterceptors
@@ -12,15 +12,15 @@ export default class Client<R extends string = any, C extends string = any>
   static createClient<R extends string = any, C extends string = any>(
     options: (RuffClientOptions & RuffClientInterceptors) | string,
     configs?: RuffClientConfigs<R, C>
-  ): Client<R> & Record<R, ExtendedMainResource> & Record<C, CallableAPI>;
+  ): Client<R> & Record<R, ExtendedMainResource> & Record<C, RuffCallableAPI>;
   static createClient<R extends string = any, C extends string = any>(
     options: (RuffClientOptions & RuffClientInterceptors) | string,
     configs: RuffMockClientSimpleConfigs<R>
-  ): MockClient<R> & Record<R, ExtendedMainResource> & Record<C, CallableAPI>;
+  ): MockClient<R> & Record<R, ExtendedMainResource> & Record<C, RuffCallableAPI>;
   static createClient<R extends string = any, C extends string = any>(
     options: (RuffClientOptions & RuffClientInterceptors) | string,
     configs: RuffMockClientWithRandomsConfigs<R>
-  ): MockClient<R> & Record<R, ExtendedMainResource> & Record<C, CallableAPI>;
+  ): MockClient<R> & Record<R, ExtendedMainResource> & Record<C, RuffCallableAPI>;
   static createClient<R extends string = any, C extends string = any>(
     options: (RuffClientOptions & RuffClientInterceptors) | string,
     configs:
@@ -67,7 +67,7 @@ export default class Client<R extends string = any, C extends string = any>
     );
   }
 
-  createApiHub<T extends object = any, P extends Record<keyof T, any> = any>(prefix: string, config: CreateApiHubConfiguration<T>) {
-    return createApiHub<T, P>(prefix, this, config)
+  defineApiHub<T extends object = any, P extends Record<keyof T, any> = any>(prefix: string, config: CreateApiHubConfiguration<T>) {
+    return defineApiHub<T, P>(prefix, this, config)
   }
 }
