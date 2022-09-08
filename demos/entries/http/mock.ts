@@ -29,9 +29,27 @@ mockUserHttp.login({
         clientType: "Web",
     },
 }).then(async (resp) => {
-    // console.log('mockUserHttp.login resp:', resp)
+    console.log('mockUserHttp.login resp:', resp)
 }).catch(err => {
     console.log('mockUserHttp.login err:', err)
+});
+
+mockUserHttp.loginBySmsCode({
+    payload: {
+        loginName: "demo",
+        password: "123456",
+        clientType: "Web",
+    },
+}).then(async (resp) => {
+    console.log('mockUserHttp.login resp:', resp)
+}).catch(err => {
+    console.log('mockUserHttp.login err:', err)
+});
+
+mockUserHttp(1).doSth().then(res => {
+    console.log('userHttp(1).doSth res:', res)
+}).catch(err => {
+    console.log('userHttp(1).doSth err:', err, err.toJSON())
 });
 
 // for (const user of await mockUserHttp.list(3)) {

@@ -76,3 +76,14 @@ export const formatQueryCondition = (...qs: RuffHttpQueryCondition[]) => {
   });
   return qm;
 };
+
+export const injectToken = (tokenProvider: (req: RuffRequestConfig) => string) => {
+  return (req: RuffRequestConfig) => {
+    const token = tokenProvider(req);
+    if (token) {
+      Object.assign(req.headers || {}, {
+        Authorization: `Bearer ${token}`,
+      });
+    }
+  }
+}

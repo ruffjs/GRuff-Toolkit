@@ -42,7 +42,7 @@ interface RuffResourceDefinationOptions<
 
 type RuffAffiliatedResourceGetter<T extends RuffDataModel = any> = (
   condition?: RuffHttpQueryCondition
-) => Promise<AxiosResponse<RuffHttpResponse<T>>>;
+) => Promise<RuffResponseContent<T>>;
 
 type RuffCreateRPCApiOptions = {
   client: RuffClientBasicMethods;
@@ -53,4 +53,4 @@ type RuffCreateRPCApiOptions = {
 
 type RuffCallableAPI<T extends RuffHttpResource = any, P extends AnyRecord = any> = (
   args: RuffCallArguments<P>
-) => Promise<AxiosResponse<RuffHttpResponse<T>>>;
+) => Promise<RuffResponseContent<T>>;

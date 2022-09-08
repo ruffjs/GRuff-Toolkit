@@ -20,9 +20,11 @@ export const formatMockConfig = (
           Object.assign(randomRules, r);
         } else {
           const { path } = opts;
-          const apiId =
-            dirname + "/" + (path ? joinPath(path) : childname) + ":0";
-          randomRules[apiId] = opts[0];
+          if (opts[0]) {
+            const apiId =
+              dirname + "/" + (path ? joinPath(path) : childname) + ":0";
+            randomRules[apiId] = opts[0];
+          }
         }
       });
     } else if (m === "/**/") {
@@ -37,9 +39,11 @@ export const formatMockConfig = (
           Object.assign(randomRules, r);
         } else {
           const { path } = opts;
-          const apiId =
-            dirname + "/**/" + (path ? joinPath(path) : propname) + ":0";
-          randomRules[apiId] = opts[0];
+          if (opts[0]) {
+            const apiId =
+              dirname + "/**/" + (path ? joinPath(path) : propname) + ":0";
+            randomRules[apiId] = opts[0];
+          }
         }
       });
     } else {

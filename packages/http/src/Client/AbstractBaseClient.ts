@@ -13,7 +13,7 @@ export default abstract class AbstractBaseClient {
   };
 
   private _endpoint: string = "/";
-  private _axiosInstance: AxiosInstance;
+  protected _axiosInstance: AxiosInstance;
   private _timeout = 0;
 
   constructor(
@@ -44,60 +44,65 @@ export default abstract class AbstractBaseClient {
     });
   }
 
-  request<T extends RuffHttpResource = any, D = any>(
+  async request<T extends RuffHttpResource = any, D = any>(
     config: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
+  ): Promise<RuffResponseContent<T>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).request<
         T,
-        AxiosResponse<RuffHttpResponse<T>>,
+        RuffResponseContent<T>,
         D
       >(config);
     return Promise.reject("Axios Instance not found.");
   }
-  get<T extends RuffHttpResource = any, D = any>(
+  async get<T extends RuffHttpResource = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
+  ): Promise<RuffResponseContent<T>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).get<
         T,
-        AxiosResponse<RuffHttpResponse<T>>,
+        RuffResponseContent<T>,
         D
       >(url, config);
     return Promise.reject("Axios Instance not found.");
   }
-  post<T extends RuffHttpResource = any, D = any>(
+  async post<T extends RuffHttpResource = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
-    if (this._axiosInstance)
-      return (this._axiosInstance as AxiosInstance).post(url, data, config);
+  ): Promise<RuffResponseContent<T>> {
+    if (this._axiosInstance) {
+      try {
+        return (this._axiosInstance as AxiosInstance).post(url, data, config)
+      } catch (error) {
+        console.log(error)
+      }
+    }
     return Promise.reject("Axios Instance not found.");
   }
-  put<T extends RuffHttpResource = any, D = any>(
+  async put<T extends RuffHttpResource = any, D = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
+  ): Promise<RuffResponseContent<T>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).put(url, data, config);
     return Promise.reject("Axios Instance not found.");
   }
-  patch<T extends RuffHttpResource = any, D = any>(
+  async patch<T extends RuffHttpResource = any, D = any>(
     url: string,
     data?: Partial<D>,
     config?: AxiosRequestConfig<Partial<D>>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
+  ): Promise<RuffResponseContent<T>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).patch(url, data, config);
     return Promise.reject("Axios Instance not found.");
   }
-  delete<T extends RuffHttpResource = any, D = any>(
+  async delete<T extends RuffHttpResource = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
+  ): Promise<RuffResponseContent<T>> {
     if (this._axiosInstance)
       return (this._axiosInstance as AxiosInstance).delete(url, config);
     return Promise.reject("Axios Instance not found.");
@@ -108,9 +113,5 @@ export default abstract class AbstractBaseClient {
       timeout: this._timeout,
       endpoint: this._endpoint,
     };
-  }
-
-  get axiosInstance() {
-    return this._axiosInstance;
   }
 }

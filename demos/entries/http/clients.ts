@@ -32,9 +32,4 @@ const clients = {
   }),
 };
 
-clients.mock.onResponseFulfilled = (res: any) => {
-  console.log(res.status, res);
-  return res.data;
-};
-
 export default clients;

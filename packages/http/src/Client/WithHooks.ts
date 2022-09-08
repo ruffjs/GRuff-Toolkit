@@ -1,63 +1,47 @@
-import { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
-import { withQuery } from "../utils";
+import { AxiosError } from "axios";
 import * as mixins from "../utils/mixin-hooks";
-import MockRequestor from "./WithMockRequestors";
+import RESTfulRequestor from "./WithResourceRequestors";
 
-export default class MockClient<R extends string = any, C extends string = any>
-  extends MockRequestor<R>
+export default class WithHooks
+  extends RESTfulRequestor
   implements RuffClientInterceptors {
-  private _endpoint: string = "mock://";
-  private _timeout = 0;
-
   private __hooks: RuffClientInterceptors = {} as RuffClientInterceptors;
 
-  public constructor(
+  constructor(
     options: (RuffClientOptions & RuffClientInterceptors) | string,
-    config: AxiosRequestConfig<any> = {},
-    resources: RuffClientResourcesConfigs<R>,
-    calls: RuffClientRPCConfigs<C>,
-    randomRules: Record<string, RuffMockRandom> = {}
+    config: RuffRequestConfig = {}
   ) {
-    super(options, config, resources, calls, randomRules);
+    super(options, config);
     Object.assign(this.__hooks, mixins.defaults);
-
     Object.defineProperties(this, {
       ...mixins.publics(this as unknown as RuffClientWithInterceptors),
     });
 
     if (options && typeof options === "object") {
-      (
-        Object.keys(mixins.defaults) as (keyof RuffClientInterceptors)[]
-      ).forEach((hook) => {
-        this[hook] = options[hook] as any;
-      });
+      (Object.keys(mixins.defaults) as (keyof RuffClientInterceptors)[]).forEach(
+        (hook) => {
+          this[hook] = options[hook] as any;
+        }
+      );
     }
-  }
 
-  get network() {
-    return {
-      timeout: this._timeout,
-      endpoint: this._endpoint,
-    };
-  }
-
-  get axiosInstance(): AxiosInstance {
-    return {} as AxiosInstance;
-  }
-
-  withQuery = withQuery;
-
-  request(): Promise<Error> {
-    throw new Error(
-      "You cannot invock this method of a Mock Client, please use an Http Client instead."
+    this._axiosInstance.interceptors.request.use(
+      mixins.privates.__requestFulfilled.bind(
+        this as unknown as RuffClientWithInterceptors
+      ),
+      mixins.privates.__requestRejected.bind(
+        this as unknown as RuffClientWithInterceptors
+      )
+    );
+    this._axiosInstance.interceptors.response.use(
+      mixins.privates.__responseFulfilled.bind(
+        this as unknown as RuffClientWithInterceptors
+      ),
+      mixins.privates.__responseRejected.bind(
+        this as unknown as RuffClientWithInterceptors
+      )
     );
   }
-  get = this.request.bind(this);
-  post = this.request.bind(this);
-  put = this.request.bind(this);
-  patch = this.request.bind(this);
-  delete = this.request.bind(this);
-
   beforeRequest(req: any): void { throw new Error("Method not implemented.") }
   onError(error: Error, response: false): boolean;
   onError(error: AxiosError, response?: AxiosResponse<any, any> | undefined): boolean;

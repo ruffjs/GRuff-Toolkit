@@ -15,7 +15,7 @@ export function defineApiHub<T extends Record<string, any> = any, P extends Reco
     (Object.keys(config) as K[]).forEach(apiname => {
         apis[apiname] = CallableAPIs.defineApi(apiname as string, {
             call: config[apiname],
-            prefix,
+            prefix: [prefix],
             client,
         });
     })

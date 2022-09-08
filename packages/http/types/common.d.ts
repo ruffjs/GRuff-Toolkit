@@ -22,7 +22,7 @@ type RuffHttpResource = RuffDataModel;
 
 type RuffHttpResourcesArray<T extends RuffHttpResource = RuffHttpResource> = T[];
 
-interface RuffHttpResponse<T extends RuffHttpResource> {
+interface RuffResponseContent<T extends RuffHttpResource = any> {
     data?: T;
     code: number;
     message: string;

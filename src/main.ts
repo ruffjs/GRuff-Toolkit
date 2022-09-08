@@ -4,7 +4,7 @@
 
 // import "../demos/entries/http/clients";
 
-// import "../demos/entries/http/user";
+import "../demos/entries/http/user";
 
 import "../demos/entries/http/mock";
 

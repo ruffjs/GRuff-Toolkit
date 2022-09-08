@@ -5,7 +5,7 @@ interface RuffResourceRequestors {
    * ### 创建实体资源
    * #### ResourceMethod.POST
    */
-  $create_main_resource<
+  async $create_main_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -13,12 +13,12 @@ interface RuffResourceRequestors {
     payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, any>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.UPLOAD
    */
-  $create_main_resource_with_attachment<
+  async $create_main_resource_with_attachment<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -26,12 +26,12 @@ interface RuffResourceRequestors {
     payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<FormData>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, FormData>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.POST
    */
-  $create_affiliated_resource<
+  async $create_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -41,22 +41,22 @@ interface RuffResourceRequestors {
     payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.GET
    */
-  $get_main_resource<T extends RuffDataModel = any, D = any>(
+  async $get_main_resource<T extends RuffDataModel = any, D = any>(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.GET
    */
-  $get_affiliated_resource<
+  async $get_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -65,12 +65,12 @@ interface RuffResourceRequestors {
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.GET
    */
-  $get_identifiable_affiliated_resource<
+  async $get_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -80,21 +80,21 @@ interface RuffResourceRequestors {
     subIdOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.LIST
    */
-  $get_main_resources<T extends RuffDataModel = any, D = any>(
+  async $get_main_resources<T extends RuffDataModel = any, D = any>(
     path: RuffResourcePath,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<RuffHttpResourcesList<T>>, D>>;
+  ): Promise<RuffResponseContent<RuffHttpResourcesList<T>>>;
 
   /**
    * #### ResourceMethod.LIST
    */
-  $get_pageable_affiliated_resource<
+  async $get_pageable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -103,7 +103,7 @@ interface RuffResourceRequestors {
     idOrKeys: IdOrKeys,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<RuffHttpResourcesList<T>>, D>>;
+  ): Promise<RuffResponseContent<RuffHttpResourcesList<T>>>;
 
   /** 写入资源 **/
 
@@ -111,7 +111,7 @@ interface RuffResourceRequestors {
    * #### ResourceMethod.PUT
    * #### ResourceMethod.PATCH
    */
-  $set_main_resource<
+  async $set_main_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -120,13 +120,13 @@ interface RuffResourceRequestors {
     payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.PUT
    * #### ResourceMethod.PATCH
    */
-  $set_affiliated_resource<
+  async $set_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -136,13 +136,13 @@ interface RuffResourceRequestors {
     payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.PUT
    * #### ResourceMethod.PATCH
    */
-  $set_identifiable_affiliated_resource<
+  async $set_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -153,24 +153,24 @@ interface RuffResourceRequestors {
     payload: D,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /** 删除资源 **/
 
   /**
    * #### ResourceMethod.DELETE'
    */
-  $remove_main_resource<T extends RuffDataModel = any, D = any>(
+  async $remove_main_resource<T extends RuffDataModel = any, D = any>(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.DELETE
    */
-  $remove_affiliated_resource<
+  async $remove_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -179,12 +179,12 @@ interface RuffResourceRequestors {
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 
   /**
    * #### ResourceMethod.DELETE
    */
-  $remove_identifiable_affiliated_resource<
+  async $remove_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -194,5 +194,5 @@ interface RuffResourceRequestors {
     subIdOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
+  ): Promise<RuffResponseContent<T>>;
 }

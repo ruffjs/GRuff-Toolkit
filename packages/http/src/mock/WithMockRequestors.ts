@@ -3,7 +3,7 @@ import { ResourceMethod as M } from "../utils/resource-methods";
 import { joinPath as $, withQuery as q, toObjectiveQuery as _ } from "../utils";
 import { registerResources } from "../utils/resources-helper";
 import MockResponsor from "../responses/MockResponsor";
-import HTTP_STATUS_CODES from "../utils/status-codes";
+import HTTP_STATUS_CODES, { StatusCode } from "../utils/status-codes";
 
 export default class MockRequestor<
   R extends string = any,
@@ -39,7 +39,7 @@ export default class MockRequestor<
 
   get isMock() { return true }
 
-  $create_main_resource<
+  async $create_main_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -67,7 +67,7 @@ export default class MockRequestor<
     );
   }
 
-  $create_main_resource_with_attachment<
+  async $create_main_resource_with_attachment<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -79,7 +79,7 @@ export default class MockRequestor<
     return this.$create_main_resource(path, payload, query, config as unknown as AxiosRequestConfig<D>)
   }
 
-  $create_affiliated_resource<
+  async $create_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -94,7 +94,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, payload, query }, config)
   }
 
-  $get_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  async $get_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
@@ -104,7 +104,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  $get_affiliated_resource<
+  async $get_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -118,7 +118,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  $get_identifiable_affiliated_resource<
+  async $get_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -133,7 +133,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, subIdOrKeys, query }, config)
   }
 
-  $get_main_resources<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  async $get_main_resources<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     path: RuffResourcePath,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
@@ -142,7 +142,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { query }, config)
   }
 
-  $get_pageable_affiliated_resource<
+  async $get_pageable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -156,7 +156,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  $set_main_resource<
+  async $set_main_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -179,7 +179,7 @@ export default class MockRequestor<
     );
   }
 
-  $set_affiliated_resource<
+  async $set_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -195,7 +195,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, payload, query }, config)
   }
 
-  $set_identifiable_affiliated_resource<
+  async $set_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -212,7 +212,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, subIdOrKeys, payload, query }, config)
   }
 
-  $remove_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  async $remove_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
@@ -222,7 +222,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  $remove_affiliated_resource<
+  async $remove_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -236,7 +236,7 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  $remove_identifiable_affiliated_resource<
+  async $remove_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -251,26 +251,36 @@ export default class MockRequestor<
     return this.$call<T, D>(apiId, { idOrKeys, subIdOrKeys, query }, config)
   }
 
-  $call<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  async $call<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     apiId: string,
     { payload, query, idOrKeys, subIdOrKeys }: CallParams<D> = {},
     config: AxiosRequestConfig<D> = {}
   ) {
-    console.log(apiId, payload, query, idOrKeys)
+    // console.log(apiId, payload, query, idOrKeys)
     const random = this._randomRules[apiId];
     switch (typeof random) {
       case 'function': {
-        const data = random({ payload, query: _(query), idOrKeys: $(idOrKeys), subIdOrKeys: $(subIdOrKeys) }, config)
-        const status = data?.code in HTTP_STATUS_CODES ? data.code : 200
-        return this._mockResponsor.resolve<T, D>(
-          data,
-          config,
-          status
-        );
+        try {
+          const data = await random({ payload, query: _(query), idOrKeys: $(idOrKeys) || undefined, subIdOrKeys: $(subIdOrKeys) || undefined }, config)
+          const status = data?.code in HTTP_STATUS_CODES ? data.code as StatusCode : 200
+          return this._mockResponsor.resolve<T, D>(
+            data,
+            config,
+            status
+          );
+        } catch (error: any) {
+          // console.log("$call", error)
+          const status = error?.code in HTTP_STATUS_CODES ? error.code as StatusCode : 400
+          return this._mockResponsor.reject<T, D>(
+            error,
+            config,
+            status
+          );
+        }
       }
       case 'object': {
-        const data = this._mockParser.parse(random, { payload, query: _(query), idOrKeys: $(idOrKeys), subIdOrKeys: $(subIdOrKeys), config })
-        const status = data?.code in HTTP_STATUS_CODES ? data.code : 200
+        const data = this._mockParser.parse(random, { payload, query: _(query), idOrKeys: $(idOrKeys) || undefined, subIdOrKeys: $(subIdOrKeys) || undefined, config })
+        const status = data?.code in HTTP_STATUS_CODES ? data.code as StatusCode : 200
         return this._mockResponsor.resolve<T, D>(
           data,
           config,

@@ -2,12 +2,12 @@ import { AxiosRequestConfig } from "axios";
 import { ExtendedMainResource } from "../resource/MainResource";
 import MockClient from "../mock/MockClient";
 import { registerResources } from "../utils/resources-helper";
-import WithInterceptors from "./WithInterceptors";
+import WithHooks from "./WithHooks";
 import formatMockConfigs from "../utils/configs-helper";
 import { defineApiHub, CreateApiHubConfiguration } from "../utils/api-hub";
 
 export default class Client<R extends string = any, C extends string = any>
-  extends WithInterceptors
+  extends WithHooks
   implements RuffHttpClient {
   static createClient<R extends string = any, C extends string = any>(
     options: (RuffClientOptions & RuffClientInterceptors) | string,

@@ -80,7 +80,7 @@ export default class IdentifiedResource<
     return ModifiedResource.prototype.query.apply(this, qs) as unknown as IdentifiedResource
   }
 
-  async get(): Promise<AxiosResponse<RuffHttpResponse<T>, any>> {
+  async get(): Promise<RuffResponseContent<T>> {
     return ModifiedResource.prototype.get.call(this, this._idOrKeys)
   }
 

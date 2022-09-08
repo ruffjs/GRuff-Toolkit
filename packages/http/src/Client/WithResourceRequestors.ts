@@ -8,7 +8,7 @@ export default class RESTfulRequestor
   get isMock() { return false }
   withQuery = q;
 
-  $create_resource<T extends RuffDataModel = any, D = any>(
+  async $create_resource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     payload: D,
     query?: RuffHttpQueryCondition,
@@ -17,7 +17,7 @@ export default class RESTfulRequestor
     return this.post<T, D>(pathname + q(query), payload, config);
   }
 
-  $create_main_resource<
+  async $create_main_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -29,7 +29,7 @@ export default class RESTfulRequestor
     return this.$create_resource<T, D>($(path), payload, query, config);
   }
 
-  $create_main_resource_with_attachment<
+  async $create_main_resource_with_attachment<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -45,7 +45,7 @@ export default class RESTfulRequestor
     return this.$create_resource<T, FormData>($(path), body, query, config);
   }
 
-  $create_affiliated_resource<
+  async $create_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -64,7 +64,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $get_resource<T extends RuffDataModel = any, D = any>(
+  async $get_resource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
@@ -72,7 +72,7 @@ export default class RESTfulRequestor
     return this.get<T, D>(pathname + q(query), config);
   }
 
-  $getIdentifiableData<T extends RuffDataModel = any, D = any>(
+  async $getIdentifiableData<T extends RuffDataModel = any, D = any>(
     pathname: string,
     id: Id,
     query?: RuffHttpQueryCondition,
@@ -81,7 +81,7 @@ export default class RESTfulRequestor
     return this.$get_resource<T, D>($([pathname, id]), query, config);
   }
 
-  $get_main_resource<T extends RuffDataModel = any, D = any>(
+  async $get_main_resource<T extends RuffDataModel = any, D = any>(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
@@ -90,7 +90,7 @@ export default class RESTfulRequestor
     return this.$get_resource<T, D>($([$(path), $(idOrKeys)]), query, config);
   }
 
-  $get_affiliated_resource<
+  async $get_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -107,7 +107,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $get_identifiable_affiliated_resource<
+  async $get_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -125,7 +125,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $get_pageable_resource<T extends RuffDataModel = any, D = any>(
+  async $get_pageable_resource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
@@ -133,7 +133,7 @@ export default class RESTfulRequestor
     return this.get<RuffHttpResourcesList<T>, D>(pathname + q(query), config);
   }
 
-  $get_main_resources<T extends RuffDataModel = any, D = any>(
+  async $get_main_resources<T extends RuffDataModel = any, D = any>(
     path: RuffResourcePath,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
@@ -141,7 +141,7 @@ export default class RESTfulRequestor
     return this.$get_pageable_resource<T, D>($(path), query, config);
   }
 
-  $get_pageable_affiliated_resource<
+  async $get_pageable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -158,7 +158,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $set_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  async $set_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     pathname: string,
     data: Partial<D>,
     query?: RuffHttpQueryCondition,
@@ -171,7 +171,7 @@ export default class RESTfulRequestor
     return this.put<T, D>(pathname + q(query), data as D, config);
   }
 
-  $set_main_resource<
+  async $set_main_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -190,7 +190,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $set_affiliated_resource<
+  async $set_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -210,7 +210,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $set_identifiable_affiliated_resource<
+  async $set_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -231,7 +231,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $remove_resource<T extends RuffDataModel = any, D = any>(
+  async $remove_resource<T extends RuffDataModel = any, D = any>(
     pathname: string,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
@@ -239,7 +239,7 @@ export default class RESTfulRequestor
     return this.delete<T, D>(pathname + q(query), config);
   }
 
-  $remove_main_resource<T extends RuffDataModel = any, D = any>(
+  async $remove_main_resource<T extends RuffDataModel = any, D = any>(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
@@ -252,7 +252,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $remove_affiliated_resource<
+  async $remove_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -269,7 +269,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $remove_identifiable_affiliated_resource<
+  async $remove_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -287,7 +287,7 @@ export default class RESTfulRequestor
     );
   }
 
-  $call<T extends RuffDataModel = any, D extends RuffDataModel = any>(): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
+  async $call<T extends RuffDataModel = any, D extends RuffDataModel = any>(): Promise<RuffResponseContent<T>> {
     throw new Error(
       "You cannot invock this method of a Http Client, please use an Mock Client instead."
     );

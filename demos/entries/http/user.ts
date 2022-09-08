@@ -1,9 +1,10 @@
+import { injectToken } from "@ruff-web/http/src/utils";
 import clients from "./clients";
 
 console.log(clients, clients.user.network);
 
-clients.user.onTokenRequired = () =>
-  "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ0eXBlIjoiUGxhdGZvcm0iLCJsZXZlbCI6IkFkbWluIiwidGVuYW50SWQiOjEsImVtYWlsIjoiZGVtbyIsInBob25lIjoiMTgyMTczOTQwNjUiLCJuYW1lIjoi5Y2X5r2uIiwicm9sZXMiOltdLCJwcm9qZWN0cyI6Wy0xXX0sImV4cGlyZUF0IjoxNjU1NzgzMDc5LCJpc3N1ZUF0IjoxNjU1Njk2Njc5LCJpYXQiOjE2NTU2OTY2NzksImlzcyI6InJ1ZmYifQ._g_W-IX97Rqwplaz5zOB1ctodtO2Nh7hDUbRVKS25n9edBS7K5HkhZeFdz5S2UDr5i7uvVdgVZDCQ-Mm0SRtNQ";
+clients.user.beforeRequest = injectToken(() =>
+  "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ0eXBlIjoiUGxhdGZvcm0iLCJsZXZlbCI6IkFkbWluIiwidGVuYW50SWQiOjEsImVtYWlsIjoiZGVtbyIsInBob25lIjoiMTgyMTczOTQwNjUiLCJuYW1lIjoi5Y2X5r2uIiwicm9sZXMiOltdLCJwcm9qZWN0cyI6Wy0xXX0sImV4cGlyZUF0IjoxNjU1NzgzMDc5LCJpc3N1ZUF0IjoxNjU1Njk2Njc5LCJpYXQiOjE2NTU2OTY2NzksImlzcyI6InJ1ZmYifQ._g_W-IX97Rqwplaz5zOB1ctodtO2Nh7hDUbRVKS25n9edBS7K5HkhZeFdz5S2UDr5i7uvVdgVZDCQ-Mm0SRtNQ");
 
 type User = {
   id?: number
@@ -35,65 +36,70 @@ userHttp.login({
   // console.log('userHttp.login resp:', resp)
   const { token } = resp.data
   // console.log('userHttp.login token:', token)
-  clients.user.onTokenRequired = () => token
+  clients.user.beforeRequest = injectToken((req) => token)
 
-  for (const user of await userHttp.list(3)) {
-    console.log(user.name, user, user.rawData);
+  // for (const user of await userHttp.list(3)) {
+  //   console.log(user.name, user, user.rawData);
 
-    user.profile.query({ a: 'foo' })
-    console.log(user.profile.getFullPath(), await user.profile());
-  }
+  //   user.profile.query({ a: 'foo' })
+  //   console.log(user.profile.getFullPath(), await user.profile());
+  // }
 
-  console.log(await userHttp.loginLog.query({ a: 'foo' }).list());
+  // console.log(await userHttp.loginLog.query({ a: 'foo' }).list());
 
-  console.log(
-    await userHttp.query({ role: "Admin" })
-      .query({ role: "PM" })
-      .query("type=Gateway&type=Device", "nodeType=composite")
-      .query({
-        online: true,
-      })
-      .list()
-  );
+  // console.log(
+  //   await userHttp.query({ role: "Admin" })
+  //     .query({ role: "PM" })
+  //     .query("type=Gateway&type=Device", "nodeType=composite")
+  //     .query({
+  //       online: true,
+  //     })
+  //     .list()
+  // );
 
-  // console.log(await userHttp.pick([1, 10]))
+  // // console.log(await userHttp.pick([1, 10]))
 
-  const $typifydUserLoginLogResource = userHttp.loginLog.$typify();
+  // const $typifydUserLoginLogResource = userHttp.loginLog.$typify();
 
-  console.log(await $typifydUserLoginLogResource.list());
+  // console.log(await $typifydUserLoginLogResource.list());
 
-  userHttp.post({
-    "name": "Test User",
-    "phone": "18620881236",
-    "password": "string123",
-    "remark": "string",
-    "roleIds": [1],
-    "allProject": true
-  }).then(
-    async (res) => {
-      console.log("userHttp.post resp", res)
-      console.log(await res.profile())
-      console.log(await userHttp(res.id as number).drop() + "");
-    }
-  ).catch(err => {
-    console.log("userHttp.post err", err)
-  })
+  // userHttp.post({
+  //   "name": "Test User",
+  //   "phone": "18620881236",
+  //   "password": "string123",
+  //   "remark": "string",
+  //   "roleIds": [1],
+  //   "allProject": true
+  // }).then(
+  //   async (res) => {
+  //     console.log("userHttp.post resp", res)
+  //     console.log(await res.profile())
+  //     console.log(await userHttp(res.id as number).drop() + "");
+  //   }
+  // ).catch(err => {
+  //   console.log("userHttp.post err", err)
+  // })
 
-  userHttp(1).doSth()
+  // clients
+  userHttp(1).doSth().then(res => {
+    console.log('userHttp(1).doSth res:', res)
+  }).catch(err => {
+    console.log('userHttp(1).doSth err:', err, err.toJSON())
+  });
 }).catch(err => {
   console.log('userHttp.login err:', err)
 });
 
-await clients.user.login({
-  payload: {
-    loginName: "demo",
-    password: "123456",
-    clientType: "Web",
-  },
-}).then(
-  res => {
-    console.log("clients.user.login resp", res.data)
-  }
-).catch(err => {
-  console.log("clients.user.login err", err)
-})
+// await clients.user.login({
+//   payload: {
+//     loginName: "demo",
+//     password: "123456",
+//     clientType: "Web",
+//   },
+// }).then(
+//   res => {
+//     console.log("clients.user.login resp", res.data)
+//   }
+// ).catch(err => {
+//   console.log("clients.user.login err", err)
+// })

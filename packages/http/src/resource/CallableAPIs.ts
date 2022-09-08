@@ -20,7 +20,7 @@ export default class CallableAPIs<T extends RuffHttpResource = any, P extends An
   private _client: RuffClientBasicMethods;
   private _url: string;
   private _apiId: string;
-  private _idOrKeys: IdOrKeys
+  private _idOrKeys?: IdOrKeys
   private _options: RuffCreateRPCApiOptions;
 
   private constructor(name: string, options: RuffCreateRPCApiOptions) {
@@ -36,48 +36,48 @@ export default class CallableAPIs<T extends RuffHttpResource = any, P extends An
       this._idOrKeys = prefix[1]
     } else {
       this._apiId = `${this._url}:0`
-      this._idOrKeys = ""
+      this._idOrKeys = undefined
     }
     // console.log(this._url, this._apiId, (this._client as any)._randomRules)
     this._options = options;
   }
 
   private async _call(query?: RuffHttpQueryCondition, payload?: P) {
-    // console.log(this._url, this._apiId)
+    // console.log(this._url, this._apiId, this._idOrKeys)
     return this._client.$call(this._apiId, { payload, query, idOrKeys: this._idOrKeys })
   }
 
   async POST({
     payload,
     query,
-  }: RuffCallArguments<P> = {}): Promise<AxiosResponse<RuffHttpResponse<T>>> {
-    console.log(this._client.isMock)
+  }: RuffCallArguments<P> = {}): Promise<RuffResponseContent<T>> {
+    // console.log(this._client.isMock)
     if (this._client.isMock) return this._call(query, payload)
     return this._client.post(this._url + withQuery(query), payload);
   }
   async GET({
     query,
-  }: RuffCallArguments<P> = {}): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  }: RuffCallArguments<P> = {}): Promise<RuffResponseContent<T>> {
     if (this._client.isMock) return this._call(query)
     return this._client.get(this._url + withQuery(query));
   }
   async PUT({
     payload,
     query,
-  }: RuffCallArguments<P> = {}): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  }: RuffCallArguments<P> = {}): Promise<RuffResponseContent<T>> {
     if (this._client.isMock) return this._call(query, payload)
     return this._client.put(this._url + withQuery(query), payload);
   }
   async PATCH({
     payload,
     query,
-  }: RuffCallArguments<P>): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  }: RuffCallArguments<P>): Promise<RuffResponseContent<T>> {
     if (this._client.isMock) return this._call(query, payload)
     return this._client.patch(this._url + withQuery(query), payload);
   }
   async DELETE({
     query,
-  }: RuffCallArguments<P> = {}): Promise<AxiosResponse<RuffHttpResponse<T>>> {
+  }: RuffCallArguments<P> = {}): Promise<RuffResponseContent<T>> {
     if (this._client.isMock) return this._call(query)
     return this._client.delete(this._url + withQuery(query));
   }
