@@ -4,9 +4,9 @@
 
 // import "../demos/entries/http/clients";
 
-import "../demos/entries/http/user";
+// import "../demos/entries/http/user";
 
-import "../demos/entries/http/mock";
+// import "../demos/entries/http/mock";
 
 // import "../demos/entries/http/dataview";
 
@@ -16,4 +16,4 @@ import "../demos/entries/http/mock";
 
 // import "../demos/entries/table";
 
-// import "../demos/entries/spa";
+import "../demos/entries/spa";

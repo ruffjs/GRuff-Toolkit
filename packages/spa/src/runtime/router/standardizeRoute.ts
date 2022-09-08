@@ -79,7 +79,18 @@ export default function standardizeRoute(this: any, item: RuffSPAPageConfig) {
 
   if (item.component) {
     if (item.children && item.children.length) {
-      item.children = item.children.map(standardizeRoute, item);
+      const names: string[] = []
+      item.children = item.children.map(standardizeRoute, item).filter(i => {
+        if (i === undefined) {
+          return false
+        }
+        if (i.name && names.includes(i.name)) {
+          console.error(`route name "${i.name}" has been taken already.`)
+          return false
+        }
+        i.name && names.push(i.name)
+        return true
+      }) as RuffSPAPageConfig[];
     }
   } else if (item.redirect) {
   } else {
@@ -87,7 +98,9 @@ export default function standardizeRoute(this: any, item: RuffSPAPageConfig) {
   }
   if (item.name || item.redirect) {
   } else {
-    throw new TypeError("route must have a name like attr");
+    // throw new TypeError("route must have a name like attr");
+    console.error("route must have a name-like attr")
+    return undefined
   }
 
   return item;

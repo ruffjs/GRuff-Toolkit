@@ -12,31 +12,47 @@ export default [
     icon: "snippets-outlined",
     children: [
       {
-        key: "workspace/pages/fixed",
+        key: "workspace/page/fixed",
         name: "固定高度页面",
-        link: "/pages/fixed",
+        link: "/page/fixed",
       },
       {
-        key: "workspace/pages/scroll",
+        key: "workspace/page/scroll",
         name: "可滚动页面",
-        link: "/pages/realtime",
+        link: "/page/realtime",
       },
       {
-        key: "workspace/pages/with-header-std",
+        key: "workspace/page/with-header-std",
         name: "含通用头部的页面",
-        link: "/pages/with-header-std",
+        link: "/page/with-header-std",
       },
       {
-        key: "workspace/pages/with-header-auto",
+        key: "workspace/page/with-header-auto",
         name: "含通用头部的页面（自动）",
-        link: "/pages/with-header-auto",
+        link: "/page/with-header-auto",
       },
       {
-        key: "workspace/pages/with-header-custom",
+        key: "workspace/page/with-header-custom",
         name: "含自定义头部的页面",
-        link: "/pages/with-header-custom",
+        link: "/page/with-header-custom",
+      },
+      {
+        key: "workspace/page/with-auth-route",
+        name: "需要访问权限的页面（路由级）",
+        link: "/page/with-auth-route",
+      },
+      {
+        key: "workspace/page/with-auth-page",
+        name: "需要访问权限的页面（页面容器级）",
+        link: "/page/with-auth-page",
       },
     ],
+  },
+  {
+    key: "workspace/container",
+    name: "其他SPA容器",
+    icon: "snippets-outlined",
+    children: []
   },
   {
     key: "workspace/table",
@@ -74,9 +90,14 @@ export default [
         link: "/table/cells",
       },
       {
-        key: "workspace/table/cells",
+        key: "workspace/table/cellrenders",
         name: "使用自定义单元格渲染函数",
-        link: "/table/cells",
+        link: "/table/cellrenders",
+      },
+      {
+        key: "workspace/table/cellnames",
+        name: "使用自定义单元格名",
+        link: "/table/cellnames",
       },
     ],
   },
@@ -95,7 +116,7 @@ export default [
   {
     key: "workspace/advance-table",
     name: "表格的高级功能",
-    icon: "table-outlined",
+    icon: "insert-row-above-outlined",
     children: [
       {
         key: "workspace/advance-table/filters-n-orders",
@@ -175,6 +196,22 @@ export default [
     key: "workspace/others",
     name: "其它工具",
     icon: "ellipsis-outlined",
-    children: [],
+    children: [
+      {
+        key: "workspace/others/csv",
+        name: "CSV导入导出",
+        link: "/others/csv",
+      },
+      {
+        key: "workspace/others/icons",
+        name: "集成图标库",
+        link: "/others/icons",
+      },
+      {
+        key: "workspace/others/xrender",
+        name: "XRender Vue Plus",
+        link: "/others/xrender",
+      },
+    ],
   },
 ] as RuffSPAMenuItem[];

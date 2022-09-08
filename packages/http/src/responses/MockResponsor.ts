@@ -44,20 +44,28 @@ class MockResponse<T, D = any> implements AxiosResponse {
 }
 
 export default class MockResponsor {
+  public static enableMockLog = true
   private _durationRange = [200, 2000];
 
   private _random: RandomInstance;
-  private _delay: number;
+
   private _client: RuffClientWithInterceptors;
 
   constructor(client: RuffClientWithInterceptors) {
     this._client = client;
 
     this._random = createRandom();
-    this._delay = this._random.natural(
+  }
+
+  private get _delay() {
+    return this._random.natural(
       this._durationRange[0],
       this._durationRange[1]
     );
+  }
+
+  private _log(res: MockResponse<RuffResponseContent>) {
+    if (!!MockResponsor.enableMockLog) console.info(`%c[Ruff-Http-Client-Mock-Response](use ${this._delay}ms)`, 'color: orange;', res);
   }
 
   async resolve<T extends RuffDataModel = any, D extends RuffDataModel = any>(
@@ -68,7 +76,7 @@ export default class MockResponsor {
     await delay(this._delay);
     const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
     const res = new MockResponse(data, status, statusText, config);
-    console.log("Ruff-Http-Client-Mock-Response:", res, `used ${this._delay}ms.`);
+    this._log(res)
     return res.data;
   }
 
@@ -80,7 +88,7 @@ export default class MockResponsor {
     await delay(this._delay);
     const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
     const res = new MockResponse(data, status, statusText, config);
-    console.log("Ruff-Http-Client-Mock-Response:", res, `used ${this._delay}ms.`);
+    this._log(res)
     return mixins.privates.__responseRejected.call(this._client, new RuffMockError(res, config))
   }
 }

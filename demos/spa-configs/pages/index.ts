@@ -1,49 +1,51 @@
 import { DirectRouter, AnimateRouter, PlaceholderPage } from "@ruff-web/spa";
 
-import HomePage from "../spa-views/home/HomePage.vue";
-
-// import History from "../views/workspace/monitor/HistoryList.vue"
-// import HistoryDetail from "../views/workspace/monitor/HistoryDetail.vue"
-// import RealTime from "../views/workspace/monitor/RealTimeList.vue"
-// import RealTimeDetail from "../views/workspace/monitor/RealTimeDetail.vue"
-
-// import Calibration from "../views/workspace/operation/Calibration.vue"
-
-// import Device from "../views/workspace/device/DeviceList.vue"
-// import DeviceDetail from "../views/workspace/device/DeviceDetail.vue"
-
-// import Site from "../views/workspace/setting/SiteList.vue"
-// import SiteDetail from "../views/workspace/setting/SiteDetail.vue"
-// import User from "../views/workspace/setting/UserList.vue"
+import HomePage from "../../spa-views/home/HomePage.vue";
+import { entities } from "./entites";
+import { forms } from "./form";
+import { pages, spacontainers } from "./spa";
+import { advTables, tables } from "./table";
 
 export default [
   {
     path: "home",
     component: HomePage,
   },
+  pages,
+  spacontainers,
+  tables,
+  forms,
+  advTables,
+  entities,
   {
-    path: "page",
-    component: AnimateRouter,
-    meta: {
-      name: "页面容器",
-    },
-    children: [],
-  },
-  {
-    path: "table",
+    path: "others",
     component: DirectRouter,
     meta: {
-      name: "表格xainggoo组件与单元格组件",
+      name: "其它工具",
     },
-    children: [],
-  },
-  {
-    path: "table",
-    component: DirectRouter,
-    meta: {
-      name: "表格组件与单元格组件",
-    },
-    children: [],
+    children: [
+      {
+        path: "csv",
+        component: PlaceholderPage,
+        meta: {
+          name: "CSV导入导出",
+        },
+      },
+      {
+        path: "icons",
+        component: PlaceholderPage,
+        meta: {
+          name: "集成图标库",
+        },
+      },
+      {
+        path: "xrender",
+        component: PlaceholderPage,
+        meta: {
+          name: "XRender Vue Plus",
+        },
+      },
+    ],
   },
 
   // {

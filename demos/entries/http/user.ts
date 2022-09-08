@@ -38,47 +38,47 @@ userHttp.login({
   // console.log('userHttp.login token:', token)
   clients.user.beforeRequest = injectToken((req) => token)
 
-  // for (const user of await userHttp.list(3)) {
-  //   console.log(user.name, user, user.rawData);
+  for (const user of await userHttp.list(3)) {
+    console.log(user.name, user, user.rawData);
 
-  //   user.profile.query({ a: 'foo' })
-  //   console.log(user.profile.getFullPath(), await user.profile());
-  // }
+    user.profile.query({ a: 'foo' })
+    console.log(user.profile.getFullPath(), await user.profile());
+  }
 
-  // console.log(await userHttp.loginLog.query({ a: 'foo' }).list());
+  console.log(await userHttp.loginLog.query({ a: 'foo' }).list());
 
-  // console.log(
-  //   await userHttp.query({ role: "Admin" })
-  //     .query({ role: "PM" })
-  //     .query("type=Gateway&type=Device", "nodeType=composite")
-  //     .query({
-  //       online: true,
-  //     })
-  //     .list()
-  // );
+  console.log(
+    await userHttp.query({ role: "Admin" })
+      .query({ role: "PM" })
+      .query("type=Gateway&type=Device", "nodeType=composite")
+      .query({
+        online: true,
+      })
+      .list()
+  );
 
-  // // console.log(await userHttp.pick([1, 10]))
+  // console.log(await userHttp.pick([1, 10]))
 
-  // const $typifydUserLoginLogResource = userHttp.loginLog.$typify();
+  const $typifydUserLoginLogResource = userHttp.loginLog.$typify();
 
-  // console.log(await $typifydUserLoginLogResource.list());
+  console.log(await $typifydUserLoginLogResource.list());
 
-  // userHttp.post({
-  //   "name": "Test User",
-  //   "phone": "18620881236",
-  //   "password": "string123",
-  //   "remark": "string",
-  //   "roleIds": [1],
-  //   "allProject": true
-  // }).then(
-  //   async (res) => {
-  //     console.log("userHttp.post resp", res)
-  //     console.log(await res.profile())
-  //     console.log(await userHttp(res.id as number).drop() + "");
-  //   }
-  // ).catch(err => {
-  //   console.log("userHttp.post err", err)
-  // })
+  userHttp.post({
+    "name": "Test User",
+    "phone": "18620881236",
+    "password": "string123",
+    "remark": "string",
+    "roleIds": [1],
+    "allProject": true
+  }).then(
+    async (res) => {
+      console.log("userHttp.post resp", res)
+      console.log(await res.profile())
+      console.log(await userHttp(res.id as number).drop() + "");
+    }
+  ).catch(err => {
+    console.log("userHttp.post err", err)
+  })
 
   // clients
   userHttp(1).doSth().then(res => {
