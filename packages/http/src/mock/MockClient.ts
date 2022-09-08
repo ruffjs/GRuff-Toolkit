@@ -5,8 +5,7 @@ import MockRequestor from "./WithMockRequestors";
 
 export default class MockClient<R extends string = any, C extends string = any>
   extends MockRequestor<R>
-  implements RuffClientInterceptors
-{
+  implements RuffClientInterceptors {
   private _endpoint: string = "mock://";
   private _timeout = 0;
 

@@ -49,7 +49,7 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
     ref: AbstractBaseResource,
     options: RuffAffiliatedResourceConfiguration<T>
   ) {
-    console.log(ref, options)
+    // console.log(ref, options)
     this._ref = ref;
     this._name = name;
     this._options = options

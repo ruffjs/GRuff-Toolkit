@@ -110,12 +110,17 @@ export default class ModifiedResource<
       );
       const list = new HttpResourcesList<T, A>(data);
       data?.content?.forEach((item: any) => {
-        const ref = IdentifiedResource.defineResource<T, A>(
-          this._path,
-          item.id,
-          this._options,
-          {}
-        );
+        let ref: any
+        if (item.id) {
+          ref = IdentifiedResource.defineResource<T, A>(
+            this._path,
+            item.id,
+            this._options,
+            {}
+          );
+        } else {
+          ref = {}
+        }
         list.push(HttpPackagedResource.packageResource<T, A>(item, ref));
       });
       return list;

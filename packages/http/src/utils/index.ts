@@ -6,22 +6,22 @@ export const isNotEmpty = (obj: any) => obj !== null && !isEmptyObject(obj);
 
 type joinable = RuffResourcePath | IdOrKeys;
 
-export const joinPath = (path: joinable) => {
+export const joinPath = (path?: joinable) => {
   if (typeof path === "object" && path instanceof Array) {
     return (
       path
         .filter((dir) => !!dir)
         .join("/")
-        .replace(/\/+/, "/") || "/"
+        .replace(/\/+/, "/") || ""
     );
   }
   if (typeof path === "string") {
-    return path.replace(/\/+/, "/") || "/";
+    return path.replace(/\/+/, "/") || "";
   }
   if (typeof path === "number") {
-    return String(path) || "/";
+    return String(path) || "";
   }
-  return "/";
+  return "";
 };
 
 export const withQuery = (query?: RuffHttpQueryCondition) => {
@@ -32,7 +32,15 @@ export const withQuery = (query?: RuffHttpQueryCondition) => {
   return "";
 };
 
-class _MultipleValues extends Array {}
+export const toObjectiveQuery = (query?: RuffHttpQueryCondition) => {
+  if (typeof query === "string")
+    return QS.parse(query.replace(/^\?/, "").replace(/\?$/, "")) || {}
+  if (typeof query === "object")
+    return isNotEmpty(query) ? query : {};
+  return {};
+};
+
+class _MultipleValues extends Array { }
 const formatQueryConditionUnit = (query: RuffHttpQueryCondition) => {
   if (query) {
     if (typeof query === "object") return query;

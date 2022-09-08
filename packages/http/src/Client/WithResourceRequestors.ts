@@ -1,10 +1,11 @@
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { joinPath as $, withQuery as q } from "../utils";
 import AbstractBaseClient from "./AbstractBaseClient";
 
 export default class RESTfulRequestor
   extends AbstractBaseClient
   implements RuffResourceMethods, RuffResourceRequestors {
+  get isMock() { return false }
   withQuery = q;
 
   $create_resource<T extends RuffDataModel = any, D = any>(
@@ -286,34 +287,9 @@ export default class RESTfulRequestor
     );
   }
 
-  $call<T extends RuffDataModel = any, P extends AnyRecord = any>(
-    path: RuffResourcePath,
-    callPath: RuffResourcePath,
-    payload: P,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<P>
-  ) {
-    return this.request<T, P>({
-      method: "post",
-      ...config,
-      url: $([$(path), $(callPath)]) + q(query),
-      data: payload,
-    });
-  }
-
-  $call_by_id_or_keys<T extends RuffDataModel = any, P extends AnyRecord = any>(
-    path: RuffResourcePath,
-    callPath: RuffResourcePath,
-    idOrKeys: IdOrKeys,
-    payload: P,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<P>
-  ) {
-    return this.request<T, P>({
-      method: "post",
-      ...config,
-      url: $([$(path), $(idOrKeys), $(callPath)]) + q(query),
-      data: payload,
-    });
+  $call<T extends RuffDataModel = any, D extends RuffDataModel = any>(): Promise<AxiosResponse<RuffHttpResponse<T>, D>> {
+    throw new Error(
+      "You cannot invock this method of a Http Client, please use an Mock Client instead."
+    );
   }
 }

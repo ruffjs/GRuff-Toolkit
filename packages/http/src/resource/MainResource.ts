@@ -55,7 +55,7 @@ export default class MainResource<
         if ("method" in opts) {
           attrs[childname] = CallableAPIs.defineApi(childname, {
             client,
-            prefix: res.getFullPath(),
+            prefix: [res.getFullPath()],
             call: opts,
           });
         } else {

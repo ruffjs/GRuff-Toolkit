@@ -195,39 +195,4 @@ interface RuffResourceRequestors {
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
-
-  /**
-   * ### 主RPC风格接口
-   * @param path
-   * @param command
-   * @param payload
-   * @param query
-   * @param config
-   */
-  $call<T extends RuffDataModel = any, A extends AnyRecord = any>(
-    path: RuffResourcePath,
-    callPath: RuffResourcePath,
-    payload: P,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<P>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, P>>;
-
-  /**
-   * ### 附属RPC风格接口
-   * #### /api/v1/device/{deviceId}/acquisition/refresh
-   * @param path
-   * @param command
-   * @param idOrKeys
-   * @param payload
-   * @param query
-   * @param config
-   */
-  $call_by_id_or_keys<T extends RuffDataModel = any, P extends AnyRecord = any>(
-    path: RuffResourcePath,
-    callPath: RuffResourcePath,
-    idOrKeys: IdOrKeys,
-    payload: P,
-    query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<P>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>, P>>;
 }

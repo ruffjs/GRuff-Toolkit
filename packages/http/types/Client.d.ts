@@ -1,36 +1,50 @@
+
+type CallParams<P extends RuffDataModel = any> = {
+  payload?: P,
+  query?: RuffHttpQueryCondition,
+  idOrKeys?: IdOrKeys,
+  subIdOrKeys?: IdOrKeys,
+}
 interface RuffClientBasicMethods {
+  isMock: boolean;
   // 请求需要授权时
-  request<T extends RuffHttpResource = any, D = any>(
+  request<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     config: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
-  get<T extends RuffHttpResource = any, D = any>(
+  get<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     url: string,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
-  post<T extends RuffHttpResource = any, D = any>(
-    url: string,
-    data?: D,
-    config?: AxiosRequestConfig<D>
-  ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
-
-  put<T extends RuffHttpResource = any, D = any>(
+  post<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     url: string,
     data?: D,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
-  patch<T extends RuffHttpResource = any, D = any>(
+  put<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig<D>
+  ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
+
+  patch<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     url: string,
     data?: Partial<D>,
     config?: AxiosRequestConfig<Partial<D>>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
 
-  delete<T extends RuffHttpResource = any, D = any>(
+  delete<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     url: string,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>>>;
+
+  $call<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+    apiId: string,
+    params: CallParams<D>,
+    config?: AxiosRequestConfig<D>
+  ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
   get network(): {
     timeout: number;
@@ -42,7 +56,7 @@ interface RuffClientBasicMethods {
 
 interface RuffResourceMethods extends RuffClientBasicMethods {
   /** 创建资源 */
-  $create_resource<T extends RuffDataModel = any, D = any>(
+  $create_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     pathname: string,
     model: D,
     query?: RuffHttpQueryCondition,
@@ -50,13 +64,13 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
   ): Promise<AxiosResponse<RuffHttpResponse<T>, any>>;
 
   /** 获取资源 */
-  $get_resource<T extends RuffDataModel = any, D = any>(
+  $get_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     pathname: string,
     query?: RuffHttpQueryCondition,
     config?: AxiosRequestConfig<D>
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
-  $get_pageable_resource<T extends RuffDataModel = any, D = any>(
+  $get_pageable_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     pathname: string,
     query?: RuffPageableResourcesQueryModel,
     config?: AxiosRequestConfig<D>
@@ -72,15 +86,15 @@ interface RuffResourceMethods extends RuffClientBasicMethods {
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 
   /** 删除资源 */
-  $remove_resource<T extends RuffDataModel = any, D = any>(
+  $remove_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     pathname: string,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: AxiosRequestConfig<D>,
   ): Promise<AxiosResponse<RuffHttpResponse<T>, D>>;
 }
 
 type RuffRequestConfig<T = any> = AxiosRequestConfig<T> | {};
-type RuffResponse<T extends RuffHttpResource = any, D = any> = AxiosResponse<T, D> | {};
+type RuffResponse<T extends RuffHttpResource = any, D extends RuffDataModel = any> = AxiosResponse<T, D> | {};
 interface RuffClientInterceptors {
   // 请求需要授权时
   onTokenRequired(req: RuffRequestConfig): string | null;

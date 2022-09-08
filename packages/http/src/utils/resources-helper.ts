@@ -13,7 +13,7 @@ export function registerResources<
     const { prefix, ...call } = calls[callname];
     client[callname] = CallableAPIs.defineApi(callname, {
       call,
-      prefix,
+      prefix: [prefix],
       client: client as unknown as RuffClientBasicMethods &
         RuffResourceRequestors,
     });

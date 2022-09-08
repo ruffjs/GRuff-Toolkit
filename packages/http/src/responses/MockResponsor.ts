@@ -60,11 +60,25 @@ export default class MockResponsor {
     );
   }
 
-  async resolve<T, D = any>(
-    data: T,
+  async resolve<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+    data: RuffHttpResponse<T>,
     config: AxiosRequestConfig<D> = {},
-    status: StatusCode = 200
-  ) {
+    status: StatusCode = 200,
+  ): Promise<MockResponse<RuffHttpResponse<T>, D>> {
+    await delay(this._delay);
+    const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
+    const res = new MockResponse(data, status, statusText, config);
+    console.log("模拟请求:", `duration: ${this._delay}ms`, "RawData:", res);
+    return await Promise.resolve(
+      mixins.privates.__responseFulfilled.call(this._client, res)
+    );
+  }
+
+  async reject<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+    data: RuffHttpResponse<T>,
+    config: AxiosRequestConfig<D> = {},
+    status: StatusCode = 400,
+  ): Promise<MockResponse<RuffHttpResponse<T>, D>> {
     await delay(this._delay);
     const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
     const res = new MockResponse(data, status, statusText, config);

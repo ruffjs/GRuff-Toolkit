@@ -46,7 +46,7 @@ type RuffAffiliatedResourceGetter<T extends RuffDataModel = any> = (
 
 type RuffCreateRPCApiOptions = {
   client: RuffClientBasicMethods;
-  prefix: string;
+  prefix: string[];
   call: RuffHttpRPCConfiguration;
 };
 

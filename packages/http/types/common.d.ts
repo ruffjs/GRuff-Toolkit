@@ -23,9 +23,18 @@ type RuffHttpResource = RuffDataModel;
 type RuffHttpResourcesArray<T extends RuffHttpResource = RuffHttpResource> = T[];
 
 interface RuffHttpResponse<T extends RuffHttpResource> {
+    data?: T;
+    code: number;
+    message: string;
+}
+
+interface AxiosResponse<T = any, D = any> {
     data: T;
     status: number;
-    message: string;
+    statusText: string;
+    headers: AxiosResponseHeaders;
+    config: AxiosRequestConfig<D>;
+    request?: any;
 }
 
 interface RuffHttpPageableResources<T extends RuffHttpResource> {

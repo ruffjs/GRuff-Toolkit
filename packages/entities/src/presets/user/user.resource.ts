@@ -4,6 +4,7 @@ export default {
     prefix: "api/v1",
     methods: [M.POST, M.LIST, M.PUT, M.DELETE],
     pickable: false,
+    keyf: 'id',
     "/": {
         loginLog: {
             methods: [M.LIST],

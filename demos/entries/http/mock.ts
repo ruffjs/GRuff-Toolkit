@@ -1,12 +1,40 @@
-import Resource from "@ruff-web/http/src/resource/MainResource";
-import userResource from "@ruff-web/entities/src/presets/user/user.mock";
 import clients from "./clients";
 
-const userHttp = clients.mock.user.$typify();
+type User = {
+    id?: number
+    name: string
+    email?: string
+    phone: string
+    password: string
+    remark: string
+    roleIds: number[]
+    projectIds?: number[]
+    allProject: boolean
+}
 
-console.log(await userHttp.list(3));
+const mockUserHttp = clients.mock.user.$typify<
+    "loginLog" | "token",
+    "login" | "loginBySmsCode",
+    "profile" | "password" | "bindPhone",
+    "doSth",
+    User
+>();
 
-// for (const user of await userHttp.list(3)) {
+console.log(await mockUserHttp.list(3));
+
+mockUserHttp.login({
+    payload: {
+        loginName: "demo",
+        password: "123456",
+        clientType: "Web",
+    },
+}).then(async (resp) => {
+    // console.log('mockUserHttp.login resp:', resp)
+}).catch(err => {
+    console.log('mockUserHttp.login err:', err)
+});
+
+// for (const user of await mockUserHttp.list(3)) {
 //   console.log(user.name, user, user.rawData);
 //   console.log(await user.profile());
 // }
@@ -77,13 +105,13 @@ console.log(await userHttp.list(3));
 //   },
 // });
 
-// const userHttp = Resource.defineResource("user", {
+// const mockUserHttp = Resource.defineResource("user", {
 //   resource: userResource,
 //   client: clients.mock,
 //   prefix: "api/v1",
 // });
 
-// const res = await userHttp.post({
+// const res = await mockUserHttp.post({
 //   name: "string",
 //   email: "string",
 //   phone: "string",

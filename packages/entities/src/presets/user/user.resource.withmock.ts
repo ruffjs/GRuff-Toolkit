@@ -3,6 +3,8 @@ import { ResourceMethod as M } from "@ruff-web/http/src/utils/resource-methods";
 export default {
     prefix: 'api/v1',
     methods: [M.POST, M.LIST, M.PUT, M.DELETE],
+    pickable: false,
+    keyf: 'id',
     [M.POST]: () => {
         console.log("11111");
     },
@@ -10,10 +12,10 @@ export default {
         return {
             content: [
                 {
-                    foo: "bar1",
+                    id: "bar1",
                 },
                 {
-                    foo: "bar2",
+                    id: "bar2",
                 },
                 {
                     foo: "bar3",

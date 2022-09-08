@@ -36,7 +36,7 @@ export default class IdentifiedResource<
         if ("method" in propConf) {
           (ref as AnyRecord)[propname] = CallableAPIs.defineApi(propname, {
             client,
-            prefix: ref.getFullPath(),
+            prefix: ref.getPathAndIdentity(),
             call: propConf,
           });
         } else {
@@ -72,6 +72,7 @@ export default class IdentifiedResource<
   }
 
   getFullPath() {
+    console.log(this._prefix, this._path, this._idOrKeys)
     return joinPath([this._prefix, this._path, joinPath(this._idOrKeys)]);
   }
 
