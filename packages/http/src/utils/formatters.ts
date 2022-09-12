@@ -24,7 +24,7 @@ export const joinPath = (path?: joinable) => {
   return "";
 };
 
-export const withQuery = (query?: RuffHttpQueryCondition) => {
+export const withQueryString = (query?: RuffHttpQueryCondition) => {
   if (typeof query === "string")
     return ("?" + query.replace(/^\?/, "")).replace(/\?$/, "");
   if (typeof query === "object")
@@ -77,8 +77,8 @@ export const formatQueryCondition = (...qs: RuffHttpQueryCondition[]) => {
   return qm;
 };
 
-export const injectToken = (tokenProvider: (req: RuffRequestConfig) => string) => {
-  return (req: RuffRequestConfig) => {
+export const injectToken = (tokenProvider: (req: RuffClientRequestConfig) => string) => {
+  return (req: RuffClientRequestConfig) => {
     const token = tokenProvider(req);
     if (token) {
       Object.assign(req.headers || {}, {

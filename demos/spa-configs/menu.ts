@@ -46,6 +46,11 @@ export default [
         name: "需要访问权限的页面（页面容器级）",
         link: "/page/with-auth-page",
       },
+      {
+        key: "workspace/page/404",
+        name: "工作区404",
+        link: "/page/404",
+      },
     ],
   },
   {

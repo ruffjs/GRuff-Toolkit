@@ -1,85 +1,63 @@
-import { AxiosRequestConfig } from "axios";
-import { ResourceMethod as M } from "../utils/resource-methods";
-import { joinPath as $, withQuery as q, toObjectiveQuery as _ } from "../utils";
-import { registerResources } from "../utils/resources-helper";
-import MockResponsor from "../responses/MockResponsor";
-import HTTP_STATUS_CODES, { StatusCode } from "../utils/status-codes";
+import { ResourceMethod as M } from "../../utils/resource-methods";
+import { joinPath as $, withQueryString as q, toObjectiveQuery as _ } from "../../utils/formatters";
+import HTTP_STATUS_CODES, { StatusCode } from "../../utils/status-codes";
+import MockResponsor from "../../models/MockResponsor";
+import AbstractBaseClient from "../core/AbstractBaseClient";
 
-export default class MockRequestor<
+export default abstract class MockRequestor<
   R extends string = any,
   C extends string = any
-> implements RuffResourceRequestors {
+> extends AbstractBaseClient<R, C> implements RuffClientResourceRequestorAPIs {
   private _mockResponsor: MockResponsor;
-  private _config: AxiosRequestConfig<any>;
-  private _randomRules: Record<string, RuffMockRandom>;
+  private _config: RuffClientRequestConfig<any>;
+  private _mockRules: Record<string, RuffMockRandomConfig>;
   private _mockParser: any
 
-  withQuery = q;
-  toObjectiveQuery = _
-
   protected constructor(
-    options: (RuffClientOptions & RuffClientInterceptors) | string,
-    config: AxiosRequestConfig<any> = {},
+    options: (RuffCreateClientOptions & Partial<RuffClientHooks>) | string,
+    config: RuffClientRequestConfig<any> = {},
     resources: RuffClientResourcesConfigs<R>,
-    calls: RuffClientRPCConfigs<C>,
-    randomRules: Record<string, RuffMockRandom> = {}
+    calls: RuffClientCallersConfigs<C>,
+    mockRules: Record<string, RuffMockRandomConfig> = {}
   ) {
+    super(options, resources, calls)
     if (options) {
     }
 
-    registerResources(resources, calls, this as any);
-
     this._config = config || {};
-    this._randomRules = randomRules;
-    this._mockResponsor = new MockResponsor(
-      this as unknown as RuffClientWithInterceptors
-    );
-    // console.log(this._randomRules);
+    this._mockRules = mockRules;
+    this._mockResponsor = new MockResponsor(this as unknown as RuffClient);
   }
 
   get isMock() { return true }
 
-  async $create_main_resource<
+  async $_create_main_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
     path: RuffResourcePath,
     payload: D,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}:${M.POST}`
-    console.log("apiId:", apiId);
-    return this.$call<T, D>(apiId, { payload, query }, config)
-
-    return this._mockResponsor.resolve(
-      {
-        data: payload as unknown as T,
-        message: "OK",
-        code: 200,
-      },
-      {
-        ...config,
-        method: "post",
-        url: $(path) + q(query),
-        data: payload,
-      }
-    );
+    // console.log("apiId:", apiId);
+    return this.$_call<T, D>(apiId, { payload, query }, config)
   }
 
-  async $create_main_resource_with_attachment<
+  async $_create_main_resource_with_attachment<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
     path: RuffResourcePath,
     payload: D,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<FormData>
+    config?: RuffClientRequestConfig<FormData>
   ) {
-    return this.$create_main_resource(path, payload, query, config as unknown as AxiosRequestConfig<D>)
+    return this.$_create_main_resource(path, payload, query, config as unknown as RuffClientRequestConfig<D>)
   }
 
-  async $create_affiliated_resource<
+  async $_create_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -88,23 +66,23 @@ export default class MockRequestor<
     idOrKeys: IdOrKeys,
     payload: D,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}/**/${$(subPath)}:${M.POST}`
-    return this.$call<T, D>(apiId, { idOrKeys, payload, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, payload, query }, config)
   }
 
-  async $get_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  async $_get_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}:${M.GET}`
-    return this.$call<T, D>(apiId, { idOrKeys, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  async $get_affiliated_resource<
+  async $_get_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -112,13 +90,13 @@ export default class MockRequestor<
     subPath: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}/**/${$(subPath)}:${M.GET}`
-    return this.$call<T, D>(apiId, { idOrKeys, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  async $get_identifiable_affiliated_resource<
+  async $_get_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -127,22 +105,22 @@ export default class MockRequestor<
     idOrKeys: IdOrKeys,
     subIdOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}/**/${$(subPath)}:${M.GET}`
-    return this.$call<T, D>(apiId, { idOrKeys, subIdOrKeys, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, subIdOrKeys, query }, config)
   }
 
-  async $get_main_resources<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  async $_get_main_resources<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     path: RuffResourcePath,
     query?: RuffPageableResourcesQueryModel,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}:${M.LIST}`;
-    return this.$call<T, D>(apiId, { query }, config)
+    return this.$_call<T, D>(apiId, { query }, config)
   }
 
-  async $get_pageable_affiliated_resource<
+  async $_get_pageable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -150,13 +128,13 @@ export default class MockRequestor<
     subPath: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffPageableResourcesQueryModel,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}/**/${$(subPath)}:${M.LIST}`
-    return this.$call<T, D>(apiId, { idOrKeys, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  async $set_main_resource<
+  async $_set_main_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -164,22 +142,14 @@ export default class MockRequestor<
     idOrKeys: IdOrKeys,
     payload: D,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const mockPort = (config as any)?.partially ? M.PATCH : M.PUT
     const apiId = `${$(path)}:${mockPort}`
-    return this.$call<T, D>(apiId, { idOrKeys, payload, query }, config)
-    return this._mockResponsor.resolve(
-      {
-        data: payload as unknown as T,
-        message: "OK",
-        code: 200,
-      },
-      config
-    );
+    return this.$_call<T, D>(apiId, { idOrKeys, payload, query }, config)
   }
 
-  async $set_affiliated_resource<
+  async $_set_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -188,14 +158,14 @@ export default class MockRequestor<
     idOrKeys: IdOrKeys,
     payload: D,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const mockPort = (config as any)?.partially ? M.PATCH : M.PUT
     const apiId = `${$(path)}/**/${$(subPath)}:${mockPort}`
-    return this.$call<T, D>(apiId, { idOrKeys, payload, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, payload, query }, config)
   }
 
-  async $set_identifiable_affiliated_resource<
+  async $_set_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -205,24 +175,24 @@ export default class MockRequestor<
     subIdOrKeys: IdOrKeys,
     payload: D,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const mockPort = (config as any)?.partially ? M.PATCH : M.PUT
     const apiId = `${$(path)}/**/${$(subPath)}:${mockPort}`
-    return this.$call<T, D>(apiId, { idOrKeys, subIdOrKeys, payload, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, subIdOrKeys, payload, query }, config)
   }
 
-  async $remove_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  async $_remove_main_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     path: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}:${M.DELETE}`
-    return this.$call<T, D>(apiId, { idOrKeys, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  async $remove_affiliated_resource<
+  async $_remove_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -230,13 +200,13 @@ export default class MockRequestor<
     subPath: RuffResourcePath,
     idOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}/**/${$(subPath)}:${M.DELETE}`
-    return this.$call<T, D>(apiId, { idOrKeys, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, query }, config)
   }
 
-  async $remove_identifiable_affiliated_resource<
+  async $_remove_identifiable_affiliated_resource<
     T extends RuffDataModel = any,
     D extends RuffDataModel = any
   >(
@@ -245,19 +215,19 @@ export default class MockRequestor<
     idOrKeys: IdOrKeys,
     subIdOrKeys: IdOrKeys,
     query?: RuffHttpQueryCondition,
-    config?: AxiosRequestConfig<D>
+    config?: RuffClientRequestConfig<D>
   ) {
     const apiId = `${$(path)}/**/${$(subPath)}:${M.DELETE}`
-    return this.$call<T, D>(apiId, { idOrKeys, subIdOrKeys, query }, config)
+    return this.$_call<T, D>(apiId, { idOrKeys, subIdOrKeys, query }, config)
   }
 
-  async $call<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  async $_call<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     apiId: string,
-    { payload, query, idOrKeys, subIdOrKeys }: CallParams<D> = {},
-    config: AxiosRequestConfig<D> = {}
+    { payload, query, idOrKeys, subIdOrKeys }: RuffClientResourceCallParams<D> = {},
+    config: RuffClientRequestConfig<D> = {}
   ) {
     // console.log(apiId, payload, query, idOrKeys)
-    const random = this._randomRules[apiId];
+    const random = this._mockRules[apiId];
     switch (typeof random) {
       case 'function': {
         try {
@@ -269,7 +239,7 @@ export default class MockRequestor<
             status
           );
         } catch (error: any) {
-          // console.log("$call", error)
+          // console.log("$_call", error)
           const status = error?.code in HTTP_STATUS_CODES ? error.code as StatusCode : 400
           return this._mockResponsor.reject<T, D>(
             error,

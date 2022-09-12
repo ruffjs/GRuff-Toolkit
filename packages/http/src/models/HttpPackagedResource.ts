@@ -1,9 +1,9 @@
-import AffiliatedResource from "../resource/AffiliatedResource";
-import { ExtendedIdentifiedResource } from "../resource/IdentifiedResource";
+import AffiliatedResource from "../resources/AffiliatedResource";
+import { ExtendedIdentifiedResource } from "../resources/IdentifiedResource";
 
 export type ProxiedHttpPackagedResource<T extends RuffHttpResource = any, A extends string = any> = HttpPackagedResource<T, A> & T &
   Record<A, RuffAffiliatedResourceGetter & AffiliatedResource> &
-  Record<A, RuffCallableAPI> & {
+  Record<A, RuffResourceCaller> & {
     rawData: T
   };
 

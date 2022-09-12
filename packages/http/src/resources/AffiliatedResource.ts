@@ -1,6 +1,5 @@
-import { AxiosResponse } from "axios";
-import HttpPackagedResource from "../responses/HttpPackagedResource";
-import { formatQueryCondition, joinPath } from "../utils/index";
+import HttpPackagedResource from "../models/HttpPackagedResource";
+import { formatQueryCondition, joinPath } from "../utils/formatters";
 import { ResourceMethod } from "../utils/resource-methods";
 import AbstractBaseResource from "./AbstractBaseResource";
 
@@ -8,7 +7,7 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
   static defineResource<T extends RuffHttpResource = any>(
     name: string,
     ref: AbstractBaseResource,
-    options: RuffAffiliatedResourceConfiguration<T>
+    options: RuffCreateAffiliatedResourceConfig<T>
   ) {
     const resource = new AffiliatedResource<T>(name, ref, options);
     const callable = function RuffAffiliatedResourceGetter(subIdOrKeys?: IdOrKeys) {
@@ -42,14 +41,13 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
 
   private _ref: AbstractBaseResource;
   private _name: string;
-  private _options: RuffAffiliatedResourceConfiguration<T>;
+  private _options: RuffCreateAffiliatedResourceConfig<T>;
   private _query: RuffHttpQueryModel;
   private constructor(
     name: string,
     ref: AbstractBaseResource,
-    options: RuffAffiliatedResourceConfiguration<T>
+    options: RuffCreateAffiliatedResourceConfig<T>
   ) {
-    // console.log(ref, options)
     this._ref = ref;
     this._name = name;
     this._options = options
@@ -81,7 +79,7 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
       const [path, idOrKeys] = this._ref.getPathAndIdentity()
       const { data } = await this._ref
         .getClient()
-        .$create_affiliated_resource(
+        .$_create_affiliated_resource(
           path,
           this._name,
           idOrKeys,
@@ -105,7 +103,7 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
       if (subIdOrKeys) {
         const { data } = await this._ref
           .getClient()
-          .$get_identifiable_affiliated_resource(
+          .$_get_identifiable_affiliated_resource(
             path,
             this._name,
             idOrKeys,
@@ -114,10 +112,9 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
           );
         return HttpPackagedResource.packageResource<T>(data, {} as any)
       } else {
-        // console.log(this._query)
         const { data } = await this._ref
           .getClient()
-          .$get_affiliated_resource(
+          .$_get_affiliated_resource(
             path,
             this._name,
             idOrKeys,
@@ -142,7 +139,7 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
       if (subIdOrKeys) {
         const { data } = await this._ref
           .getClient()
-          .$set_identifiable_affiliated_resource(
+          .$_set_identifiable_affiliated_resource(
             path,
             this._name,
             idOrKeys,
@@ -154,7 +151,7 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
       } else {
         const { data } = await this._ref
           .getClient()
-          .$set_affiliated_resource(
+          .$_set_affiliated_resource(
             path,
             this._name,
             idOrKeys,
@@ -180,7 +177,7 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
       if (subIdOrKeys) {
         const { data } = await this._ref
           .getClient()
-          .$remove_identifiable_affiliated_resource(
+          .$_remove_identifiable_affiliated_resource(
             path,
             this._name,
             idOrKeys,
@@ -191,7 +188,7 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
       } else {
         const { data } = await this._ref
           .getClient()
-          .$remove_affiliated_resource(
+          .$_remove_affiliated_resource(
             path,
             this._name,
             idOrKeys,

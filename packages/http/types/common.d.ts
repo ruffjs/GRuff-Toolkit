@@ -1,3 +1,15 @@
+type Method =
+    | 'get' | 'GET'
+    | 'delete' | 'DELETE'
+    | 'head' | 'HEAD'
+    | 'options' | 'OPTIONS'
+    | 'post' | 'POST'
+    | 'put' | 'PUT'
+    | 'patch' | 'PATCH'
+    | 'purge' | 'PURGE'
+    | 'link' | 'LINK'
+    | 'unlink' | 'UNLINK';
+
 type RuffResourcePath = string[] | string;
 
 type identity = number | string;
@@ -22,24 +34,13 @@ type RuffHttpResource = RuffDataModel;
 
 type RuffHttpResourcesArray<T extends RuffHttpResource = RuffHttpResource> = T[];
 
-interface RuffResponseContent<T extends RuffHttpResource = any> {
+interface RuffClientResponseContent<T extends RuffHttpResource = any> {
     data?: T;
     code: number;
     message: string;
 }
 
-interface AxiosResponse<T = any, D = any> {
-    data: T;
-    status: number;
-    statusText: string;
-    headers: AxiosResponseHeaders;
-    config: AxiosRequestConfig<D>;
-    request?: any;
-}
-
-interface RuffHttpPageableResources<T extends RuffHttpResource> {
-    [stirng]: RuffHttpResourcesArray<T> | number;
-}
+type RuffHttpPageableResources<T extends RuffHttpResource> = Record<string, RuffHttpResourcesArray<T> | number>
 
 interface RuffHttpResourcesList<T extends RuffHttpResource> {
     rawData: RuffHttpResourcesArray<T>;
@@ -51,3 +52,16 @@ type RuffCallArguments<P extends AnyRecord = any> = {
     payload?: P;
     query?: RuffHttpQueryCondition;
 };
+
+type RuffAffiliatedResourceGetter<T extends RuffDataModel = any> = (
+    condition?: RuffHttpQueryCondition
+) => Promise<RuffClientResponseContent<T>>;
+
+
+type RuffResourceCaller<T extends RuffHttpResource = any, P extends AnyRecord = any> = (
+    args: RuffCallArguments<P>
+) => Promise<RuffClientResponseContent<T>>;
+
+
+type RuffMockRandomFunction<T extends RuffHttpResource = any, D extends RuffHttpResource = any> = ((params: RuffClientResourceCallParams<D>,
+    config?: AxiosRequestConfig<D>) => Promise<RuffClientResponseContent<T>>)

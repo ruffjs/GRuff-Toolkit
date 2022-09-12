@@ -5,7 +5,7 @@ const restResponse = <T extends RuffHttpResource = any>(data: T, code = 200, mes
         data,
         code,
         message
-    } as RuffResponseContent<T>
+    } as RuffClientResponseContent<T>
 }
 
 export default {
@@ -13,11 +13,11 @@ export default {
     methods: [M.POST, M.LIST, M.PUT, M.DELETE],
     pickable: false,
     keyf: 'id',
-    [M.POST]: async (_: CallParams) => {
+    [M.POST]: async (_: RuffClientResourceCallParams) => {
         console.log("11111");
         return restResponse({})
     },
-    [M.LIST]: async (_: CallParams) => {
+    [M.LIST]: async (_: RuffClientResourceCallParams) => {
         console.log("22222");
         return restResponse({
             content: [
@@ -34,7 +34,7 @@ export default {
             totalCount: 10,
         });
     },
-    [M.PUT]: async (_: CallParams) => {
+    [M.PUT]: async (_: RuffClientResourceCallParams) => {
         console.log("33333");
         return restResponse({})
     },
@@ -42,14 +42,14 @@ export default {
     '/': {
         loginLog: {
             methods: [M.LIST],
-            [M.LIST]: async (_: CallParams) => {
+            [M.LIST]: async (_: RuffClientResourceCallParams) => {
                 console.log("44444");
                 return restResponse({})
             },
             '/': {
                 loginLog2: {
                     methods: [M.LIST],
-                    [M.LIST]: async (_: CallParams) => {
+                    [M.LIST]: async (_: RuffClientResourceCallParams) => {
                         console.log("55555");
                         return restResponse({})
                     },
@@ -58,7 +58,7 @@ export default {
         },
         token: {
             methods: [M.POST],
-            [M.LIST]: async (_: CallParams) => {
+            [M.LIST]: async (_: RuffClientResourceCallParams) => {
                 console.log("66666");
                 return restResponse({})
             },
@@ -69,11 +69,11 @@ export default {
                 // console.log("77777");
                 // console.log(payload, query, idOrKeys, subIdOrKeys, config)
                 return restResponse(7777777, 201, "massage")
-            }) as RuffMockRandomFn,
+            }) as RuffMockRandomFunction,
         },
         loginBySmsCode: {
             method: M.POST,
-            0: async (_: CallParams): Promise<RuffResponseContent> => {
+            0: async (_: RuffClientResourceCallParams): Promise<RuffClientResponseContent> => {
                 // console.log("88888");
                 return Promise.reject(restResponse({}, 401, "Need Login"))
             },
@@ -82,29 +82,29 @@ export default {
     '/**/': {
         profile: {
             methods: [M.GET, M.PUT],
-            [M.GET]: async (_: CallParams) => {
+            [M.GET]: async (_: RuffClientResourceCallParams) => {
                 console.log("99999");
                 return restResponse({})
             },
-            [M.PUT]: async (_: CallParams) => {
+            [M.PUT]: async (_: RuffClientResourceCallParams) => {
                 console.log("aaaaa");
                 return restResponse({})
             },
         },
         password: {
             methods: [M.PUT],
-            [M.PUT]: async (_: CallParams) => {
+            [M.PUT]: async (_: RuffClientResourceCallParams) => {
                 console.log("bbbbb");
                 return restResponse({})
             },
         },
         bindPhone: {
             methods: [M.POST, M.DELETE],
-            [M.POST]: async (_: CallParams) => {
+            [M.POST]: async (_: RuffClientResourceCallParams) => {
                 console.log("ccccc");
                 return restResponse({})
             },
-            [M.DELETE]: async (_: CallParams) => {
+            [M.DELETE]: async (_: RuffClientResourceCallParams) => {
                 console.log("ddddd");
                 return restResponse({})
             },

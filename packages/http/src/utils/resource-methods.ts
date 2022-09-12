@@ -98,4 +98,4 @@ export type SetterMethod =
   | ResourceMethod.PUT
   | ResourceMethod.PATCH;
 
-export type GetterMethod = ResourceMethod.LIST | ResourceMethod.GET;
+export type GetterMethod = ResourceMethod.LIST | ResourceMethod.GET | null;

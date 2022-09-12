@@ -1,18 +1,18 @@
 import { AxiosResponse } from "axios";
-import { joinPath } from "../utils";
+import { joinPath } from "../utils/formatters";
 import AbstractBaseResource from "./AbstractBaseResource";
 import AffiliatedResource from "./AffiliatedResource";
-import CallableAPIs from "./CallableAPIs";
-import ModifiedResource from "./ModifiedResource";
+import CallableResource from "./CallableResource";
+import StatefulResource from "./StatefulResource";
 
 export type ExtendedIdentifiedResource<
   T extends RuffHttpResource = any,
   A extends string = any
 > = IdentifiedResource<T, A> &
   Record<A, RuffAffiliatedResourceGetter & AffiliatedResource> &
-  Record<A, RuffCallableAPI>;
+  Record<A, RuffResourceCaller>;
 
-export type CallableResource<T extends RuffHttpResource = any, A extends string = any> = (
+export type IdentifiableResource<T extends RuffHttpResource = any, A extends string = any> = (
   idOrKeys: IdOrKeys
 ) => ExtendedIdentifiedResource<T, A>;
 
@@ -34,7 +34,7 @@ export default class IdentifiedResource<
       (Object.keys(props) as A[]).forEach((propname) => {
         const propConf = props[propname];
         if ("method" in propConf) {
-          (ref as AnyRecord)[propname] = CallableAPIs.defineApi(propname, {
+          (ref as AnyRecord)[propname] = CallableResource.defineCallApi(propname, {
             client,
             prefix: ref.getPathAndIdentity(),
             call: propConf,
@@ -77,18 +77,18 @@ export default class IdentifiedResource<
   }
 
   query(...qs: RuffHttpQueryCondition[]): IdentifiedResource {
-    return ModifiedResource.prototype.query.apply(this, qs) as unknown as IdentifiedResource
+    return StatefulResource.prototype.query.apply(this, qs) as unknown as IdentifiedResource
   }
 
-  async get(): Promise<RuffResponseContent<T>> {
-    return ModifiedResource.prototype.get.call(this, this._idOrKeys)
+  async get(): Promise<RuffClientResponseContent<T>> {
+    return StatefulResource.prototype.get.call(this, this._idOrKeys)
   }
 
   async set(payload: T, partially: boolean) {
-    return ModifiedResource.prototype.set.call(this, this._idOrKeys, payload, partially)
+    return StatefulResource.prototype.set.call(this, this._idOrKeys, payload, partially)
   }
 
   async drop() {
-    return ModifiedResource.prototype.drop.call(this, this._idOrKeys)
+    return StatefulResource.prototype.drop.call(this, this._idOrKeys)
   }
 }

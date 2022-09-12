@@ -1,42 +1,42 @@
 import { ResourceMethod } from "../utils/resource-methods";
-import { formatQueryCondition, joinPath } from "../utils/index";
+import { formatQueryCondition, joinPath } from "../utils/formatters";
 import IdentifiedResource, {
-  CallableResource
+  IdentifiableResource
 } from "./IdentifiedResource";
-import ModifiedResource from "./ModifiedResource";
-import CallableAPIs from "./CallableAPIs";
+import StatefulResource from "./StatefulResource";
+import CallableResource from "./CallableResource";
 
-export type ExtendedMainResource<
+export type ExtendedResourceInterface<
   T extends RuffHttpResource = any,
-  M extends string = any,
+  S extends string = any,
   A extends string = any
-> = CallableResource<T, A> &
-  MainResource<T, M, A> &
-  Record<M, CallableResource<T, A> & MainResource<T, M, A> & RuffCallableAPI<T>>;
+> = IdentifiableResource<T, A> &
+  StatelessResource<T, S, A> &
+  Record<S, IdentifiableResource<T, A> & StatelessResource<T, S, A> & RuffResourceCaller<T>>;
 
-type FriendlyMainResource<
-  MR extends string = any,
-  MC extends string = any,
+export type FriendlyResourceInterface<
+  SR extends string = any,
+  SC extends string = any,
   AR extends string = any,
   AC extends string = any,
   T extends RuffHttpResource = any
-> = CallableResource<T, AR | AC> &
-  MainResource<T, any, AR | AC> &
-  Record<MR, ExtendedMainResource> &
-  Record<MC, RuffCallableAPI>;
+> = IdentifiableResource<T, AR | AC> &
+  StatelessResource<T, any, AR | AC> &
+  Record<SR, ExtendedResourceInterface> &
+  Record<SC, RuffResourceCaller>;
 
-export default class MainResource<
+export default class StatelessResource<
   T extends RuffHttpResource = any,
-  M extends string = any,
+  S extends string = any,
   A extends string = any
-> extends ModifiedResource<T, A> {
+> extends StatefulResource<T, A> {
   static defineResource<
     T extends RuffHttpResource = any,
-    M extends string = any,
+    S extends string = any,
     A extends string = any
-  >(name: string, options: Readonly<RuffResourceDefinationOptions<T, M, A>>) {
-    const res = new MainResource(name, options);
-    const callable = function CallableResource(idOrKeys: IdOrKeys) {
+  >(name: string, options: Readonly<RuffResourceDefinationOptions<T, S, A>>) {
+    const res = new StatelessResource(name, options);
+    const identifiable = function createIdentifiableResource(idOrKeys: IdOrKeys) {
       return IdentifiedResource.defineResource<T, A>(
         name,
         idOrKeys,
@@ -48,18 +48,18 @@ export default class MainResource<
 
     const methods = resource.methods;
     const children = resource["/"];
-    const attrs = {} as Record<M, any>;
+    const attrs = {} as Record<S, any>;
     if (children !== undefined) {
-      (Object.keys(children) as M[]).forEach((childname) => {
+      (Object.keys(children) as S[]).forEach((childname) => {
         const opts = children[childname];
         if ("method" in opts) {
-          attrs[childname] = CallableAPIs.defineApi(childname, {
+          attrs[childname] = CallableResource.defineCallApi(childname, {
             client,
             prefix: [res.getFullPath()],
             call: opts,
           });
         } else {
-          attrs[childname] = MainResource.defineResource(childname, {
+          attrs[childname] = StatelessResource.defineResource(childname, {
             client,
             config,
             prefix: res.getFullPath(),
@@ -75,9 +75,9 @@ export default class MainResource<
       setPrefix: res.setPrefix.bind(res),
       getPrefix: res.getPrefix.bind(res),
       getFullPath: res.getFullPath.bind(res),
-      $typify: res.$typify.bind(callable),
+      $typify: res.$typify.bind(identifiable),
       query: res.query.bind(res),
-    } as MainResource;
+    } as StatelessResource;
 
     if (methods?.includes(ResourceMethod.POST)) {
       bounds.post = res.post.bind(res);
@@ -106,32 +106,32 @@ export default class MainResource<
 
 
     return Object.assign(
-      callable,
+      identifiable,
       res,
       bounds
-    ) as unknown as ExtendedMainResource<T, M, A>;
+    ) as unknown as ExtendedResourceInterface<T, S, A>;
   }
 
   private constructor(
     name: string,
-    options: RuffResourceDefinationOptions<T, M, A>
+    options: RuffResourceDefinationOptions<T, S, A>
   ) {
     super(name, options, {} as RuffHttpQueryModel);
   }
 
   $typify<
-    MR extends string = any,
-    MC extends string = any,
+    SR extends string = any,
+    SC extends string = any,
     AR extends string = any,
     AC extends string = any,
     TI extends RuffHttpResource = any
-  >(): FriendlyMainResource<MR, MC, AR, AC, TI> {
-    return this as unknown as FriendlyMainResource<MR, MC, AR, AC, TI>;
+  >(): FriendlyResourceInterface<SR, SC, AR, AC, TI> {
+    return this as unknown as FriendlyResourceInterface<SR, SC, AR, AC, TI>;
   }
 
-  query(...qs: RuffHttpQueryCondition[]): ModifiedResource {
+  query(...qs: RuffHttpQueryCondition[]): StatefulResource {
     const condition = formatQueryCondition(...qs);
-    return ModifiedResource.defineResource<T, A>(
+    return StatefulResource.defineResource<T, A>(
       this._path,
       this._options,
       condition as RuffHttpQueryModel

@@ -11,7 +11,7 @@ export const extendedGetters = {
     isCarrier(state: UserState) {
       if (state.meta?.level === "Member" && state.meta?.roles) {
         return state.meta.roles.some((item: any) =>
-          ["CMCC", "CUCC", "CTCC"].includes(item.code)
+          ["CSCC", "CUCC", "CTCC"].includes(item.code)
         )
       }
       return false

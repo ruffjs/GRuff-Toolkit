@@ -1,10 +1,9 @@
 import { RandomInstance } from "../../../data-random/index";
 import { createRandom } from "@ruff-web/data-random";
 
-import { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from "axios";
+import { AxiosError, AxiosResponseHeaders } from "axios";
 import HTTP_STATUS_CODES, { StatusCode } from "../utils/status-codes";
 import { delay } from "@ruff-web/utils/src/async";
-import * as mixins from "../utils/mixin-hooks";
 
 class MockRequestInfo<D> {
   method: string;
@@ -23,14 +22,14 @@ class MockResponse<T, D = any> implements AxiosResponse {
   status: number;
   statusText: string;
   headers: AxiosResponseHeaders;
-  config: AxiosRequestConfig<D>;
+  config: RuffClientRequestConfig<D>;
   request: MockRequestInfo<D>;
 
   constructor(
     data: T,
     status: number,
     statusText: string,
-    config: AxiosRequestConfig<D>
+    config: RuffClientRequestConfig<D>
   ) {
     // console.log(data);
     this.data = data;
@@ -49,9 +48,9 @@ export default class MockResponsor {
 
   private _random: RandomInstance;
 
-  private _client: RuffClientWithInterceptors;
+  private _client: RuffClient;
 
-  constructor(client: RuffClientWithInterceptors) {
+  constructor(client: RuffClient) {
     this._client = client;
 
     this._random = createRandom();
@@ -64,15 +63,15 @@ export default class MockResponsor {
     );
   }
 
-  private _log(res: MockResponse<RuffResponseContent>) {
+  private _log(res: MockResponse<RuffClientResponseContent>) {
     if (!!MockResponsor.enableMockLog) console.info(`%c[Ruff-Http-Client-Mock-Response](use ${this._delay}ms)`, 'color: orange;', res);
   }
 
   async resolve<T extends RuffDataModel = any, D extends RuffDataModel = any>(
-    data: RuffResponseContent<T>,
-    config: AxiosRequestConfig<D> = {},
+    data: RuffClientResponseContent<T>,
+    config: RuffClientRequestConfig<D> = {},
     status: StatusCode = 200,
-  ): Promise<RuffResponseContent<T>> {
+  ): Promise<RuffClientResponseContent<T>> {
     await delay(this._delay);
     const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
     const res = new MockResponse(data, status, statusText, config);
@@ -81,15 +80,15 @@ export default class MockResponsor {
   }
 
   async reject<T extends RuffDataModel = any, D extends RuffDataModel = any>(
-    data: RuffResponseContent<T>,
-    config: AxiosRequestConfig<D> = {},
+    data: RuffClientResponseContent<T>,
+    config: RuffClientRequestConfig<D> = {},
     status: StatusCode = 400,
-  ): Promise<RuffResponseContent<T>> {
+  ): Promise<RuffClientResponseContent<T>> {
     await delay(this._delay);
     const statusText = HTTP_STATUS_CODES[status] || HTTP_STATUS_CODES[200];
     const res = new MockResponse(data, status, statusText, config);
     this._log(res)
-    return mixins.privates.__responseRejected.call(this._client, new RuffMockError(res, config))
+    return (this._client as any).__responseRejected.call(this._client, new RuffMockError(res, config))
   }
 }
 
@@ -98,12 +97,12 @@ class RuffMockError<T extends RuffDataModel = any, D extends RuffDataModel = any
   readonly code = "ERR_BAD_REQUEST";
   readonly isAxiosError = false;
 
-  readonly config: AxiosRequestConfig<any>;
+  readonly config: RuffClientRequestConfig<any>;
   readonly request: any;
   readonly response: MockResponse<T, D>;
   readonly status: string | undefined;
 
-  constructor(response: MockResponse<T, D>, config: AxiosRequestConfig<D>) {
+  constructor(response: MockResponse<T, D>, config: RuffClientRequestConfig<D>) {
     super(`Request failed with status code ${response.status}`)
     this.config = config
     this.status = String(response.status)

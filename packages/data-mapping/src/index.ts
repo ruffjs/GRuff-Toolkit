@@ -69,12 +69,13 @@ export default class DataMapping<
         if (p === "getLast") {
           return getLast;
         }
-        if (typeof options[p].get === "function") {
+        // console.log(options, p)
+        if (typeof options[p]?.get === "function") {
           target[p] = (<Function>options[p].get)(context._targetData, context);
         } else {
-          target[p] = options[p].value;
+          target[p] = options[p]?.value || undefined;
         }
-        return target[p];
+        return target[p] || undefined;
       },
       set(target, p: K, value: any, receiver: Record<K, any>) {
         if (typeof options[p].set === "function") {

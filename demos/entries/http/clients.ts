@@ -1,16 +1,16 @@
-import Client from "@ruff-web/http/src/Client";
+import createClient from "@ruff-web/http/src/clients";
 
 import userApis, {
   login,
 } from "@ruff-web/entities/src/presets/user/user.resource";
 import userMock from "@ruff-web/entities/src/presets/user/user.resource.withmock";
-import { formatMockConfig } from "@ruff-web/http/src/utils/configs-helper";
+import { pickMockRulesOfResource } from "@ruff-web/http/src/helpers/ResponseBuilder/MockRule";
 
-const userMockConfig = formatMockConfig("user", userMock);
+const userMockConfig = pickMockRulesOfResource("user", userMock);
 
 const clients = {
-  main: Client.createClient("/test-dev-svc"),
-  user: Client.createClient("/test-user-svc", {
+  main: createClient("/test-dev-svc"),
+  user: createClient("/test-user-svc", {
     resources: {
       user: userApis,
     },
@@ -18,10 +18,10 @@ const clients = {
       login: login,
     },
   }),
-  tank: Client.createClient("/test-tank-svc"),
-  bsmm: Client.createClient("/test-bsm-svc"),
-  bsmu: Client.createClient("/test-bsm-user-svc/"),
-  mock: Client.createClient("/test-user-svc", {
+  tank: createClient("/test-tank-svc"),
+  bsmm: createClient("/test-bsm-svc"),
+  bsmu: createClient("/test-bsm-user-svc/"),
+  mock: createClient("/test-user-svc", {
     resources: {
       user: userMock,
     },

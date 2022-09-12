@@ -1,8 +1,8 @@
-import { formatQueryCondition } from "../utils";
+import { formatQueryCondition } from "../utils/formatters";
 
 export default abstract class AbstractBaseResource {
 
-  protected _client: RuffResourceRequestors;
+  protected _client: RuffClient;
   protected _prefix;
   protected _path: string;
   protected _options: RuffResourceDefinationOptions;
@@ -30,14 +30,13 @@ export default abstract class AbstractBaseResource {
     options: RuffResourceDefinationOptions,
     query: RuffHttpQueryModel
   ) {
-    const { client, prefix, resource, config } = options;
+    const { client, prefix, resource } = options;
     this._client = client;
     this._prefix = prefix || 'api/v1';
     this._path = resource.path || name;
     this._options = options;
     this._query = query || {};
     this._partially = false
-
   }
 
   query(...qs: RuffHttpQueryCondition[]): AbstractBaseResource {

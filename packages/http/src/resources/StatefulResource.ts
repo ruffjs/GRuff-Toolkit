@@ -1,28 +1,23 @@
-import { formatQueryCondition } from "../utils/index";
-import HttpPackagedResource, { ProxiedHttpPackagedResource } from "../responses/HttpPackagedResource";
-import HttpResourcesList from "../responses/HttpResourcesList";
-import { joinPath } from "../utils";
+import { formatQueryCondition } from "../utils/formatters";
+import HttpPackagedResource, { ProxiedHttpPackagedResource } from "../models/HttpPackagedResource";
+import { joinPath } from "../utils/formatters";
 import IdentifiedResource from "./IdentifiedResource";
 import AbstractBaseResource from "./AbstractBaseResource";
 import { ResourceMethod } from "../utils/resource-methods";
+import HttpResourcesList from "../models/HttpResourcesList";
 
-export default class ModifiedResource<
+export default class StatefulResource<
   T extends RuffHttpResource = any,
   A extends string = any
 > extends AbstractBaseResource {
-  protected static pageIndex = 1;
-  protected static pageSize = 10;
 
-  static set defaultpageSize(size: number) {
-    ModifiedResource.pageSize = size;
-  }
 
   protected static defineResource<T extends RuffHttpResource = any, A extends string = any>(
     name: string,
     options: Readonly<RuffResourceDefinationOptions<T, never, A>>,
     query: RuffHttpQueryModel
   ) {
-    return new ModifiedResource<T, A>(name, options, query);
+    return new StatefulResource<T, A>(name, options, query);
   }
 
   setPrefix(prefix: string) {
@@ -37,7 +32,7 @@ export default class ModifiedResource<
     return joinPath([this._prefix, this._path]);
   }
 
-  query(...qs: RuffHttpQueryCondition[]): ModifiedResource {
+  query(...qs: RuffHttpQueryCondition[]): StatefulResource {
     const condition = formatQueryCondition(...qs);
     this._query = {
       ...this._query,
@@ -51,7 +46,7 @@ export default class ModifiedResource<
       throw new Error('this resource cannot be posted')
     }
     try {
-      const { data } = await this._client.$create_main_resource(
+      const { data } = await this._client.$_create_main_resource(
         joinPath([this._prefix, this._path]),
         payload,
         this._query
@@ -74,7 +69,7 @@ export default class ModifiedResource<
     }
 
     try {
-      const { data } = await this._client.$create_main_resource_with_attachment(
+      const { data } = await this._client.$_create_main_resource_with_attachment(
         joinPath([this._prefix, this._path]),
         payload,
         this._query
@@ -92,15 +87,15 @@ export default class ModifiedResource<
   }
 
   async list(
-    pageSize: number = ModifiedResource.pageSize,
-    pageIndex: number = ModifiedResource.pageIndex
+    pageSize: number = this._client.pageSize,
+    pageIndex: number = this._client.pageIndex
   ): Promise<HttpResourcesList<T, A>> {
     // console.log("this._query", this._query);
     if (!this._options.resource.methods?.includes(ResourceMethod.LIST)) {
       throw new Error('cannot get list of this resource')
     }
     try {
-      const { data } = await this._client.$get_main_resources(
+      const { data } = await this._client.$_get_main_resources<T, A>(
         joinPath([this._prefix, this._path]),
         {
           ...this._query,
@@ -108,22 +103,28 @@ export default class ModifiedResource<
           pageIndex,
         } as RuffPageableResourcesQueryModel
       );
-      const list = new HttpResourcesList<T, A>(data);
-      data?.content?.forEach((item: any) => {
-        let ref: any
-        if (item.id) {
-          ref = IdentifiedResource.defineResource<T, A>(
-            this._path,
-            item.id,
-            this._options,
-            {}
-          );
-        } else {
-          ref = {}
+      if (data) {
+        const list = new HttpResourcesList<T, A>(data);
+        const array = data[this._client.listKey]
+        if (typeof array === 'object' && array instanceof Array) {
+          array.forEach((item: any) => {
+            let ref: any
+            if (item.id) {
+              ref = IdentifiedResource.defineResource<T, A>(
+                this._path,
+                item.id,
+                this._options,
+                {}
+              );
+            } else {
+              ref = {}
+            }
+            list.push(HttpPackagedResource.packageResource<T, A>(item, ref));
+          });
         }
-        list.push(HttpPackagedResource.packageResource<T, A>(item, ref));
-      });
-      return list;
+        return list;
+      }
+      throw new Error("get main resources data error")
     } catch (error) {
       throw error
     }
@@ -140,7 +141,7 @@ export default class ModifiedResource<
       throw new Error('cannot get this resource by id or keys')
     }
     try {
-      const { data } = await this._client.$get_main_resource(
+      const { data } = await this._client.$_get_main_resource(
         joinPath([this._prefix, this._path]),
         idOrKeys,
         this._query
@@ -165,7 +166,7 @@ export default class ModifiedResource<
       throw new Error('cannot update this resource by id or keys')
     }
     try {
-      const { data } = await this._client.$set_main_resource(
+      const { data } = await this._client.$_set_main_resource(
         joinPath([this._prefix, this._path]),
         idOrKeys,
         payload,
@@ -189,7 +190,7 @@ export default class ModifiedResource<
       throw new Error('cannot delete this resource by id or keys')
     }
     try {
-      const { data } = await this._client.$remove_main_resource(
+      const { data } = await this._client.$_remove_main_resource(
         joinPath([this._prefix, this._path]),
         idOrKeys,
         this._query,
