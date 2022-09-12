@@ -1,4 +1,4 @@
-import bricks from "@ruff-web/bricks";
+import bricks from "@ruff-web/bricky";
 import { App } from "vue";
 import components from "./src/components";
 

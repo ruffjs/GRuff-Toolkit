@@ -42,7 +42,7 @@ export default function usePageRoutes() {
         case "function":
           homeRoute.redirect = undefined;
           homeRoute.components = {
-            default: newHomePage as AnyFn<any, VNode>,
+            default: newHomePage as AnyFn<VNode, any[]>,
           };
           break;
       }
@@ -77,7 +77,7 @@ export default function usePageRoutes() {
         router.addRoute("workspace", {
           path,
           name: `workspace/${path}`,
-          component: newPage as AnyFn<any, VNode>,
+          component: newPage as AnyFn<VNode, any[]>,
         });
         return true;
     }

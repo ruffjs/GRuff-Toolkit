@@ -2,8 +2,8 @@
     <txt v-if="content"
          :style="{ cursor: typeof column?.onclick === 'function' ? 'pointer' : 'default' }"
          @click="column?.onclick && column.onclick(record)">{{ content }}</txt>
-    <b-icon v-else
-            type="loading-outlined"></b-icon>
+    <ruff-icon v-else
+            type="loading-outlined"></ruff-icon>
 </template>
 
 <script setup lang="ts">

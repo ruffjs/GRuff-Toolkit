@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { defineApiHub } from "../../helpers/ApiHub";
+import { ApiHub, defineApiHub } from "../../helpers/ApiHub";
 import registerResources from "../../resources";
 import { toObjectiveQuery, withQueryString } from "../../utils/formatters";
 
@@ -161,9 +161,29 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
   toObjectiveQuery = toObjectiveQuery
 
   defineApiHub<
-    T extends CreateApiHubDefination = any
-  >(prefix: string, config: CreateApiHubConfig<T>) {
-    return defineApiHub<T>(prefix, this as unknown as RuffClient, config)
+    T extends CreateApiHubDefination = any,
+    X extends Record<string, AnyFn<Promise<RuffClientResponseContent<any>>>> = {}
+  >(prefix: string, config: CreateApiHubConfig<T>, more: (X | ((client: RuffClient) => X)) = {} as X): ApiHub<T> & X {
+    const client = this as unknown as RuffClient
+    const apihub = defineApiHub<T>(prefix, client, config)
+    if (more) {
+      if (typeof more === 'object') {
+        return {
+          ...apihub,
+          ...more
+        }
+      }
+      if (typeof more === 'function') {
+        return {
+          ...apihub,
+          ...more(client)
+        }
+      }
+    }
+    return {
+      ...apihub,
+      ...({} as X)
+    }
   }
 
   get beforeRequest() {

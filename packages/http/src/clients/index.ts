@@ -1,7 +1,7 @@
 import { ExtendedResourceInterface } from "../resources/StatelessResource";
 import MockClient from "./mock/MockClient";
 import HttpClient from "./http/HttpClient";
-import { pickMockRules } from "../helpers/ResponseBuilder/MockRule";
+import { pickMockRules } from "../helpers/DataVonder/MockRule";
 
 function createClient<R extends string = any, C extends string = any>(
   options: (RuffCreateClientOptions & RuffClientHooks) | string,

@@ -57,7 +57,7 @@ export default [
     key: "workspace/container",
     name: "其他SPA容器",
     icon: "snippets-outlined",
-    children: []
+    children: [],
   },
   {
     key: "workspace/table",

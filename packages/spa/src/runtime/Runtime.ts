@@ -8,7 +8,7 @@ import {
 } from "vue";
 import Antd from "ant-design-vue";
 import "../styles/antd/antd.variable.css";
-import bricks from "@ruff-web/bricks";
+import bricks from "@ruff-web/bricky";
 import icons from "@ruff-web/icons";
 import { allocateStorage } from "@ruff-web/data-storage/index";
 import createVuexStore from "./store/createVuexStore";

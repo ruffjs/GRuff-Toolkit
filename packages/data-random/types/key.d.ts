@@ -11,9 +11,9 @@ interface RandomMethods_Key {
 
     id(): string
 
-    _genIncrement(start: number): (step: number = 1) => number
+    _genIncrement(start: Numeric): (step: Numeric = 1) => number
 
-    increment(step: number = 1): number
+    increment(step: Numeric = 1): number
 
-    inc(step: number = 1): number
+    inc(step: Numeric = 1): number
 }

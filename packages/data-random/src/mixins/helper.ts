@@ -1,4 +1,5 @@
 import { isArray } from "@ruff-web/utils/src/object";
+import { toInt } from "../utils/type-convert";
 
 export function capitalize(this: RandomMethods, word: string) {
   return (word + "").charAt(0).toUpperCase() + (word + "").substring(1);
@@ -15,8 +16,8 @@ export function lower(this: RandomMethods, str: string) {
 export function pick<T = any>(
   this: RandomMethods,
   arr: T[],
-  minLength: nummeric,
-  maxLength: nummeric
+  minLength: Numeric,
+  maxLength: Numeric
 ) {
   // pick( item1, item2 ... )
   if (!isArray(arr)) {
@@ -40,8 +41,8 @@ export function pick<T = any>(
 export function shuffle<T = any>(
   this: RandomMethods,
   arr: T[] = [],
-  min?: nummeric,
-  max?: nummeric
+  min?: Numeric,
+  max?: Numeric
 ) {
   const old = arr.slice(0),
     result: T[] = [],
@@ -63,13 +64,13 @@ export function shuffle<T = any>(
     /* falls through */
     case 3:
     default:
-      return result.slice(0, this.natural(min as nummeric, max as nummeric));
+      return result.slice(0, this.natural(min as Numeric, max as Numeric));
   }
 }
 
-export function repeat<T = any>(item: T | (() => T), time: number = 2) {
+export function repeat<T = any>(item: T | (() => T), time: Numeric = 2) {
   const arr = [];
-  for (let index = 0; index < time; index++) {
+  for (let index = 0; index < toInt(time); index++) {
     arr.push(typeof item === "function" ? (<AnyFn>item)(index) : item);
   }
   return arr;

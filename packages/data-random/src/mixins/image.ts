@@ -16,7 +16,7 @@ export function _brandNames() {
 
 export function image(
     this: RandomMethods,
-    size: RandomAdSize | RandomScreenSize | RandomVideoSize | nummeric,
+    size: RandomAdSize | RandomScreenSize | RandomVideoSize | Numeric,
     background: RandomColorName | RandomHashColor,
     foreground: RandomColorName | RandomHashColor | undefined,
     format: RandomImageType | undefined,
@@ -51,7 +51,7 @@ export function image(
 
 export const img = image
 
-export function dataImage(this: RandomMethods, size: RandomAdSize | RandomScreenSize | RandomVideoSize | nummeric, text: string) {
+export function dataImage(this: RandomMethods, size: RandomAdSize | RandomScreenSize | RandomVideoSize | Numeric, text: string) {
     const canvas = document.createElement("canvas");
     // 此处删掉了 node-canvas 的创建，因为此工具改为纯前端工具
 

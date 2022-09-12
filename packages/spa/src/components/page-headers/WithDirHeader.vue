@@ -16,7 +16,7 @@
         >
           <slot v-if="props.title === '#'" name="title"></slot>
           <txt v-else class="ruff-sub-title1">
-            <b-icon type="left-outlined" />{{ computedTitle }}
+            <ruff-icon type="antd" name="left-outlined" />{{ computedTitle }}
           </txt>
         </a>
         <router-link
@@ -25,7 +25,7 @@
           class="breadcrumb-back"
         >
           <txt class="ruff-sub-title1">
-            <b-icon type="left-outlined" />{{ computedTitle }}
+            <ruff-icon type="antd" name="left-outlined" />{{ computedTitle }}
           </txt>
         </router-link>
 

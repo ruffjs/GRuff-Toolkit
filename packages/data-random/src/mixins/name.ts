@@ -23,7 +23,7 @@ export function clast(this: RandomMethods) {
     return this.pick(zh_givenname)
 }
 
-export function name(this: RandomMethods, middle = false) {
+export function name(this: RandomMethods, middle: Bool = false) {
     return this.first() + ' ' +
         (middle ? this.first() + ' ' : '') +
         this.last()

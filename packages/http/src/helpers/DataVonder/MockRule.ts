@@ -1,4 +1,4 @@
-import { joinPath } from "@ruff-web/http/src/utils/formatters";
+import { joinPath } from "../../utils/formatters";
 
 export const pickMockRulesOfResource = (
     name: string,

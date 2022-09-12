@@ -1,36 +1,31 @@
-type nummeric = number | string;
-
-const p = (input: nummeric, radix?: number | undefined) =>
-  parseInt(input as string, radix);
-
 interface RandomMethods_Basic {
-  boolean(less: nummeric, more: nummeric, value: boolean): boolean;
-  bool(less: nummeric, more: nummeric, value: boolean): boolean;
+  boolean(less: Numeric, more: Numeric, value: Bool): boolean;
+  bool(less: Numeric, more: Numeric, value: Bool): boolean;
 
-  natural(min: nummeric, max: nummeric): number;
+  natural(min?: Numeric, max?: Numeric): number;
 
-  integer(min: nummeric, max: nummeric): number;
-  int(min: nummeric, max: nummeric): number;
+  integer(min?: Numeric, max?: Numeric): number;
+  int(min?: Numeric, max?: Numeric): number;
 
-  float(min: nummeric, max: nummeric, dmin: number, dmax: number): number;
+  float(min?: Numeric, max?: Numeric, dmin?: Numeric, dmax?: Numeric): number;
 
   character(pool?: string | Symbol): string;
-  char(pool: string | Symbol): string;
+  char(pool?: string | Symbol): string;
 
-  string(length: nummeric): string;
-  string(pool: string, maxLength: nummeric): string;
-  string(minLength: nummeric, maxLength: nummeric): string;
+  string(length?: Numeric): string;
+  string(pool: string, maxLength: Numeric): string;
+  string(minLength: Numeric, maxLength: Numeric): string;
   string(
     pool: string | Symbol,
-    minLength: nummeric,
-    maxLength: nummeric
+    minLength: Numeric,
+    maxLength: Numeric
   ): string;
 
-  str(length: nummeric): string;
-  str(minLength: nummeric, maxLength: nummeric): string;
-  str(pool: string | Symbol, minLength: nummeric, maxLength: nummeric): string;
+  str(length: Numeric): string;
+  str(minLength: Numeric, maxLength: Numeric): string;
+  str(pool: string | Symbol, minLength: Numeric, maxLength: Numeric): string;
 
-  range(start: number, stop: number, step: number): number[];
+  range(start: Numeric, stop: Numeric, step: Numeric): number[];
 
   echo(content: string = ""): string;
 }

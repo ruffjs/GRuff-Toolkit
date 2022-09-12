@@ -1,6 +1,7 @@
 import { ResourceMethod as M } from "@ruff-web/http/src/utils/resource-methods";
 import { combineApiHubs, defineApiHub } from "@ruff-web/http/src/helpers/ApiHub";
 import clients from "../clients";
+import tankApis from "./tank";
 
 class A { }
 class B {
@@ -34,10 +35,15 @@ const apihub3 = clients.user.defineApiHub("api/v1", {
         model: B.model,
         path: "user/login",
     },
-} as const)
+} as const, {
+    postSth(a: string, b: number) {
+        return clients.user.post('')
+    }
+})
 
 const busHub = {
     ...combineApiHubs(apihub1, apihub2, apihub3),
+    ...tankApis,
     getSthById(a: string, b: number) {
         return clients.user.post('')
     }
@@ -50,6 +56,10 @@ apihub3.login3
 busHub.login
 busHub.login2
 busHub.login3
+busHub.postSth
+busHub.getSthById
+
+busHub.addSite
 
 busHub.login({
     payload: {

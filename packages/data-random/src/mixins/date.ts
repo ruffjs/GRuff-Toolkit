@@ -12,12 +12,12 @@ export const _rformat = new RegExp((function () {
 export function _formatDate(this: RandomMethods, date: Date, format: string) {
     function creatNewSubString($0: string, flag: DatePatternFlag): string {
         if (typeof datePattern[flag] === 'function') {
-            return (<AnyFn<Date[], string>>datePattern[flag])(date)
+            return (<AnyFn<string, Date[]>>datePattern[flag])(date)
         }
         if (<string>datePattern[flag] in datePattern) {
             return creatNewSubString($0, datePattern[flag] as DatePatternFlag)
         }
-        return (date[datePattern[flag] as keyof Date] as AnyFn<any[], string>)()
+        return (date[datePattern[flag] as keyof Date] as AnyFn<string, any[]>)()
     }
     return format.replace(this._rformat, creatNewSubString)
 }

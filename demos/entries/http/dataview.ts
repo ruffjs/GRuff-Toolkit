@@ -2,15 +2,12 @@ import DataView from "@ruff-web/http/src/helpers/DataView";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import clients from "./clients";
 
-clients.user.beforeRequest = injectToken(() =>
-  "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjozMzYsInR5cGUiOiJUZW5hbnQiLCJsZXZlbCI6IkFkbWluIiwidGVuYW50SWQiOjY2LCJlbWFpbCI6InRhbmtfdGVzdCIsInBob25lIjoiMTExMTExMTExIiwibmFtZSI6IuWCqOe9kOa1i-ivlSIsInJvbGVzIjpbXSwicHJvamVjdHMiOlstMV19LCJleHBpcmVBdCI6MTY2MTc4MTM1NywiaXNzdWVBdCI6MTY2MTY5NDk1NywiaWF0IjoxNjYxNjk0OTU3LCJpc3MiOiJydWZmIn0.-Erlqm_g2HsBPPa96LlvqEUlqRiJeYiZ31qYsPYYHc-HxwYfvGvS29bPYusdm2kaeoDjEwfD5Penuk1CjdQIMg");
-
-
 const dataview1 = new DataView({
   apiId: DataView.formatApiId("api/v1/user", "profile", DataView.GET),
   client: clients.user,
   rules: {},
 });
+
 
 const dataview2 = new DataView({
   apiId: DataView.formatApiId("api/v1/user", DataView.LIST),

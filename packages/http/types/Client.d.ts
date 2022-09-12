@@ -133,7 +133,12 @@ interface RuffClient
 
   withQueryString(query?: RuffHttpQueryCondition): string;
   toObjectiveQuery(query?: RuffHttpQueryCondition): RuffHttpQueryModel
-  defineApiHub<T extends CreateApiHubDefination = any>(prefix: string, config: CreateApiHubConfig<T>): { [k in keyof T]: RuffResourceCaller<T[k]['type'], T[k]['model']>; }
+
+  defineApiHub<
+    T extends CreateApiHubDefination = any,
+    X extends Record<string, AnyFn<Promise<RuffClientResponseContent<any>>>> = {}
+  >(prefix: string, config: CreateApiHubConfig<T>, more: (X | ((client: RuffClient) => X)) = {} as X)
+    : { [k in keyof T]: RuffResourceCaller<T[k]['type'], T[k]['model']>; } & X
 }
 
 interface RuffCreateClientOptions {

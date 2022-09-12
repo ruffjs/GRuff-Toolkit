@@ -6,7 +6,7 @@ type ISOTime = string;
 
 type AnyArray<T = any> = Array<T>;
 type AnyList<T = any> = Array<T>;
-type AnyFn<A extends AnyArray = any[], R = any> = (...args: A) => R;
+type AnyFn<R = any, A extends AnyArray = any[]> = (...args: A) => R;
 type AnyRecord<T = any> = Record<string, T>;
 
 type ScalarRecord = Record<string, ScalarValue>;

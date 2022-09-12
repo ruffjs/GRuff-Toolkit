@@ -9,7 +9,7 @@
     <box row align="center">
       <b-touchable @click="toggleMenuStatus" :padding="[0, '--ms']">
         <txt :line-height="18" :margin="[8, 0]">
-          <b-icon
+          <ruff-icon
             :type="isMenuCollapsed ? 'menu-unfold-outlined' : 'menu-fold-outlined'"
             size="18"
             class="side-bar-switch"
@@ -23,7 +23,7 @@
         <router-link v-if="shotcut.type === 'link'" :to="(shotcut.link as string)">
           <b-touchable :padding="[0, 10]">
             <txt :line-height="18">
-              <b-icon type="bell-outlined" size="18" class="top-bar-text" />
+              <ruff-icon type="antd" name="bell-outlined" size="18" class="top-bar-text" />
             </txt>
           </b-touchable>
         </router-link>

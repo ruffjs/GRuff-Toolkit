@@ -1,7 +1,6 @@
 <script lang="tsx">
-/* eslint-disable no-unused-vars */
 import { defineComponent } from "vue";
-import * as AntdIcons from "@ant-design/icons-vue";
+import * as AntdIconsVue from "@ant-design/icons-vue";
 import { pixelValueCheck, stringValueCheck } from "./style";
 
 const {
@@ -9,15 +8,21 @@ const {
   createFromIconfontCN,
   setTwoToneColor,
   getTwoToneColor,
-  ...Icons
-} = AntdIcons;
+  ...AntdIcons
+} = AntdIconsVue;
 
-type IconType = keyof typeof Icons;
+const iconTypes = {
+  antd: AntdIcons,
+};
+type IconType = keyof typeof iconTypes;
+
+type IconName = keyof typeof iconTypes[IconType];
 
 export default defineComponent({
-  name: "BIcon",
+  name: "RuffIcon",
   props: {
     type: [String],
+    name: [String],
     size: [String, Number],
     rotate: [Number],
     spin: [Boolean],
@@ -25,12 +30,17 @@ export default defineComponent({
     twoToneColor: [String],
   },
   render(props: any) {
-    const type = props.type.replace(/((^|-)([a-z]))/g, (c: string) =>
-      c.replace("-", "").toUpperCase()
-    );
+    const type: IconType = props.type in iconTypes ? props.type : "antd";
+    const Icons = iconTypes[type];
 
-    if (type in Icons) {
-      const Icon = Icons[type as IconType];
+    const name = (props.name?.replace(/((^|-)([a-z]))/g, (c: string) =>
+      c.replace("-", "").toUpperCase()
+    ) || "") as IconName;
+
+    // console.log(name, props);
+
+    if (name in Icons) {
+      const Icon = Icons[name];
       const styleObj = {};
       pixelValueCheck("fontSize", props.size, styleObj);
       stringValueCheck("color", props.color, styleObj);

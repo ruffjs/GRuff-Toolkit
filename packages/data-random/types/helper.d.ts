@@ -8,9 +8,9 @@ interface RandomMethods_Helper {
     pick<T = any>(arr: T[]): T;
     pick<T = any>(...arr: T[]): T;
     pick<T = any>(arr: T[]): T;
-    pick<T = any>(arr: T[], minLength: nummeric, maxLength: nummeric): T | T[];
+    pick<T = any>(arr: T[], minLength: Numeric, maxLength: Numeric): T | T[];
 
-    shuffle<T = any>(arr: T[], min: nummeric, max: nummeric): T[]
+    shuffle<T = any>(arr: T[], min: Numeric, max: Numeric): T[]
 
-    repeat<T = any>(item: T | (() => T), time: number = 2): T[]
+    repeat<T = any>(item: T | (() => T), time: Numeric = 2): T[]
 }

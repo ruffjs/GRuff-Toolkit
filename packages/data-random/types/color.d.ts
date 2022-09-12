@@ -38,5 +38,5 @@ interface RandomMethods_Color {
 
     hsl(): string
 
-    _goldenRatioColor(saturation?: number, value?: number): numbers
+    _goldenRatioColor(saturation?: Numeric, value?: Numeric): numbers
 }

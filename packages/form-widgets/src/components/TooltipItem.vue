@@ -4,7 +4,7 @@
             {{ label || '-' }}
             <a-tooltip placement="right">
                 <template #title> {{ tip || '-' }} </template>
-                <b-icon type="QuestionCircleOutlined"
+                <ruff-icon type="antd" name="QuestionCircleOutlined"
                         style="margin-left:10px" />
             </a-tooltip>
         </template>

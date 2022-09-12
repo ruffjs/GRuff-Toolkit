@@ -35,7 +35,7 @@
       :disabled="!!action.disabled"
     >
       <template #icon>
-        <b-icon type="question-circle-outlined" style="color: var(--b-negative-color)" />
+        <ruff-icon type="antd" name="question-circle-outlined" style="color: var(--b-negative-color)" />
       </template>
       <a-button
         type="link"

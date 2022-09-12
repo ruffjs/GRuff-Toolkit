@@ -1,5 +1,6 @@
 import { hsv2rgb, rgb2hex, hsv2hsl } from '../utils/color-convert'
 import DICT from '../dicts/color-dict'
+import { toNum } from '../utils/type-convert'
 
 export function color(this: RandomMethods, name: RandomColorName) {
     if (name || DICT[name])
@@ -41,16 +42,16 @@ export function hsl(this: RandomMethods) {
         parseInt(hsl[2], 10) + ')'
 }
 
-export function _goldenRatioColor(this: RandomMethods, saturation?: number, value?: number) {
+export function _goldenRatioColor(this: RandomMethods, saturation?: Numeric, value?: Numeric) {
     this._goldenRatio = 0.618033988749895
     this._hue = this._hue || Math.random()
     this._hue += this._goldenRatio
     this._hue %= 1
 
     if (typeof saturation !== "number")
-        saturation = 0.5
+        saturation = saturation ? toNum(saturation) : 0.5
     if (typeof value !== "number")
-        value = 0.95
+        value = value ? toNum(value) : 0.95
 
     return [
         this._hue * 360,

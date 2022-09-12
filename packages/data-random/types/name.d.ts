@@ -14,7 +14,7 @@ interface RandomMethods_Name {
 
     clast(this: RandomMethods): string
 
-    name(this: RandomMethods, middle = false): string
+    name(this: RandomMethods, middle?: Bool): string
 
     cname(): string
 }

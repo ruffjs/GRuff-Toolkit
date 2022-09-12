@@ -3,6 +3,7 @@
  */
 
 import DICT from "../dicts/address-dict";
+import { toInt } from "../utils/type-convert";
 
 export function d4(this: RandomMethods) {
     return this.natural(1, 4);
@@ -74,12 +75,9 @@ export function id(this: RandomMethods) {
     return id;
 }
 
-export function _genIncrement(start = 0) {
-    return (step: number = 1) => {
+export function _genIncrement(_start: Numeric = 0) {
+    let start = toInt(_start)
+    return (step: Numeric = 1) => {
         return (start += +step || 1);
     };
 };
-
-// export const increment = _genIncrement(0);
-
-// export const inc = increment;

@@ -1,6 +1,6 @@
 import { DICT_KANZI } from "../dicts/text-dict";
 
-function range(random: RandomMethods, defaultMin: nummeric, defaultMax: nummeric, min?: nummeric, max?: nummeric) {
+function range(random: RandomMethods, defaultMin: Numeric, defaultMax: Numeric, min?: Numeric, max?: Numeric) {
     return min === undefined
         ? random.natural(defaultMin, defaultMax)
         : max === undefined
@@ -8,7 +8,7 @@ function range(random: RandomMethods, defaultMin: nummeric, defaultMax: nummeric
             : random.natural(min, max);
 }
 
-export function paragraph(this: RandomMethods, min?: nummeric, max?: nummeric) {
+export function paragraph(this: RandomMethods, min?: Numeric, max?: Numeric) {
     const len = range(this, 3, 7, min, max);
     const result = [];
     for (let i = 0; i < len; i++) {
@@ -17,7 +17,7 @@ export function paragraph(this: RandomMethods, min?: nummeric, max?: nummeric) {
     return result.join(" ");
 }
 
-export function cparagraph(this: RandomMethods, min?: nummeric, max?: nummeric) {
+export function cparagraph(this: RandomMethods, min?: Numeric, max?: Numeric) {
     const len = range(this, 3, 7, min, max);
     const result = [];
     for (let i = 0; i < len; i++) {
@@ -25,7 +25,7 @@ export function cparagraph(this: RandomMethods, min?: nummeric, max?: nummeric) 
     }
     return result.join("");
 }
-export function sentence(this: RandomMethods, min?: nummeric, max?: nummeric) {
+export function sentence(this: RandomMethods, min?: Numeric, max?: Numeric) {
     const len = range(this, 12, 18, min, max);
     const result = [];
     for (let i = 0; i < len; i++) {
@@ -33,7 +33,7 @@ export function sentence(this: RandomMethods, min?: nummeric, max?: nummeric) {
     }
     return this.capitalize(result.join(" ")) + ".";
 }
-export function csentence(this: RandomMethods, min?: nummeric, max?: nummeric) {
+export function csentence(this: RandomMethods, min?: Numeric, max?: Numeric) {
     const len = range(this, 12, 18, min, max);
     const result = [];
     for (let i = 0; i < len; i++) {
@@ -42,7 +42,7 @@ export function csentence(this: RandomMethods, min?: nummeric, max?: nummeric) {
 
     return result.join("") + "。";
 }
-export function word(this: RandomMethods, min?: nummeric, max?: nummeric) {
+export function word(this: RandomMethods, min?: Numeric, max?: Numeric) {
     const len = range(this, 3, 10, min, max);
     let result = "";
     for (let i = 0; i < len; i++) {
@@ -50,7 +50,7 @@ export function word(this: RandomMethods, min?: nummeric, max?: nummeric) {
     }
     return result;
 }
-export function cword(this: RandomMethods, pool: string, min?: nummeric, max?: nummeric) {
+export function cword(this: RandomMethods, pool: string, min?: Numeric, max?: Numeric) {
     // 最常用的 500 个汉字 http://baike.baidu.com/view/568436.htm
 
     let len: number;
@@ -75,13 +75,13 @@ export function cword(this: RandomMethods, pool: string, min?: nummeric, max?: n
                 len = Number(min);
             } else {
                 // ( min, max )
-                len = this.natural(Number(pool), min as nummeric);
+                len = this.natural(Number(pool), min);
                 pool = DICT_KANZI;
             }
             break;
         case 3:
         default:
-            len = this.natural(min as nummeric, max as nummeric);
+            len = this.natural(min, max);
             break;
     }
 
@@ -90,7 +90,7 @@ export function cword(this: RandomMethods, pool: string, min?: nummeric, max?: n
     }
     return result;
 }
-export function title(this: RandomMethods, min?: nummeric, max?: nummeric) {
+export function title(this: RandomMethods, min?: Numeric, max?: Numeric) {
     const len = range(this, 3, 7, min, max);
     const result = [];
     for (let i = 0; i < len; i++) {
@@ -98,7 +98,7 @@ export function title(this: RandomMethods, min?: nummeric, max?: nummeric) {
     }
     return result.join(" ");
 }
-export function ctitle(this: RandomMethods, min?: nummeric, max?: nummeric) {
+export function ctitle(this: RandomMethods, min?: Numeric, max?: Numeric) {
     const len = range(this, 3, 7, min, max);
     const result = [];
     for (let i = 0; i < len; i++) {

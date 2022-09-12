@@ -1,4 +1,6 @@
 import { defineMapping } from "@ruff-web/data-mapping";
+import HttpPackagedResource from "../models/HttpPackagedResource";
+import { isNotEmpty } from "../utils/formatters";
 import { GetterMethod, ResourceMethod } from "../utils/resource-methods";
 
 export default class DataView<
@@ -25,13 +27,13 @@ export default class DataView<
   private _apiId: string;
   private _method: GetterMethod;
 
-  private _rules: MappingOptions<T[K], K, OK>;
+  private _rules: MappingOptions<T[K], K, OK> | null;
 
   constructor(options: {
     apiId: string;
     // method: GetterMethod;
     client: RuffClient;
-    rules: MappingOptions<T[K], K, OK>;
+    rules?: MappingOptions<T[K], K, OK>;
   }) {
     const { apiId, client, rules } = options;
     const [_, method] = apiId.split(":");
@@ -46,7 +48,7 @@ export default class DataView<
       this._method = null
     }
 
-    this._rules = rules;
+    this._rules = rules && isNotEmpty(rules) ? rules : null;
   }
 
   getApiId() {
@@ -65,8 +67,8 @@ export default class DataView<
       // console.log(this._client.isMock)
       const { data } = await this._client.$_call(this._apiId, { query })
       if (data[this._client.listKey]) {
-        return data[this._client.listKey].map((element: any) =>
-          defineMapping<T>(this._rules, element)
+        return data[this._client.listKey].map((item: any) =>
+          this._rules ? defineMapping<T>(this._rules, item) : HttpPackagedResource.packageResource<T>(item, {} as any)
         );
       } else {
         throw new Error("This type of resource may not provided LIST method, or check your configurations.")
@@ -81,7 +83,7 @@ export default class DataView<
   private async _get(idOrKeys: IdOrKeys, query: RuffHttpQueryModel, subIdOrKeys?: IdOrKeys): Promise<T> {
     try {
       const { data } = await this._client.$_call(this._apiId, { idOrKeys, subIdOrKeys, query })
-      return defineMapping(this._rules, data)
+      return this._rules ? defineMapping(this._rules, data) : HttpPackagedResource.packageResource<T>(data, {} as any)
     } catch (error) {
       // return defineMapping<T>(this._rules, {});
       throw error

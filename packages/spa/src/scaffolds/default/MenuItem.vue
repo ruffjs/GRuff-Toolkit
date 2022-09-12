@@ -2,7 +2,7 @@
   <template v-if="show && item?.children?.length">
     <a-sub-menu :key="item?.key" background="var(--ruff-sub-menu-background)">
       <template #icon>
-        <b-icon :type="item?.icon" />
+        <ruff-icon type="antd" :name="item?.icon" />
       </template>
       <template #title>{{ item?.name }}</template>
       <SubMenuItem
@@ -15,7 +15,7 @@
   <template v-else-if="show">
     <a-menu-item :key="item?.key" background="var(--ruff-menu-background)">
       <template #icon>
-        <b-icon :type="item?.icon" />
+        <ruff-icon type="antd" :name="item?.icon" />
       </template>
       <span>{{ item?.name }}</span>
     </a-menu-item>

@@ -35,7 +35,7 @@
               placeholder="手机号"
             >
               <template #prefix>
-                <b-icon type="user-outlined" />
+                <ruff-icon type="antd" name="user-outlined" />
               </template>
             </a-input>
           </a-form-item>
@@ -48,7 +48,7 @@
               type="password"
             >
               <template #prefix>
-                <b-icon type="lock-outlined" />
+                <ruff-icon type="antd" name="lock-outlined" />
               </template>
             </a-input>
           </a-form-item>

@@ -5,16 +5,16 @@ const convertStringToVarible = (string: string) => {
   return string
 }
 
-const convertNummericToPixel = (nummeric: number | string) => {
-  if (typeof nummeric === "number") {
-    if (nummeric === 0) return "0"
-    return nummeric + "px"
-  } else if (typeof nummeric === "string") {
-    if (nummeric === "0") return "0"
-    if (nummeric.match(/^\d+$/)) {
-      return nummeric + "px"
+const convertNummericToPixel = (numeric: number | string) => {
+  if (typeof numeric === "number") {
+    if (numeric === 0) return "0"
+    return numeric + "px"
+  } else if (typeof numeric === "string") {
+    if (numeric === "0") return "0"
+    if (numeric.match(/^\d+$/)) {
+      return numeric + "px"
     }
-    return convertStringToVarible(nummeric)
+    return convertStringToVarible(numeric)
   }
 }
 

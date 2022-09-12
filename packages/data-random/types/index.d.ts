@@ -1,3 +1,15 @@
+type Numeric = string | number
+
+type IntNumeric = Numeric
+
+type FloatNumeric = Numeric
+
+type Bool = 'true' | 'false' | boolean
+
+type ObjectNotation = string | object
+
+type ObjectEmpty = {}
+
 type RandomExtendsOptions = Record<string, AnyFn>
 type RandomMethods = RandomMethods_Address &
   RandomMethods_Basic &

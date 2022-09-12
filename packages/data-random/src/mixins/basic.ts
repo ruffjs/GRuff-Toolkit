@@ -1,55 +1,54 @@
-const p = (input: nummeric, radix?: number | undefined) =>
-  parseInt(input as string, radix);
+import { MAX, notNaN, toBool, toFloat, toInt } from "../utils/type-convert";
 
 export function boolean(
   this: RandomMethods,
-  less: nummeric,
-  more: nummeric,
-  value: boolean
+  less?: IntNumeric,
+  more?: IntNumeric,
+  value?: Bool
 ) {
   if (value !== undefined) {
     less =
-      typeof less !== "undefined" && !isNaN(less as number) ? p(less, 10) : 1;
+      typeof less !== "undefined" && notNaN(less) ? toInt(less, 10) : 1;
     more =
-      typeof more !== "undefined" && !isNaN(more as number) ? p(more, 10) : 1;
-    return Math.random() > (1.0 / (less + more)) * less ? !value : value;
+      typeof more !== "undefined" && notNaN(more) ? toInt(more, 10) : 1;
+    return Math.random() > (1.0 / (less + more)) * less ? !toBool(value) : toBool(value);
   }
   return Math.random() >= 0.5;
 }
 export const bool = boolean;
 
-export function natural(this: RandomMethods, min: nummeric, max: nummeric) {
-  min = typeof min !== "undefined" ? p(min, 10) : 0;
+export function natural(this: RandomMethods, min?: Numeric, max?: Numeric) {
+  min = typeof min !== "undefined" ? toInt(min, 10) : 0;
   max =
-    typeof max !== "undefined" ? p(max, 10) : Number(Number(9007199254740992n)); // 2^53
+    typeof max !== "undefined" ? toInt(max, 10) : MAX; // 2^53
   return Math.round(Math.random() * (max - min)) + min;
 }
 
-export function integer(this: RandomMethods, min: nummeric, max: nummeric) {
-  min = typeof min !== "undefined" ? p(min, 10) : -Number(9007199254740992n);
-  max = typeof max !== "undefined" ? p(max, 10) : Number(9007199254740992n); // 2^53
+export function integer(this: RandomMethods, min?: Numeric, max?: Numeric) {
+  min = typeof min !== "undefined" ? toInt(min, 10) : -MAX;
+  max = typeof max !== "undefined" ? toInt(max, 10) : MAX; // 2^53
   return Math.round(Math.random() * (max - min)) + min;
 }
 export const int = integer;
 
 export function float(
   this: RandomMethods,
-  min: nummeric,
-  max: nummeric,
-  dmin: number,
-  dmax: number
+  min?: Numeric,
+  max?: Numeric,
+  dmin?: Numeric,
+  dmax?: Numeric
 ) {
   dmin = dmin === undefined ? 0 : dmin;
-  dmin = Math.max(Math.min(dmin, 17), 0);
+  dmin = Math.max(Math.min(toInt(dmin), 17), 0);
   dmax = dmax === undefined ? 17 : dmax;
-  dmax = Math.max(Math.min(dmax, 17), 0);
+  dmax = Math.max(Math.min(toInt(dmax), 17), 0);
   let ret = this.integer(min, max) + ".";
   for (let i = 0, dcount = this.natural(dmin, dmax); i < dcount; i++) {
     ret +=
       // 最后一位不能为 0：如果最后一位为 0，会被 JS 引擎忽略掉。
       i < dcount - 1 ? this.character("number") : this.character("123456789");
   }
-  return parseFloat(ret);
+  return toFloat(ret);
 }
 
 const all = Symbol(undefined);
@@ -77,9 +76,9 @@ export const char = character;
 
 export function string(
   this: RandomMethods,
-  pool: string | Symbol,
-  minLength: nummeric,
-  maxLength: nummeric
+  pool?: string | Symbol,
+  minLength?: Numeric,
+  maxLength?: Numeric
 ) {
   let len: number;
   switch (arguments.length) {
@@ -96,7 +95,7 @@ export function string(
         len = Number(minLength);
       } else {
         // ( min, max )
-        len = this.natural(pool as nummeric, minLength);
+        len = this.natural(pool as Numeric, minLength);
         pool = all;
       }
       break;
@@ -117,21 +116,20 @@ export const str = string;
 
 export function range(
   this: RandomMethods,
-  start: number,
-  stop: number,
-  step: number
+  start?: Numeric,
+  stop?: Numeric,
+  step?: Numeric
 ) {
   // range( stop )
   if (arguments.length <= 1) {
-    stop = start || 0;
-    start = 0;
+    stop = toInt(start || 0);
+    start = toInt(0);
+  } else {
+    start = toInt(start as Numeric);
+    stop = toInt(stop as Numeric);
   }
   // range( start, stop )
-  step = arguments[2] || 1;
-
-  start = +start;
-  stop = +stop;
-  step = +step;
+  step = toInt(arguments[2] || 1);
 
   var len = Math.max(Math.ceil((stop - start) / step), 0);
   var idx = 0;

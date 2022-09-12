@@ -176,16 +176,16 @@ interface RandomMethods_Image {
     _brandNames(): RandomBrands[]
 
     image(
-        size: RandomAdSize | RandomScreenSize | RandomVideoSize | nummeric,
+        size: RandomAdSize | RandomScreenSize | RandomVideoSize | Numeric,
         background: RandomColorName | RandomHashColor,
         text: string): string
     image(
-        size: RandomAdSize | RandomScreenSize | RandomVideoSize | nummeric,
+        size: RandomAdSize | RandomScreenSize | RandomVideoSize | Numeric,
         background: RandomColorName | RandomHashColor,
         foreground: RandomColorName | RandomHashColor,
         text: string): string
     image(
-        size: RandomAdSize | RandomScreenSize | RandomVideoSize | nummeric,
+        size: RandomAdSize | RandomScreenSize | RandomVideoSize | Numeric,
         background: RandomColorName | RandomHashColor,
         foreground: RandomColorName | RandomHashColor,
         format: RandomImageType,
@@ -193,5 +193,5 @@ interface RandomMethods_Image {
 
     //  img = image
 
-    dataImage(size: RandomAdSize | RandomScreenSize | RandomVideoSize | nummeric, text: string): string
+    dataImage(size: RandomAdSize | RandomScreenSize | RandomVideoSize | Numeric, text: string): string
 }

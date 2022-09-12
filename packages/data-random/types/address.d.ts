@@ -13,9 +13,9 @@ interface RandomMethods_Address {
 
   province(): string;
 
-  city(prefix: boolean): string;
+  city(prefix: Bool): string;
 
-  county(prefix: boolean): string;
+  county(prefix: Bool): string;
 
-  zip(len: number): string;
+  zip(len: Numeric): string;
 }

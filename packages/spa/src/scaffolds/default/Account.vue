@@ -12,7 +12,7 @@
     <template v-slot:overlay>
       <a-menu class="ant-pro-drop-down menu" :selected-keys="[]">
         <a-menu-item key="logout" @click="handleLogout">
-          <b-icon type="logout" />
+          <ruff-icon type="antd" name="logout" />
           退出登录
         </a-menu-item>
       </a-menu>
