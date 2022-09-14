@@ -4,7 +4,7 @@ import userApis, {
   login,
 } from "@ruff-web/entities/src/presets/user/user.resource";
 import userMock from "@ruff-web/entities/src/presets/user/user.resource.withmock";
-import { pickMockRulesOfResource } from "@ruff-web/http/src/helpers/DataVonder/MockRule";
+import { pickMockRulesOfResource } from "@ruff-web/http/src/helpers/vendors/MockRule";
 
 const userMockConfig = pickMockRulesOfResource("user", userMock);
 
