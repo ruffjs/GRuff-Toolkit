@@ -20,7 +20,7 @@ export default defineComponent({
 
     return (
       <div
-        class={props.class ? `bricks-box ${props.class}` : "bricks-box"}
+        class={props.class ? `bricky-box ${props.class}` : "bricky-box"}
         style={{
           ...styleObj,
           ...cssObj,
@@ -34,7 +34,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.bricks-box {
+.bricky-box {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

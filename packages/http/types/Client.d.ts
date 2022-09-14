@@ -112,8 +112,10 @@ interface RuffClientHooks {
   on401Error(error: AxiosError, response: AxiosResponse): boolean;
   on403Error(error: AxiosError, response: AxiosResponse): boolean;
   on404Error(error: AxiosError, response: AxiosResponse): boolean;
-  // 因服务更新重启而请求失败
+  // 因服务更新重启或其他原因而请求失败
   onServerError(status: number, error: AxiosError): boolean;
+  // 请求超时或网络异常
+  onNetworkError(error: AxiosError): boolean
 }
 interface RuffClient
   extends
