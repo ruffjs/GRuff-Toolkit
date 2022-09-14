@@ -1,5 +1,4 @@
 import runtime from "@/spa-configs/runtime";
-import { allocateStorage } from "@ruff-web/data-storage";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import { createApp } from "vue";
 import App from "../SPA.vue";

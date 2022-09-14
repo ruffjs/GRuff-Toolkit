@@ -112,7 +112,8 @@ const patterns = {
   }),
 } as const;
 export type RulePattern = keyof typeof patterns;
-export const defineRule = {
+
+export const rules = {
   ...patterns,
   validator: (
     validator: Validator,
@@ -221,17 +222,17 @@ const checkRule = (rule: Rule | Rule[]): RuleObject => {
     }
     return rule;
   } else if (typeof rule === "function") {
-    return defineRule.validator(rule);
+    return rules.validator(rule);
   }
   if (rule.startsWith("required:")) {
     const [p, a, t] = rule.split(":");
     if (a === "array") {
-      return defineRule.requiredArray(t);
+      return rules.requiredArray(t);
     }
-    return defineRule.required(a as RuleType);
+    return rules.required(a as RuleType);
   }
   if (patterns[rule as RulePattern]) {
-    return defineRule[rule as RulePattern]();
+    return rules[rule as RulePattern]();
   } else {
     throw "UnknownRulePattern " + rule;
   }

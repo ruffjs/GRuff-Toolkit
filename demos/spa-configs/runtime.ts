@@ -3,6 +3,7 @@ import { createRuntime, withDefaults } from "@ruff-web/spa/src/runtime";
 import storageConfig from "./storage";
 import { globalState, extendedGetters } from "./states";
 import pages from "./pages";
+import PageNotFound from "../spa-views/errors/PageNotFound.vue";
 
 import "../styles/index.scss";
 import { PlaceholderPage } from "@ruff-web/spa";
@@ -21,7 +22,7 @@ export default createRuntime({
     // home: defineComponent(PlaceholderPage as {}),
     // home: () => createVNode("div", {}, "Hello, world"), // FunctionalComponent
     // forbidden: PageForbidden,
-    // default: PageNotFound,
+    default: PageNotFound,
   }),
   async onPermissionCheck(userState: UserState, acceesDescription: any) {
     // console.log("onPermissionCheck", userState, acceesDescription?.roles)

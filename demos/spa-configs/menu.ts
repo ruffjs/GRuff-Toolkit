@@ -19,7 +19,7 @@ export default [
       {
         key: "workspace/page/scroll",
         name: "可滚动页面",
-        link: "/page/realtime",
+        link: "/page/scroll",
       },
       {
         key: "workspace/page/with-header-std",
@@ -80,14 +80,14 @@ export default [
         link: "/table/hidable-columns",
       },
       {
-        key: "workspace/table/group-columns/1",
+        key: "workspace/table/group-columns/v1",
         name: "对列进行分组 v1",
-        link: "/table/group-columns/1",
+        link: "/table/group-columns/v1",
       },
       {
-        key: "workspace/table/group-columns/2",
+        key: "workspace/table/group-columns/v2",
         name: "对列进行分组 v2",
-        link: "/table/group-columns/2",
+        link: "/table/group-columns/v2",
       },
       {
         key: "workspace/table/cells",
