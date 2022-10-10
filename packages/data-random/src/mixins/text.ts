@@ -106,3 +106,36 @@ export function ctitle(this: RandomMethods, min?: Numeric, max?: Numeric) {
     }
     return result.join("");
 }
+
+export function bigint(this: RandomMethods, min?: Numeric, max?: Numeric) {
+    // 最常用的 500 个汉字 http://baike.baidu.com/view/568436.htm
+
+    const pool = "0123456789"
+    let len: number;
+    let result = "";
+    switch (arguments.length) {
+        case 0:
+            if (typeof arguments[0] === "string") {
+                len = 1;
+            } else {
+                len = Number(pool);
+            }
+            break;
+        case 1:
+            if (typeof arguments[0] === "string") {
+                len = Number(min);
+            } else {
+                len = this.natural(Number(pool), min);
+            }
+            break;
+        case 2:
+        default:
+            len = this.natural(min, max);
+            break;
+    }
+
+    for (let i = 0; i < len; i++) {
+        result += pool.charAt(this.natural(0, pool.length - 1));
+    }
+    return result;
+}

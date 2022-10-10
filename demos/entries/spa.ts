@@ -24,7 +24,3 @@ if (storage._demo_spa_token) {
         console.log('busHub.login err:', err, err.toJSON())
     });
 }
-
-
-
-
