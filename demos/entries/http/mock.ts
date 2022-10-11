@@ -123,7 +123,7 @@ mockUserHttp(1).doSth().then(res => {
 //   },
 // });
 
-// const mockUserHttp = Resource.defineResource("user", {
+// const mockUserHttp = Resource.defineProvider("user", {
 //   resource: userResource,
 //   client: clients.mock,
 //   prefix: "api/v1",

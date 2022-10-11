@@ -151,12 +151,12 @@ interface RuffCreateClientOptions {
 
 type RuffClientResourcesConfigs<R extends string = any> = Record<
   R,
-  RuffCreateResourceConfig & { prefix: string }
+  RuffCreateResourceProviderConfig & { prefix: string }
 >;
 
 type RuffClientCallersConfigs<C extends string = any> = Record<
   C,
-  RuffCreateCallableResouceConfig & { prefix: string }
+  RuffCreateCallableResouceProviderConfig & { prefix: string }
 >;
 
 interface RuffCreateClientConfigs<R extends string = any, C extends string = any> {
@@ -167,7 +167,7 @@ interface RuffCreateClientConfigs<R extends string = any, C extends string = any
 
 type RuffClientMockResourcesConfigs<E extends string = any> = Record<
   E,
-  RuffCreateMockResourceConfig
+  RuffCreateResourceMockerConfig
 > &
   RuffClientResourcesConfigs<E>;
 

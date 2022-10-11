@@ -2,7 +2,7 @@ import { ResourceMethod as M } from "../../utils/resource-methods";
 import { joinPath as $, withQueryString as q, toObjectiveQuery as _ } from "../../utils/formatters";
 import HTTP_STATUS_CODES, { StatusCode } from "../../utils/status-codes";
 import MockResponsor from "../../models/MockResponsor";
-import AbstractBaseClient from "../core/AbstractBaseClient";
+import AbstractBaseClient from "../core/AbstractClient";
 
 export default abstract class MockRequestor<
   R extends string = any,

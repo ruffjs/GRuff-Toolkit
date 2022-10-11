@@ -2,18 +2,18 @@ type RuffResourceMethod = number;
 
 type RuffMockRandomConfig<T extends RuffHttpResource = any, D extends RuffHttpResource = any> = RuffMockRandomFunction<T, D> | RuffClientResponseContent<T>;
 
-interface RuffCreateCallableResouceConfig<T extends RuffHttpResource = any, P extends AnyRecord = any> {
+interface RuffCreateCallableResouceProviderConfig<T extends RuffHttpResource = any, P extends AnyRecord = any> {
     path?: string;
     method: RuffResourceMethod;
     type?: T;
     model?: P;
 }
 
-interface RuffCreateCallableMockResouceConfig<T extends RuffHttpResource = any, P extends AnyRecord = any> extends RuffCreateCallableResouceConfig<T, P> {
+interface RuffCreateCallableResourceMockerConfig<T extends RuffHttpResource = any, P extends AnyRecord = any> extends RuffCreateCallableResouceProviderConfig<T, P> {
     0?: RuffMockRandomConfig;
 }
 
-interface RuffCreateAffiliatedResourceConfig<T extends RuffHttpResource = any> {
+interface RuffCreateAffiliatedResourceProviderConfig<T extends RuffHttpResource = any> {
     path?: string;
     methods: RuffResourceMethod[];
     type?: T;
@@ -21,47 +21,47 @@ interface RuffCreateAffiliatedResourceConfig<T extends RuffHttpResource = any> {
     config?: RuffClientRequestConfig;
 }
 
-interface RuffCreateResourceConfig<
+interface RuffCreateResourceProviderConfig<
     T extends RuffHttpResource = any,
     S extends string = any,
     A extends string = any
-> extends RuffCreateAffiliatedResourceConfig<T> {
+> extends RuffCreateAffiliatedResourceProviderConfig<T> {
     pickable?: boolean | string
-    "/"?: Record<S, RuffCreateResourceConfig | RuffCreateCallableResouceConfig>;
+    "/"?: Record<S, RuffCreateResourceProviderConfig | RuffCreateCallableResouceProviderConfig>;
     "/**/"?: Record<
         A,
-        RuffCreateAffiliatedResourceConfig | RuffCreateCallableResouceConfig
+        RuffCreateAffiliatedResourceProviderConfig | RuffCreateCallableResouceProviderConfig
     >;
 }
 
 
 
-interface RuffCreateMockResouceBaseConfig<T extends RuffHttpResource = any> extends RuffCreateAffiliatedResourceConfig<T> {
+interface RuffCreateBaseResourceMockerConfig<T extends RuffHttpResource = any> extends RuffCreateAffiliatedResourceProviderConfig<T> {
     [x: RuffResourceMethod]: RuffMockRandomConfig;
-    children?: Record<string, RuffCreateMockResouceBaseConfig>;
+    children?: Record<string, RuffCreateBaseResourceMockerConfig>;
 }
 
-interface RuffCreateMockResourceConfig extends RuffCreateMockResouceBaseConfig {
+interface RuffCreateResourceMockerConfig extends RuffCreateBaseResourceMockerConfig {
     pickable?: boolean | string
-    "/"?: Record<string, RuffCreateMockResourceConfig | RuffCreateCallableMockResouceConfig>;
-    "/**/"?: Record<string, RuffCreateMockResouceBaseConfig | RuffCreateCallableMockResouceConfig>;
+    "/"?: Record<string, RuffCreateResourceMockerConfig | RuffCreateCallableResourceMockerConfig>;
+    "/**/"?: Record<string, RuffCreateBaseResourceMockerConfig | RuffCreateCallableResourceMockerConfig>;
 }
 
-interface RuffResourceDefinationOptions<
+interface RuffResourceProviderDefinationOptions<
     T extends RuffHttpResource = any,
     S extends string = any,
     A extends string = any
 > {
-    resource: RuffCreateResourceConfig<T, S, A>;
+    resource: RuffCreateResourceProviderConfig<T, S, A>;
     prefix: string;
     client: RuffClient;
     config?: RuffClientRequestConfig;
 }
 
-type RuffCallableResourceDefinationOptions = {
+type RuffCallableResourceProviderDefinationOptions = {
     client: RuffClient;
     prefix: string[];
-    call: RuffCreateCallableResouceConfig;
+    call: RuffCreateCallableResouceProviderConfig;
 };
 
 type CreateApiHubDefination = Record<string, {
@@ -70,5 +70,5 @@ type CreateApiHubDefination = Record<string, {
 }>
 
 type CreateApiHubConfig<T extends CreateApiHubDefination> = {
-    [k in keyof T]: Partial<RuffCreateCallableResouceConfig<T[k]['type'] extends string ? T[k]['type'] : any, T[k]['model'] extends string ? T[k]['model'] : any>> & Partial<T[k]>
+    [k in keyof T]: Partial<RuffCreateCallableResouceProviderConfig<T[k]['type'] extends string ? T[k]['type'] : any, T[k]['model'] extends string ? T[k]['model'] : any>> & Partial<T[k]>
 }

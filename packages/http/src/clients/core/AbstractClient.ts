@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { ApiHub, defineApiHub } from "../../helpers/ApiHub";
-import registerResources from "../../resources";
+import registerResources from "../../resource-providers";
 import { toObjectiveQuery, withQueryString } from "../../utils/formatters";
 
 export default abstract class AbstractBaseClient<R extends string = any, C extends string = any> implements RuffClientHooks {

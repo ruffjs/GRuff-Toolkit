@@ -65,7 +65,7 @@ userHttp.login({
 
   userHttp.post({
     "name": "Test User",
-    "phone": "18620881236",
+    "phone": "18620881237",
     "password": "string123",
     "remark": "string",
     "roleIds": [1],

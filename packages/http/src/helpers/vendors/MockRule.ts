@@ -2,7 +2,7 @@ import { joinPath } from "../../utils/formatters";
 
 export const pickMockRulesOfResource = (
     name: string,
-    config: RuffCreateMockResourceConfig & { prefix: string }
+    config: RuffCreateResourceMockerConfig & { prefix: string }
 ) => {
     const { prefix, path, ...rest } = config;
     const mockRules = {} as Record<string, RuffMockRandomConfig>;
@@ -68,7 +68,7 @@ export function pickMockRules(
             pickMockRulesOfResource(name, {
                 prefix,
                 ...configs[name],
-            } as RuffCreateMockResourceConfig & { prefix: string })
+            } as RuffCreateResourceMockerConfig & { prefix: string })
         );
     });
     return mockRules;

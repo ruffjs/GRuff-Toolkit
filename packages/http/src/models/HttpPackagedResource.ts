@@ -1,8 +1,8 @@
-import AffiliatedResource from "../resources/AffiliatedResource";
-import { ExtendedIdentifiedResource } from "../resources/IdentifiedResource";
+import AffiliatedResourceProvider from "../resource-providers/AffiliatedResourceProvider";
+import { ExtendedIdentifiedResourceProvider } from "../resource-providers/IdentifiedResourceProvider";
 
 export type ProxiedHttpPackagedResource<T extends RuffHttpResource = any, A extends string = any> = HttpPackagedResource<T, A> & T &
-  Record<A, RuffAffiliatedResourceGetter & AffiliatedResource> &
+  Record<A, RuffAffiliatedResourceGetter & AffiliatedResourceProvider> &
   Record<A, RuffResourceCaller> & {
     rawData: T
   };
@@ -13,11 +13,11 @@ const packageScalarValue = (raw: any) => ({
 })
 
 export default class HttpPackagedResource<T extends RuffHttpResource = any, A extends string = any> {
-  static packageResource<T extends RuffHttpResource = any, A extends string = any>(raw: T, ref: ExtendedIdentifiedResource<T, A>) {
+  static packageResource<T extends RuffHttpResource = any, A extends string = any>(raw: T, ref: ExtendedIdentifiedResourceProvider<T, A>) {
     return new HttpPackagedResource(raw, ref) as ProxiedHttpPackagedResource<T, A>
   }
 
-  private constructor(raw: T, ref: ExtendedIdentifiedResource<T, A>) {
+  private constructor(raw: T, ref: ExtendedIdentifiedResourceProvider<T, A>) {
     (this as any).__proto__ = new Proxy(typeof raw === 'object' ? (raw || packageScalarValue(raw)) : packageScalarValue(raw), {
       get(target: any, p: A) {
         if (p === "rawData") {

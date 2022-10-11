@@ -10,12 +10,14 @@
 
 // import "../demos/entries/http/dataview";
 
-// import "../demos/entries/http/api-hub";
+import "../demos/entries/http/api-hub";
+
+// import "../demos/entries/rdo";
 
 // import "../demos/entries/storage";
 
 // import "../demos/entries/table";
 
-import "../demos/entries/rdo";
+
 
 // import "../demos/entries/spa";

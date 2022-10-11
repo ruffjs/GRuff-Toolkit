@@ -1,52 +1,52 @@
 import HttpPackagedResource from "../models/HttpPackagedResource";
 import { formatQueryCondition, joinPath } from "../utils/formatters";
 import { ResourceMethod } from "../utils/resource-methods";
-import AbstractBaseResource from "./AbstractBaseResource";
+import AbstractResourceProvider from "./AbstractResourceProvider";
 
-export default class AffiliatedResource<T extends RuffHttpResource = any> {
-  static defineResource<T extends RuffHttpResource = any>(
+export default class AffiliatedResourceProvider<T extends RuffHttpResource = any> {
+  static defineProvider<T extends RuffHttpResource = any>(
     name: string,
-    ref: AbstractBaseResource,
-    options: RuffCreateAffiliatedResourceConfig<T>
+    ref: AbstractResourceProvider,
+    options: RuffCreateAffiliatedResourceProviderConfig<T>
   ) {
-    const resource = new AffiliatedResource<T>(name, ref, options);
+    const provider = new AffiliatedResourceProvider<T>(name, ref, options);
     const callable = function RuffAffiliatedResourceGetter(subIdOrKeys?: IdOrKeys) {
-      return resource.get(subIdOrKeys);
+      return provider.get(subIdOrKeys);
     };
 
     const bounds = {
-      getPrefix: resource.getPrefix.bind(resource),
-      getFullPath: resource.getFullPath.bind(resource),
-      query: resource.query.bind(resource),
-    } as AffiliatedResource;
+      getPrefix: provider.getPrefix.bind(provider),
+      getFullPath: provider.getFullPath.bind(provider),
+      query: provider.query.bind(provider),
+    } as AffiliatedResourceProvider;
 
     if (options.methods?.includes(ResourceMethod.POST)) {
-      bounds.post = resource.post.bind(resource);
+      bounds.post = provider.post.bind(provider);
     }
 
     if (options.methods?.includes(ResourceMethod.GET)) {
-      bounds.get = resource.get.bind(resource);
+      bounds.get = provider.get.bind(provider);
     }
 
     if (options.methods?.includes(ResourceMethod.PUT) || options.methods?.includes(ResourceMethod.PATCH)) {
-      bounds.set = resource.set.bind(resource);
+      bounds.set = provider.set.bind(provider);
     }
 
     if (options.methods?.includes(ResourceMethod.DELETE)) {
-      bounds.drop = resource.drop.bind(resource);
+      bounds.drop = provider.drop.bind(provider);
     }
 
-    return Object.assign(callable, resource, bounds);
+    return Object.assign(callable, provider, bounds);
   }
 
-  private _ref: AbstractBaseResource;
+  private _ref: AbstractResourceProvider;
   private _name: string;
-  private _options: RuffCreateAffiliatedResourceConfig<T>;
+  private _options: RuffCreateAffiliatedResourceProviderConfig<T>;
   private _query: RuffHttpQueryModel;
   private constructor(
     name: string,
-    ref: AbstractBaseResource,
-    options: RuffCreateAffiliatedResourceConfig<T>
+    ref: AbstractResourceProvider,
+    options: RuffCreateAffiliatedResourceProviderConfig<T>
   ) {
     this._ref = ref;
     this._name = name;
@@ -62,7 +62,7 @@ export default class AffiliatedResource<T extends RuffHttpResource = any> {
     return joinPath([this.getPrefix(), this._name]);
   }
 
-  query(...qs: RuffHttpQueryCondition[]): AffiliatedResource {
+  query(...qs: RuffHttpQueryCondition[]): AffiliatedResourceProvider {
     const condition = formatQueryCondition(...qs);
     this._query = {
       ...this._query,

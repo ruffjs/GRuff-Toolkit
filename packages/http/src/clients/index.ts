@@ -1,4 +1,4 @@
-import { ExtendedResourceInterface } from "../resources/StatelessResource";
+import { IExtendedResourceProvider } from "../resource-providers/StatelessResourceProvider";
 import MockClient from "./mock/MockClient";
 import HttpClient from "./http/HttpClient";
 import { pickMockRules } from "../helpers/vendors/MockRule";
@@ -6,15 +6,15 @@ import { pickMockRules } from "../helpers/vendors/MockRule";
 function createClient<R extends string = any, C extends string = any>(
   options: (RuffCreateClientOptions & RuffClientHooks) | string,
   configs?: RuffCreateClientConfigs<R, C>
-): HttpClient<R> & Record<R, ExtendedResourceInterface> & Record<C, RuffResourceCaller>;
+): HttpClient<R> & Record<R, IExtendedResourceProvider> & Record<C, RuffResourceCaller>;
 function createClient<R extends string = any, C extends string = any>(
   options: (RuffCreateClientOptions & RuffClientHooks) | string,
   configs: RuffCreateMockClientSimpleConfigs<R>
-): MockClient<R> & Record<R, ExtendedResourceInterface> & Record<C, RuffResourceCaller>;
+): MockClient<R> & Record<R, IExtendedResourceProvider> & Record<C, RuffResourceCaller>;
 function createClient<R extends string = any, C extends string = any>(
   options: (RuffCreateClientOptions & RuffClientHooks) | string,
   configs: RuffCreateMockClientWithRandomsConfigs<R>
-): MockClient<R> & Record<R, ExtendedResourceInterface> & Record<C, RuffResourceCaller>;
+): MockClient<R> & Record<R, IExtendedResourceProvider> & Record<C, RuffResourceCaller>;
 function createClient<R extends string = any, C extends string = any>(
   options: (RuffCreateClientOptions & RuffClientHooks) | string,
   configs:

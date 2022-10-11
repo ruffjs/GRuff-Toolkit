@@ -1,4 +1,4 @@
-import CallableResource from "../resources/CallableResource";
+import CallableResourceProvider from "../resource-providers/CallableResourceProvider";
 
 
 export type ApiHub<T extends CreateApiHubDefination = any> = {
@@ -12,8 +12,8 @@ export function defineApiHub<
     const apis = {} as ApiHub<T>
 
     (Object.keys(config) as K[]).forEach(apiname => {
-        apis[apiname] = CallableResource.defineCallApi(apiname as string, {
-            call: config[apiname] as unknown as RuffCreateCallableResouceConfig<T[K]['type'], T[K]['model']>,
+        apis[apiname] = CallableResourceProvider.defineCallApi(apiname as string, {
+            call: config[apiname] as unknown as RuffCreateCallableResouceProviderConfig<T[K]['type'], T[K]['model']>,
             prefix: [prefix],
             client,
         });

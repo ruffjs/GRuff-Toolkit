@@ -1,23 +1,23 @@
 import { formatQueryCondition } from "../utils/formatters";
 import HttpPackagedResource, { ProxiedHttpPackagedResource } from "../models/HttpPackagedResource";
 import { joinPath } from "../utils/formatters";
-import IdentifiedResource from "./IdentifiedResource";
-import AbstractBaseResource from "./AbstractBaseResource";
+import IdentifiedResourceProvider from "./IdentifiedResourceProvider";
+import AbstractResourceProvider from "./AbstractResourceProvider";
 import { ResourceMethod } from "../utils/resource-methods";
 import HttpResourcesList from "../models/HttpResourcesList";
 
-export default class StatefulResource<
+export default class StatefulResourceProvider<
   T extends RuffHttpResource = any,
   A extends string = any
-> extends AbstractBaseResource {
+> extends AbstractResourceProvider {
 
 
-  protected static defineResource<T extends RuffHttpResource = any, A extends string = any>(
+  protected static defineProvider<T extends RuffHttpResource = any, A extends string = any>(
     name: string,
-    options: Readonly<RuffResourceDefinationOptions<T, never, A>>,
+    options: Readonly<RuffResourceProviderDefinationOptions<T, never, A>>,
     query: RuffHttpQueryModel
   ) {
-    return new StatefulResource<T, A>(name, options, query);
+    return new StatefulResourceProvider<T, A>(name, options, query);
   }
 
   setPrefix(prefix: string) {
@@ -32,7 +32,7 @@ export default class StatefulResource<
     return joinPath([this._prefix, this._path]);
   }
 
-  query(...qs: RuffHttpQueryCondition[]): StatefulResource {
+  query(...qs: RuffHttpQueryCondition[]): StatefulResourceProvider {
     const condition = formatQueryCondition(...qs);
     this._query = {
       ...this._query,
@@ -51,7 +51,7 @@ export default class StatefulResource<
         payload,
         this._query
       );
-      const ref = IdentifiedResource.defineResource<T, A>(
+      const ref = IdentifiedResourceProvider.defineProvider<T, A>(
         this._path,
         data.id,
         this._options,
@@ -74,7 +74,7 @@ export default class StatefulResource<
         payload,
         this._query
       );
-      const ref = IdentifiedResource.defineResource<T, A>(
+      const ref = IdentifiedResourceProvider.defineProvider<T, A>(
         this._path,
         data.id,
         this._options,
@@ -110,7 +110,7 @@ export default class StatefulResource<
           array.forEach((item: any) => {
             let ref: any
             if (item.id) {
-              ref = IdentifiedResource.defineResource<T, A>(
+              ref = IdentifiedResourceProvider.defineProvider<T, A>(
                 this._path,
                 item.id,
                 this._options,
@@ -146,7 +146,7 @@ export default class StatefulResource<
         idOrKeys,
         this._query
       );
-      const ref = IdentifiedResource.defineResource<T, A>(
+      const ref = IdentifiedResourceProvider.defineProvider<T, A>(
         this._path,
         data.id,
         this._options,
@@ -173,7 +173,7 @@ export default class StatefulResource<
         this._query,
         { partially }
       );
-      const ref = IdentifiedResource.defineResource<T, A>(
+      const ref = IdentifiedResourceProvider.defineProvider<T, A>(
         this._path,
         data.id,
         this._options,

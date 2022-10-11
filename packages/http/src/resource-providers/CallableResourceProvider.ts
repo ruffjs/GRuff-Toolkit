@@ -1,15 +1,14 @@
 import { withQueryString } from "../utils/formatters";
-import { AxiosResponse } from "axios";
 import { joinPath } from "../utils/formatters";
 import { ResourceMethod } from "../utils/resource-methods";
 
-export default class CallableResource<T extends RuffHttpResource = any, P extends AnyRecord = any> {
+export default class CallableResourceProvider<T extends RuffHttpResource = any, P extends AnyRecord = any> {
   static defineCallApi<T extends RuffHttpResource = any, P extends AnyRecord = any>(
     name: string,
-    options: RuffCallableResourceDefinationOptions
+    options: RuffCallableResourceProviderDefinationOptions
   ): RuffResourceCaller<T, P> {
     const method = ResourceMethod[options.call.method] || "POST";
-    const callables = new CallableResource<T, P>(name, options);
+    const callables = new CallableResourceProvider<T, P>(name, options);
 
     return (
       ((callables as any)[method] as RuffResourceCaller<T, P>)?.bind(callables) ||
@@ -21,9 +20,9 @@ export default class CallableResource<T extends RuffHttpResource = any, P extend
   private _url: string;
   private _apiId: string;
   private _idOrKeys?: IdOrKeys
-  private _options: RuffCallableResourceDefinationOptions;
+  private _options: RuffCallableResourceProviderDefinationOptions;
 
-  private constructor(name: string, options: RuffCallableResourceDefinationOptions) {
+  private constructor(name: string, options: RuffCallableResourceProviderDefinationOptions) {
     const {
       client,
       prefix,

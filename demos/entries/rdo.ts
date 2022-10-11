@@ -3,6 +3,12 @@ import { createRandom, RandomInstance } from "@ruff-web/data-random";
 
 const random = createRandom()
 
+random.extends({
+    address() {
+        return "自定义拓展方法"
+    }
+})
+
 class User {
     static [createRDO.generate] = {
         [createRDO.prototype]: User.prototype,

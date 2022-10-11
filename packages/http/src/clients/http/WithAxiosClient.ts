@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { joinPath as $, withQueryString as q, toObjectiveQuery as _ } from "../../utils/formatters";
-import AbstractBaseClient from "../core/AbstractBaseClient";
+import AbstractBaseClient from "../core/AbstractClient";
 import { GetterMethod, ResourceMethod } from "../../utils/resource-methods";
 
 export default abstract class WithAxiosClient<R extends string = any, C extends string = any> extends AbstractBaseClient<R, C> implements RuffClientResourceBaseAPIs {
