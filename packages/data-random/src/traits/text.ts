@@ -50,7 +50,7 @@ export function word(this: RandomMethods, min?: Numeric, max?: Numeric) {
     }
     return result;
 }
-export function cword(this: RandomMethods, pool: string, min?: Numeric, max?: Numeric) {
+export function cword(this: RandomMethods, min?: Numeric, max?: Numeric, pool?: string) {
     // 最常用的 500 个汉字 http://baike.baidu.com/view/568436.htm
 
     let len: number;
@@ -61,27 +61,18 @@ export function cword(this: RandomMethods, pool: string, min?: Numeric, max?: Nu
             len = 1;
             break;
         case 1: // ( pool )
-            if (typeof arguments[0] === "string") {
-                len = 1;
-            } else {
-                // ( length )
-                len = Number(pool);
-                pool = DICT_KANZI;
-            }
+            len = Number(min);
+            pool = DICT_KANZI;
             break;
         case 2:
             // ( pool, length )
-            if (typeof arguments[0] === "string") {
-                len = Number(min);
-            } else {
-                // ( min, max )
-                len = this.natural(Number(pool), min);
-                pool = DICT_KANZI;
-            }
+            len = this.natural(min, max);
+            pool = DICT_KANZI;
             break;
         case 3:
         default:
             len = this.natural(min, max);
+            pool = pool as string
             break;
     }
 

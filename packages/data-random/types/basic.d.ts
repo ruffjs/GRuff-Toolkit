@@ -13,17 +13,16 @@ interface RandomMethods_Basic {
   char(pool?: string | Symbol): string;
 
   string(length?: Numeric): string;
-  string(pool: string, maxLength: Numeric): string;
   string(minLength: Numeric, maxLength: Numeric): string;
   string(
-    pool: string | Symbol,
     minLength: Numeric,
-    maxLength: Numeric
+    maxLength: Numeric,
+    pool: string | Symbol
   ): string;
 
   str(length: Numeric): string;
   str(minLength: Numeric, maxLength: Numeric): string;
-  str(pool: string | Symbol, minLength: Numeric, maxLength: Numeric): string;
+  str(minLength: Numeric, maxLength: Numeric, pool: string | Symbol): string;
 
   range(start: Numeric, stop: Numeric, step: Numeric): number[];
 

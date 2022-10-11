@@ -76,9 +76,9 @@ export const char = character;
 
 export function string(
   this: RandomMethods,
-  pool?: string | Symbol,
   minLength?: Numeric,
-  maxLength?: Numeric
+  maxLength?: Numeric,
+  pool?: string | Symbol,
 ) {
   let len: number;
   switch (arguments.length) {
@@ -86,18 +86,12 @@ export function string(
       len = this.natural(3, 7);
       break;
     case 1: // ( length )
-      len = pool as unknown as number;
+      len = minLength as unknown as number;
       pool = all;
       break;
     case 2:
-      // ( pool, length )
-      if (typeof arguments[0] === "string") {
-        len = Number(minLength);
-      } else {
-        // ( min, max )
-        len = this.natural(pool as Numeric, minLength);
-        pool = all;
-      }
+      len = this.natural(minLength, maxLength);
+      pool = all;
       break;
     case 3:
     default:
@@ -143,6 +137,6 @@ export function range(
   return range;
 }
 
-export function echo(this: RandomMethods, content: string = "") {
-  return String(content);
+export function echo(this: RandomMethods, ...content: string[]) {
+  return String(content.join(" "));
 }

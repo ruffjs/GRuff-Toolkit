@@ -6,16 +6,16 @@
 
 // import { extend } from "../../http/src/utils/mock";
 
-import * as address from "./mixins/address";
-import * as basic from "./mixins/basic";
-import * as color from "./mixins/color";
-import * as date from "./mixins/date";
-import * as helper from "./mixins/helper";
-import * as image from "./mixins/image";
-import * as key from "./mixins/key";
-import * as name from "./mixins/name";
-import * as text from "./mixins/text";
-import * as web from "./mixins/web";
+import * as address from "./traits/address";
+import * as basic from "./traits/basic";
+import * as color from "./traits/color";
+import * as date from "./traits/date";
+import * as helper from "./traits/helper";
+import * as image from "./traits/image";
+import * as key from "./traits/key";
+import * as name from "./traits/name";
+import * as text from "./traits/text";
+import * as web from "./traits/web";
 
 const mixins = {
   ...address,

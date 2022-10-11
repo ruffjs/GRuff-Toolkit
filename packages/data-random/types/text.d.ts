@@ -12,7 +12,7 @@ interface RandomMethods_Text {
 
     cword(length?: Numeric): text
     cword(minLength: Numeric, maxLength: Numeric): text
-    cword(pool: string, minLength: Numeric, maxLength: Numeric): text
+    cword(minLength: Numeric, maxLength: Numeric, pool: string): text
 
     title(minLength?: Numeric, maxLength?: Numeric): text
 

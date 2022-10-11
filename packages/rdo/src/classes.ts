@@ -1,6 +1,10 @@
+import { natural } from "@ruff-web/data-random/src/traits/basic";
 import { MAX } from "@ruff-web/data-random/src/utils/type-convert";
 
-type RDOType = 'map' | 'list' | "str" | "raw" | "call" | "model"
+type RDOType = 'map' | 'list' | "str" | "raw" | "call"
+
+const generate: unique symbol = Symbol('RDO::generate')
+const prototype: unique symbol = Symbol('RDO::prototype')
 
 class RDO<T> {
     type: RDOType;
@@ -9,13 +13,14 @@ class RDO<T> {
         this.type = type
     }
 
-    gen(context?: any): T {
-        throw new Error("must ");
+    [generate](random: any = {}, context: object = {}): T {
+        throw new Error("must implements gen method in subclass");
     }
 }
 
 class MapRDO<T extends object = AnyRecord> extends RDO<T> {
     fields: Record<keyof T, RDO<any>>;
+    [prototype]: typeof Object = Object
     constructor(exp: Record<keyof T, any>) {
         super('map')
         const keys = Object.keys(exp) as Array<keyof T>
@@ -24,15 +29,30 @@ class MapRDO<T extends object = AnyRecord> extends RDO<T> {
             fields[key] = createRDO(exp[key])
         })
         this.fields = fields
+        if ((exp as any)[prototype]) {
+            this[prototype] = (exp as any)[prototype]
+        }
+    }
+
+    [generate](random: any = {}, context: object = {}): T {
+        const keys = Object.keys(this.fields) as Array<keyof T>
+        let data = {} as T
+        if (typeof this[prototype] === 'object') {
+            data = Object.create(this[prototype]) as T
+        }
+        keys.forEach(key => {
+            data[key] = this.fields[key][generate](random, context)
+        })
+        return data
     }
 }
 
 class ListRDO<T extends any = any> extends RDO<T[]> {
-    seed: RDO<T>;
+    model: RDO<T>;
     count: [number, number];
-    constructor(seed: any, min: number, max: number) {
+    constructor(model: any, min: number, max: number) {
         super('list')
-        this.seed = createRDO(seed) as RDO<T>
+        this.model = createRDO(model) as RDO<T>
         let r0 = parseInt(min as unknown as string) || 1, r1
         r0 = r0 >= 0 ? r0 : 0
         if (typeof max === "number" && max > r0) {
@@ -41,6 +61,16 @@ class ListRDO<T extends any = any> extends RDO<T[]> {
             r1 = r0
         }
         this.count = [r0, r1 > 0 ? r1 : 1]
+    }
+
+    [generate](random: any = {}, context: object = {}): T[] {
+        const [min, max] = this.count
+        const length = natural.call(random as any, min, max)
+        const data: T[] = []
+        for (let index = 0; index < length; index++) {
+            data.push(this.model[generate](random, context))
+        }
+        return data
     }
 }
 
@@ -52,6 +82,15 @@ class StrRDO<T extends string = string> extends RDO<T> {
         this.template = template
         this.inputs = inputs.map(input => createRDO(input))
     }
+
+    [generate](random: any = {}, context: object = {}): T {
+        let string = this.template
+        this.inputs.forEach((rdo, i) => {
+            // console.log(rdo, i)
+            string = string.replaceAll(`{${i}}`, String(rdo[generate](random, context)))
+        })
+        return string as T
+    }
 }
 
 class RawRDO<T extends any = any> extends RDO<T> {
@@ -61,7 +100,7 @@ class RawRDO<T extends any = any> extends RDO<T> {
         this.value = value
     }
 
-    gen() {
+    [generate](random: any = {}, context: object = {}): T {
         return this.value
     }
 }
@@ -77,6 +116,27 @@ class RandomRDO<T extends any = any> extends RDO<T> {
         this.method = method
         this.args = args
     }
+
+    [generate](random: any = {}, context: object = {}): any {
+        if (typeof this.method === 'function') {
+            return this.method.apply(random || {}, this.args)
+        }
+        if (typeof this.method === 'string') {
+            if (random && typeof random[this.method] === 'function') {
+                return random[this.method].apply(random || {}, this.args)
+            }
+            const arr = [this.method]
+            this.args.forEach(arg => {
+                try {
+                    arr.push(String(arg))
+                } catch (error) {
+                    arr.push('')
+                }
+            })
+            return arr.join(" ")
+        }
+        return null
+    }
 }
 
 function unique(arr: any[]) {
@@ -85,9 +145,10 @@ function unique(arr: any[]) {
 
 function createRDOByObject(exp: {
     type?: RDOType
-    seed?: RDO<any> | any;
+    model?: RDO<any> | any;
     count?: [number, number] | number;
     fields: Record<string, RDO<any> | any>;
+    [prototype]: typeof Object;
     method?: string | AnyFn;
     args?: any[];
     value?: any;
@@ -103,7 +164,7 @@ function createRDOByObject(exp: {
             return new MapRDO(exp as AnyRecord)
 
         case 'list':
-            if (exp.seed) {
+            if (exp.model) {
                 let count = [1, 1]
                 if (typeof exp.count === 'number') {
                     count = [exp.count, exp.count]
@@ -114,12 +175,15 @@ function createRDOByObject(exp: {
                         count = [exp.count[0], exp.count[0]]
                     }
                 }
-                return new ListRDO(exp.seed, count[0], count[1])
+                return new ListRDO(exp.model, count[0], count[1])
             }
             break;
 
         case 'map':
             if (exp.fields) {
+                if (exp[prototype]) {
+                    return new MapRDO({ ...exp.fields, [prototype]: exp[prototype] })
+                }
                 return new MapRDO(exp.fields)
             }
             break;
@@ -151,7 +215,7 @@ function createRDOByObject(exp: {
     }
     return new MapRDO(exp as AnyRecord)
 }
-const generate: unique symbol = Symbol('createRDO.generate')
+
 export default function createRDO(exp: any): RDO<any> {
     switch (typeof exp) {
         case 'undefined':
@@ -200,7 +264,7 @@ export default function createRDO(exp: any): RDO<any> {
         case 'function':
             if (exp[generate]) {
                 if (typeof exp[generate] === 'function') {
-                    return new RandomRDO(exp[generate])
+                    return new RandomRDO(exp[generate], exp.prototype)
                 }
                 return createRDO(exp[generate])
             }
@@ -216,6 +280,9 @@ export default function createRDO(exp: any): RDO<any> {
                 }
                 if (exp.length > 3) {
                     return new RandomRDO<null[]>('pick', unique(exp), 1, 1)
+                }
+                if (exp.length === 1) {
+                    return new ListRDO(exp[0], 1, 10)
                 }
                 if (typeof exp[1] !== 'number') {
                     return new RandomRDO<any[]>('pick', unique(exp), 1, 1)
@@ -245,3 +312,4 @@ export default function createRDO(exp: any): RDO<any> {
 }
 
 createRDO.generate = generate
+createRDO.prototype = prototype
