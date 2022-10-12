@@ -10,7 +10,7 @@
 
 // import "../demos/entries/http/dataview";
 
-import "../demos/entries/http/api-hub";
+// import "../demos/entries/http/api-hub";
 
 // import "../demos/entries/rdo";
 
@@ -18,6 +18,6 @@ import "../demos/entries/http/api-hub";
 
 // import "../demos/entries/table";
 
-
-
 // import "../demos/entries/spa";
+
+import "../demos/entries/http-sharing-spa";

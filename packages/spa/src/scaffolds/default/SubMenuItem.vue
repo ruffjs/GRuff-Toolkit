@@ -17,7 +17,7 @@
 <script lang="ts">
 import { ref, watch } from "vue";
 import usePassport from "@ruff-web/spa/src/traits/useUserPassport";
-import { getCurrentRuntime } from "../../runtime";
+import { getSPAContext } from "../../context";
 
 export default {
   name: "SubMenuItem",
@@ -31,7 +31,7 @@ const { userInfo } = usePassport();
 const show = ref(false);
 const checkShowState = async () => {
   if (props.item?.accessDesc) {
-    const runtime = getCurrentRuntime();
+    const runtime = getSPAContext();
     try {
       await runtime.checkPermission(props.item?.accessDesc);
       show.value = true;

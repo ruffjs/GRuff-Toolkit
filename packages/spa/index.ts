@@ -1,8 +1,8 @@
-import AnimateKeepAlivePageRouter from "./src/runtime/router/components/AnimateKeepAlivePageRouter.vue";
-import AnimatePageRouter from "./src/runtime/router/components/AnimatePageRouter.vue";
-import KeepAlivePageRouter from "./src/runtime/router/components/KeepAlivePageRouter.vue";
-import PageRouter from "./src/runtime/router/components/PageRouter.vue";
-import DemoPage from "./src/runtime/router/components/DemoPage.vue";
+import AnimateKeepAlivePageRouter from "./src/context/router/components/AnimateKeepAlivePageRouter.vue";
+import AnimatePageRouter from "./src/context/router/components/AnimatePageRouter.vue";
+import KeepAlivePageRouter from "./src/context/router/components/KeepAlivePageRouter.vue";
+import PageRouter from "./src/context/router/components/PageRouter.vue";
+import DemoPage from "./src/context/router/components/DemoPage.vue";
 
 export const AnimateKeepAliveRouter = AnimateKeepAlivePageRouter;
 export const AnimateRouter = AnimatePageRouter;

@@ -1,12 +1,12 @@
 <template>
-  <a-dropdown v-if="userInfo && userInfo.name" placement="bottomRight">
+  <a-dropdown v-if="profile && profile.name" placement="bottomRight">
     <b-touchable :padding="[0, 10]" row>
       <box height="20">
         <a-avatar :size="20" :src="avatar" class="antd-pro-global-header-index-avatar" />
       </box>
 
       <box margin-left="5">
-        <txt class="top-bar-text">{{ userInfo.nickname }}</txt>
+        <txt class="top-bar-text">{{ profile.display }}</txt>
       </box>
     </b-touchable>
     <template v-slot:overlay>
@@ -28,13 +28,17 @@
 import { onMounted } from "vue";
 import usePassport from "../../traits/useUserPassport";
 import avatar from "../../assets/images/avatar.png";
+import { getSPAContext } from "../../context";
 
-const { userInfo, signOut: handleLogout, updateInfo } = usePassport();
+const { profile, signIn: updateInfo, signOut: handleLogout } = usePassport();
 
-onMounted(() => {
-  // console.log('userInfo', userInfo.value)
-  if (userInfo.value?.id) {
-    updateInfo();
+onMounted(async () => {
+  console.log("user profile", profile.value);
+  const { storage, updateUserData } = getSPAContext();
+  if (storage.user.uid) {
+    const userData = await updateUserData(storage.user.uid);
+    console.log(userData);
+    updateInfo(userData);
   }
 });
 </script>

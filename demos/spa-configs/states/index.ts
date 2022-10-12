@@ -9,28 +9,28 @@ export const globalState = {
 export const extendedGetters = {
   user: {
     isCarrier(state: UserState) {
-      if (state.meta?.level === "Member" && state.meta?.roles) {
-        return state.meta.roles.some((item: any) =>
+      if (state.x?.level === "Member" && state.x?.roles) {
+        return state.x.roles.some((item: any) =>
           ["CSCC", "CUCC", "CTCC"].includes(item.code)
         )
       }
       return false
     },
     isNormal(state: UserState) {
-      if (state.meta?.roles) {
-        return state.meta.roles.some((item: any) => item.code === "Normal")
+      if (state.x?.roles) {
+        return state.x.roles.some((item: any) => item.code === "Normal")
       }
       return false
     },
     isPM(state: UserState) {
-      if (state.meta?.roles) {
-        return state.meta.roles.some((item: any) => item.code === "PM")
+      if (state.x?.roles) {
+        return state.x.roles.some((item: any) => item.code === "PM")
       }
       return false
     },
     isSuper(state: UserState) {
-      if (state.meta) {
-        return state.meta.level === "Admin"
+      if (state.x) {
+        return state.x.level === "Admin"
       }
       return false
     },

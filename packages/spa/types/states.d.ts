@@ -71,18 +71,18 @@ type AppGetters = {
 };
 
 type User = {
-  id?: number;
   email?: string;
   name: string;
-  nickname?: string;
-  level?: string;
-  groups?: string[];
+  display?: string;
+  levelLable?: string;
+  usergroups?: string[];
 };
 type UserState = {
   token: string;
-  info: User;
-  meta: AnyRecord;
-  isAdmin: boolean;
-  isSuperAdmin: boolean;
-  isBanned: boolean;
+  uid: string | number;
+  i: User;
+  x: AnyRecord;
+  isAdministrator: boolean;
+  isHighestUser: boolean;
+  isCurrentlyBanned: boolean;
 };

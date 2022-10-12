@@ -53,7 +53,7 @@ mockUserHttp(1).doSth().then(res => {
 });
 
 // for (const user of await mockUserHttp.list(3)) {
-//   console.log(user.name, user, user.rawData);
+//   console.log(user.name, user, user.$raw);
 //   console.log(await user.profile());
 // }
 

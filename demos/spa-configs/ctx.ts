@@ -1,4 +1,4 @@
-import { createRuntime, withDefaults } from "@ruff-web/spa/src/runtime";
+import { CreateSPAContext, withDefaults } from "@ruff-web/spa/src/context";
 
 import storageConfig from "./storage";
 import { globalState, extendedGetters } from "./states";
@@ -9,7 +9,7 @@ import "../styles/index.scss";
 import { PlaceholderPage } from "@ruff-web/spa";
 import { createVNode, defineComponent } from "vue";
 
-export default createRuntime({
+export default CreateSPAContext({
   anonymousAccess: false,
   storageConfig,
   globalState,
@@ -24,16 +24,16 @@ export default createRuntime({
     // forbidden: PageForbidden,
     default: PageNotFound,
   }),
-  async onPermissionCheck(userState: UserState, acceesDescription: any) {
-    // console.log("onPermissionCheck", userState, acceesDescription?.roles)
+  async onRequestPermission(userState: UserState, acceesDescription: any) {
+    // console.log("onRequestPermission", userState, acceesDescription?.roles)
     if (acceesDescription === "谁都不可访问") {
       return Promise.reject({ reason: "谁都不可访问" });
     }
-    if (userState.isSuperAdmin) return true;
+    if (userState.isHighestUser) return true;
     if (acceesDescription?.roles?.length) {
       if (
-        userState.info?.groups &&
-        userState.info?.groups.some((group: any) =>
+        userState.i?.usergroups &&
+        userState.i?.usergroups.some((group: any) =>
           acceesDescription.roles.some(
             (role: any) =>
               <number>role === group.id || <string>role === group.code

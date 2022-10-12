@@ -4,12 +4,12 @@ type DefaultPages = {
   default?: any;
 };
 type WithDefaultsPages = Array<RuffSPAPageConfig> & DefaultPages;
-interface RIRuntime {
+interface IRuffSPAContext {
   storage: RuffAppStorage;
   store: Store<RuffSPAState>;
   router: Router;
 }
-type CreateRuntimeConfiguration = {
+type CreateSPAContextConfiguration = {
   storageConfig?: any;
   anonymousAccess?: boolean;
   globalState?: any;
@@ -21,10 +21,12 @@ type CreateRuntimeConfiguration = {
   notFoundView?: any;
   pages?: WithDefaultsPages;
   boundaries?: number[];
-  onCreate(runtime: RIRuntime);
-  onInstalled?: (runtime: RIRuntime) => void;
-  onPermissionCheck(
+  onCreate?: (runtime: IRuffSPAContext) => void;
+  onInstalled?: (runtime: IRuffSPAContext) => void;
+  onRequestUserToken?: (userState: UserState, payload: AnyRecord) => Promise<{ token: string, payload: AnyRecord }>;
+  onRequestUserData?: (userState: UserState, uid: string | number) => Promise<AnyRecord>;
+  onRequestPermission?: (
     userState: UserState,
     acceesDescription: AnyRecord
-  ): Promise<unknown>;
+  ) => Promise<unknown>;
 };

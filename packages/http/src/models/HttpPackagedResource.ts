@@ -4,7 +4,7 @@ import { ExtendedIdentifiedResourceProvider } from "../resource-providers/Identi
 export type ProxiedHttpPackagedResource<T extends RuffHttpResource = any, A extends string = any> = HttpPackagedResource<T, A> & T &
   Record<A, RuffAffiliatedResourceGetter & AffiliatedResourceProvider> &
   Record<A, RuffResourceCaller> & {
-    rawData: T
+    $raw: T
   };
 
 const packageScalarValue = (raw: any) => ({
@@ -20,7 +20,7 @@ export default class HttpPackagedResource<T extends RuffHttpResource = any, A ex
   private constructor(raw: T, ref: ExtendedIdentifiedResourceProvider<T, A>) {
     (this as any).__proto__ = new Proxy(typeof raw === 'object' ? (raw || packageScalarValue(raw)) : packageScalarValue(raw), {
       get(target: any, p: A) {
-        if (p === "rawData") {
+        if (p === "$raw") {
           return target;
         }
         if (p in target) {

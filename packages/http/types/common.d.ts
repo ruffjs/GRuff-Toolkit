@@ -43,7 +43,7 @@ interface RuffClientResponseContent<T extends RuffHttpResource = any> {
 type RuffHttpPageableResources<T extends RuffHttpResource> = Record<string, RuffHttpResourcesArray<T> | number>
 
 interface RuffHttpResourcesList<T extends RuffHttpResource> {
-    rawData: RuffHttpResourcesArray<T>;
+    $raw: RuffHttpResourcesArray<T>;
     total: number;
     count: number;
 }

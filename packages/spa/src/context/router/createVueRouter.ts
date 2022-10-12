@@ -4,14 +4,14 @@ import combineRoutes from "./combineRoutes";
 import standardizeRoute from "./standardizeRoute";
 import NProgress from "./NProgress";
 import { Store } from "vuex";
-import { getCurrentRuntime } from "..";
+import { getSPAContext } from "..";
 
 const checkAccessPermission = async (
   route: VueRouter.RouteLocationNormalized
 ) => {
   if (route.meta?._ruff_spa_accessDesc) {
     // console.log("to.meta", route.meta._ruff_spa_accessDesc)
-    const runtime = getCurrentRuntime();
+    const runtime = getSPAContext();
     const promises = (route.meta._ruff_spa_accessDesc as AnyArray).map(
       (accessDesc) => runtime.checkPermission(accessDesc)
     );

@@ -39,7 +39,7 @@ userHttp.login({
   clients.user.beforeRequest = injectToken((req) => token)
 
   for (const user of await userHttp.list(3)) {
-    console.log(user.name, user, user.rawData);
+    console.log(user.name, user, user.$raw);
 
     user.profile.query({ a: 'foo' })
     console.log(user.profile.getFullPath(), await user.profile());

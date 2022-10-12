@@ -23,11 +23,11 @@ import tableCells from "@ruff-web/table-cells";
 const darkModeMedia =
   window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
 
-export default class Runtime implements RIRuntime {
-  private static currentInstance: Runtime;
+export default class Context implements IRuffSPAContext {
+  private static currentInstance: Context;
   private static currentVueApp: VueApp;
-  static createInstance(configs?: CreateRuntimeConfiguration | undefined) {
-    if (!Runtime.currentInstance) {
+  static createInstance(configs?: CreateSPAContextConfiguration | undefined) {
+    if (!Context.currentInstance) {
       const {
         storageConfig,
         anonymousAccess,
@@ -38,7 +38,9 @@ export default class Runtime implements RIRuntime {
         pages,
         boundaries,
         onCreate,
-        onPermissionCheck,
+        onRequestUserToken,
+        onRequestUserData,
+        onRequestPermission,
       } = configs || {};
 
       const storage = allocateStorage(
@@ -85,29 +87,34 @@ export default class Runtime implements RIRuntime {
           );
         }
       });
-
+      Context.currentInstance = new Context({
+        storage,
+        store,
+        router,
+        boundaries,
+      })
       onCreate &&
         onCreate(
-          (Runtime.currentInstance = new Runtime({
-            storage,
-            store,
-            router,
-            boundaries,
-          }))
+          (Context.currentInstance)
         );
 
-      if (onPermissionCheck) {
-        Runtime.currentInstance._onPermissionCheck = onPermissionCheck;
+      if (onRequestUserToken) {
+        Context.currentInstance._onRequestUserToken = onRequestUserToken;
+      }
+      if (onRequestUserData) {
+        Context.currentInstance._onRequestUserData = onRequestUserData;
+      } if (onRequestPermission) {
+        Context.currentInstance._onRequestPermission = onRequestPermission;
       }
     }
-    return Runtime.currentInstance;
+    return Context.currentInstance;
   }
   static getCurrentInstance() {
-    return Runtime.currentInstance;
+    return Context.currentInstance;
   }
   static getCurrentVueInstance() {
-    if (Runtime.currentVueApp) {
-      return Runtime.currentVueApp;
+    if (Context.currentVueApp) {
+      return Context.currentVueApp;
     }
     return (getCurrentInstance() as ComponentInternalInstance).appContext.app;
   }
@@ -138,21 +145,40 @@ export default class Runtime implements RIRuntime {
           ? store.commit("app/storeState", states)
           : store.commit("app/assignState", states)
     );
-    Runtime.currentInstance = this;
-
-    // console.log(this._router.hasRoute("workspace/home"));
-    // const routes = this._router.getRoutes();
-    // console.log(routes);
+    Context.currentInstance = this;
+    this.requestToken = this.requestToken.bind(this)
+    this.updateUserData = this.updateUserData.bind(this)
+    this.checkPermission = this.checkPermission.bind(this)
   }
 
-  private _onPermissionCheck(
+
+  static DEFAULT_USER_TOKEN = "#DEFAULT_USER_TOKEN:for_the_app_not_use_token_for_sign_in"
+  private _onRequestUserToken(
+    userState: UserState, payload: AnyRecord
+  ): Promise<{ token: string, payload: AnyRecord }> {
+    return Promise.resolve({ token: Context.DEFAULT_USER_TOKEN, payload: {} });
+  }
+  private _onRequestUserData(
+    userState: UserState,
+    uid: string | number
+  ): Promise<AnyRecord> {
+    return Promise.resolve({});
+  }
+  private _onRequestPermission(
     userState: UserState,
     acceesDescription: any
   ): Promise<unknown> {
     return Promise.resolve();
   }
+  async requestToken(payload: AnyRecord) {
+    return this._onRequestUserToken(this._store.state.user, payload);
+  }
+  async updateUserData(uid: string | number) {
+    console.log('123456789', uid)
+    return this._onRequestUserData(this._store.state.user, uid);
+  }
   async checkPermission(acceesDescription: any) {
-    return this._onPermissionCheck(this._store.state.user, acceesDescription);
+    return this._onRequestPermission(this._store.state.user, acceesDescription);
   }
 
   onInstalled?: () => void;
@@ -160,7 +186,7 @@ export default class Runtime implements RIRuntime {
     // app.config.globalProperties.$router
     if (!this._installed) {
       console.log("Vue App:", vueApp);
-      Runtime.currentVueApp = vueApp;
+      Context.currentVueApp = vueApp;
       vueApp.config.errorHandler = (err, vm, info) => {
         console.log(err, vm, info);
       };

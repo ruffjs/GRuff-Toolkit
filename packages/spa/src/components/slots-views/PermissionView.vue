@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { ref, useSlots, watchEffect } from "vue";
-import Runtime from "../../runtime/Runtime";
+import Context from "../../context/Context";
 
 const slots = useSlots();
 const props = defineProps({
@@ -33,7 +33,7 @@ const reason = ref(props.defaultReason || "权限不足");
 
 watchEffect(async () => {
   if (props.accessDesc) {
-    const runtime = Runtime.getCurrentInstance();
+    const runtime = Context.getCurrentInstance();
     try {
       await runtime.checkPermission(props.accessDesc);
       show.value = true;

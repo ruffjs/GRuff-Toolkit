@@ -1,12 +1,13 @@
-import context from "@/spa-configs/ctx";
+import context from "@/hsa-configs/ctx";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import { createApp } from "vue";
-import App from "./SPA.vue";
+import App from "./HttpSharingSPA.vue";
 import clients from "./http/clients";
 
 const storage = context.storage as any
-if (storage._demo_spa_token) {
-    clients.user.beforeRequest = injectToken((req) => storage._demo_spa_token)
+console.log(storage, storage.user.token)
+if (storage.user.token) {
+    clients.user.beforeRequest = injectToken((req) => storage.user.token)
     createApp(App).use(context).mount("#app");
 } else {
     clients.user.login({
@@ -16,8 +17,10 @@ if (storage._demo_spa_token) {
             clientType: "Web",
         },
     }).then(async (resp) => {
-        const { token } = resp.data
-        storage._demo_spa_token = token
+        console.log(resp.data)
+        const { token, info } = resp.data
+        storage.user.token = token
+        storage.user.uid = info.id
         clients.user.beforeRequest = injectToken((req) => token)
         createApp(App).use(context).mount("#app");
     }).catch(err => {

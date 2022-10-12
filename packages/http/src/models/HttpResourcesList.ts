@@ -11,7 +11,7 @@ export default class HttpResourcesList<T extends RuffHttpResource = any, A exten
     this._raw = raw || { content: [] };
   }
 
-  get rawData(): RuffHttpResourcesArray<T> {
+  get $raw(): RuffHttpResourcesArray<T> {
     return (this._raw as any)?.content || [];
   }
   get total(): number {

@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { computed, useSlots } from "vue";
 import { useStore } from "vuex";
-import flags from "../../runtime/viewport/flags";
+import flags from "../../context/viewport/flags";
 
 const store = useStore<RuffSPAState>();
 const viewport = computed(() => store.state.app.viewport);
