@@ -25,7 +25,7 @@ const map = {
 };
 const { themeMode, setThemeMode } = useColorTheme();
 const theme = computed(() => {
-  console.log(themeMode.value);
+  // console.log(themeMode.value);
   return map[themeMode.value];
 });
 </script>

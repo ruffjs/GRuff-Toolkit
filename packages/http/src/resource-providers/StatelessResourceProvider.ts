@@ -75,7 +75,7 @@ export default class StatelessResourceProvider<
       setPrefix: provider.setPrefix.bind(provider),
       getPrefix: provider.getPrefix.bind(provider),
       getFullPath: provider.getFullPath.bind(provider),
-      $typify: provider.$typify.bind(identifiable),
+      $beFriendly: provider.$beFriendly.bind(identifiable),
       query: provider.query.bind(provider),
     } as StatelessResourceProvider;
 
@@ -119,7 +119,7 @@ export default class StatelessResourceProvider<
     super(name, options, {} as RuffHttpQueryModel);
   }
 
-  $typify<
+  $beFriendly<
     SR extends string = any,
     SC extends string = any,
     AR extends string = any,

@@ -29,7 +29,6 @@ export function getVueApp() {
 
 
 export function extractMenuFromRoutes(routes: RuffSPAPageConfig[], prefix = ""): RuffSPAMenuItem[] {
-  console.log(routes)
   return routes.filter(route => route.path && route.meta?.name).map(route => {
     const path = prefix + route.path
     const link = "/" + path

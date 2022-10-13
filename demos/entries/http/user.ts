@@ -18,7 +18,19 @@ type User = {
   allProject: boolean
 }
 
-const userHttp = clients.user.user.$typify<
+type Profile = {
+  id?: number
+  name: string
+  email?: string
+  phone: string
+  password: string
+  remark: string
+  roleIds: number[]
+  projectIds?: number[]
+  allProject: boolean
+}
+
+const userHttp = clients.user.user.$beFriendly<
   "loginLog" | "token",
   "login" | "loginBySmsCode",
   "profile" | "password" | "bindPhone",
@@ -43,6 +55,8 @@ userHttp.login({
 
     user.profile.query({ a: 'foo' })
     console.log(user.profile.getFullPath(), await user.profile());
+    const friendlyProfile = await user.profile.get<Profile>()
+    console.log('friendlyProfile', friendlyProfile);
   }
 
   console.log(await userHttp.loginLog.query({ a: 'foo' }).list());
@@ -59,9 +73,9 @@ userHttp.login({
 
   // console.log(await userHttp.pick([1, 10]))
 
-  const $typifydUserLoginLogResource = userHttp.loginLog.$typify();
+  const $beFriendlydUserLoginLogResource = userHttp.loginLog.$beFriendly();
 
-  console.log(await $typifydUserLoginLogResource.list());
+  console.log(await $beFriendlydUserLoginLogResource.list());
 
   userHttp.post({
     "name": "Test User",

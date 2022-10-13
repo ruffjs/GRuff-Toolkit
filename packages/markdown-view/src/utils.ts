@@ -1,7 +1,7 @@
 import hljs from "highlight.js";
 import { marked } from "marked";
 
-hljs.initHighlightingOnLoad();
+hljs.highlightAll();
 
 export default marked.setOptions({
   gfm: true,

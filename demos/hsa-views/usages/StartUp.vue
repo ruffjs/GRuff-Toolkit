@@ -9,10 +9,10 @@ import usePageRoutes from "@ruff-web/spa/src/traits/usePageRoutes";
 import { onMounted } from "vue";
 import MarkdownView from "@ruff-web/markdown-view";
 
-import text from "./about.md?raw";
+import text from "./start-up.md?raw";
 
-// const { getRoutes } = usePageRoutes();
-// onMounted(() => {
-//   console.log(getRoutes());
-// });
+const { getRoutes } = usePageRoutes();
+onMounted(() => {
+  console.log(getRoutes());
+});
 </script>

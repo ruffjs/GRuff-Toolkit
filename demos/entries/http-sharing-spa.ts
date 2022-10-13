@@ -5,7 +5,7 @@ import App from "./HttpSharingSPA.vue";
 import clients from "./http/clients";
 
 const storage = context.storage as any
-console.log(storage, storage.user.token)
+// console.log(storage, storage.user.token)
 if (storage.user.token) {
     clients.user.beforeRequest = injectToken((req) => storage.user.token)
     createApp(App).use(context).mount("#app");

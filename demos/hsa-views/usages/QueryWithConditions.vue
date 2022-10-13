@@ -9,7 +9,7 @@ import usePageRoutes from "@ruff-web/spa/src/traits/usePageRoutes";
 import { onMounted } from "vue";
 import MarkdownView from "@ruff-web/markdown-view";
 
-import text from "./startup.md?raw";
+import text from "./query-with-conditions.md?raw";
 
 const { getRoutes } = usePageRoutes();
 onMounted(() => {

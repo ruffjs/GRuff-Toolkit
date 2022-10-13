@@ -12,7 +12,7 @@ type User = {
     allProject: boolean
 }
 
-const mockUserHttp = clients.mock.user.$typify<
+const mockUserHttp = clients.mock.user.$beFriendly<
     "loginLog" | "token",
     "login" | "loginBySmsCode",
     "profile" | "password" | "bindPhone",

@@ -35,7 +35,7 @@ export default function createVueRouter(
   const routes = combineRoutes(options).map(standardizeRoute, {
     name: "",
   }) as VueRouter.RouteRecordRaw[];
-  console.log("createAndUseRouter", routes);
+  // console.log("createAndUseRouter", routes);
 
   const router = VueRouter.createRouter({
     history: VueRouter.createWebHistory(), // VueRouter.createWebHashHistory(),

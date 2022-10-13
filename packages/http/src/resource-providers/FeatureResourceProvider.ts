@@ -10,8 +10,8 @@ export default class FeatureResourceProvider<T extends RuffHttpResource = any> {
     options: RuffCreateFeatureResourceProviderConfig<T>
   ) {
     const provider = new FeatureResourceProvider<T>(name, ref, options);
-    const callable = function RuffFeatureResourceGetter(subIdOrKeys?: IdOrKeys) {
-      return provider.get(subIdOrKeys);
+    const callable = function RuffFeatureResourceGetter<DT extends RuffHttpResource = T>(subIdOrKeys?: IdOrKeys) {
+      return provider.get<DT>(subIdOrKeys);
     };
 
     const bounds = {
@@ -92,9 +92,9 @@ export default class FeatureResourceProvider<T extends RuffHttpResource = any> {
     }
   }
 
-  async get(
+  async get<DT extends RuffHttpResource = T>(
     subIdOrKeys?: IdOrKeys
-  ): Promise<HttpPackagedResource<T>> {
+  ): Promise<HttpPackagedResource<DT>> {
     if (!this._options.methods?.includes(ResourceMethod.GET)) {
       throw new Error('cannot get this affiliated resource of the related entity')
     }
@@ -110,7 +110,7 @@ export default class FeatureResourceProvider<T extends RuffHttpResource = any> {
             subIdOrKeys,
             this._query
           );
-        return HttpPackagedResource.packageResource<T>(data, {} as any)
+        return HttpPackagedResource.packageResource<DT>(data, {} as any)
       } else {
         const { data } = await this._ref
           .getClient()
@@ -120,7 +120,7 @@ export default class FeatureResourceProvider<T extends RuffHttpResource = any> {
             idOrKeys,
             this._query
           );
-        return HttpPackagedResource.packageResource<T>(data, {} as any)
+        return HttpPackagedResource.packageResource<DT>(data, {} as any)
       }
     } catch (error) {
       throw error

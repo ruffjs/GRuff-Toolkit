@@ -12,7 +12,7 @@ export default {
     prefix: 'api/v1',
     methods: [M.POST, M.LIST, M.PUT, M.DELETE],
     pickable: false,
-    keyf: 'id',
+    pk: 'id',
     [M.POST]: async (_: RuffClientResourceCallParams) => {
         console.log("11111");
         return restResponse({})

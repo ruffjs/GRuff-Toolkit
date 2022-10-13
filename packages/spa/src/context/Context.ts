@@ -70,7 +70,7 @@ export default class Context implements IRuffSPAContext {
         },
         store
       );
-      console.log(router);
+      // console.log(router);
 
       darkModeMedia.addEventListener("change", (e) => {
         const themeMode_system =
@@ -174,7 +174,6 @@ export default class Context implements IRuffSPAContext {
     return this._onRequestUserToken(this._store.state.user, payload);
   }
   async updateUserData(uid: string | number) {
-    console.log('123456789', uid)
     return this._onRequestUserData(this._store.state.user, uid);
   }
   async checkPermission(acceesDescription: any) {
@@ -185,7 +184,7 @@ export default class Context implements IRuffSPAContext {
   install(vueApp: VueApp) {
     // app.config.globalProperties.$router
     if (!this._installed) {
-      console.log("Vue App:", vueApp);
+      // console.log("Vue App:", vueApp);
       Context.currentVueApp = vueApp;
       vueApp.config.errorHandler = (err, vm, info) => {
         console.log(err, vm, info);
