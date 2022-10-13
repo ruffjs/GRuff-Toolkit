@@ -1,8 +1,8 @@
-import AffiliatedResourceProvider from "../resource-providers/AffiliatedResourceProvider";
+import FeatureResourceProvider from "../resource-providers/FeatureResourceProvider";
 import { ExtendedIdentifiedResourceProvider } from "../resource-providers/IdentifiedResourceProvider";
 
 export type ProxiedHttpPackagedResource<T extends RuffHttpResource = any, A extends string = any> = HttpPackagedResource<T, A> & T &
-  Record<A, RuffAffiliatedResourceGetter & AffiliatedResourceProvider> &
+  Record<A, RuffFeatureResourceGetter & FeatureResourceProvider> &
   Record<A, RuffResourceCaller> & {
     $raw: T
   };

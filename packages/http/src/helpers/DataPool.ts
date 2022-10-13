@@ -21,7 +21,7 @@ export default class DataView<
   }
 
   static LIST = ResourceMethod.LIST as GetterMethod;
-  static GET = ResourceMethod.GET as GetterMethod;
+  static ITEM = ResourceMethod.GET as GetterMethod;
 
   private _client: RuffClient;
   private _apiId: string;

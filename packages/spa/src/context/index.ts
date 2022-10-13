@@ -31,18 +31,22 @@ export function getVueApp() {
 export function extractMenuFromRoutes(routes: RuffSPAPageConfig[], prefix = ""): RuffSPAMenuItem[] {
   console.log(routes)
   return routes.filter(route => route.path && route.meta?.name).map(route => {
-    const link = route.path
+    const path = prefix + route.path
+    const link = "/" + path
+    const key = "workspace" + link
     if (route.children && prefix === '') {
-      const children = extractMenuFromRoutes(route.children, "/" + link)
+      const children = extractMenuFromRoutes(route.children, path + "/")
       return {
-        keys: ["workspace/" + route.path],
+        key,
+        keys: [key],
         name: route.meta?.name || "(Untitled)",
         icon: route.meta?.icon || undefined,
         children
       } as RuffSPAMenuItem
     }
     return {
-      keys: ["workspace/" + prefix + link],
+      key,
+      keys: [key],
       name: route.meta?.name || "(Untitled)",
       icon: route.meta?.icon || undefined,
       link,

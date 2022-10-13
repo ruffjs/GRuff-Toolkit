@@ -13,7 +13,7 @@ interface RuffCreateCallableResourceMockerConfig<T extends RuffHttpResource = an
     0?: RuffMockRandomConfig;
 }
 
-interface RuffCreateAffiliatedResourceProviderConfig<T extends RuffHttpResource = any> {
+interface RuffCreateFeatureResourceProviderConfig<T extends RuffHttpResource = any> {
     path?: string;
     methods: RuffResourceMethod[];
     type?: T;
@@ -25,18 +25,18 @@ interface RuffCreateResourceProviderConfig<
     T extends RuffHttpResource = any,
     S extends string = any,
     A extends string = any
-> extends RuffCreateAffiliatedResourceProviderConfig<T> {
+> extends RuffCreateFeatureResourceProviderConfig<T> {
     pickable?: boolean | string
     "/"?: Record<S, RuffCreateResourceProviderConfig | RuffCreateCallableResouceProviderConfig>;
     "/**/"?: Record<
         A,
-        RuffCreateAffiliatedResourceProviderConfig | RuffCreateCallableResouceProviderConfig
+        RuffCreateFeatureResourceProviderConfig | RuffCreateCallableResouceProviderConfig
     >;
 }
 
 
 
-interface RuffCreateBaseResourceMockerConfig<T extends RuffHttpResource = any> extends RuffCreateAffiliatedResourceProviderConfig<T> {
+interface RuffCreateBaseResourceMockerConfig<T extends RuffHttpResource = any> extends RuffCreateFeatureResourceProviderConfig<T> {
     [x: RuffResourceMethod]: RuffMockRandomConfig;
     children?: Record<string, RuffCreateBaseResourceMockerConfig>;
 }

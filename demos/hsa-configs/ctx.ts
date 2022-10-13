@@ -1,6 +1,6 @@
 import { CreateSPAContext, withDefaults } from "@ruff-web/spa/src/context";
 import pages from "./pages";
-import PageNotFound from "../hsa-views/errors/PageNotFound.vue";
+import About from "../hsa-views/about/About.vue";
 import "../styles/index.scss";
 
 import clients from "@/entries/http/clients";
@@ -14,8 +14,8 @@ export default CreateSPAContext({
   },
   anonymousAccess: true,
   pages: withDefaults(pages, {
-    home: "/home",
-    default: PageNotFound,
+    home: "/about",
+    default: About,
   }),
   async onRequestUserData(userState: UserState, uid: string | number) {
     try {

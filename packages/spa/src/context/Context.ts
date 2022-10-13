@@ -17,7 +17,7 @@ import NotFoundView from "../views/NotFound.vue";
 import SignInView from "../views/SignIn.vue";
 import { Store } from "vuex";
 import Viewport from "./viewport/Viewport";
-import TableWrappers from "@ruff-web/table-wrappers";
+import TableWrappers from "@ruff-web/table-pro";
 import tableCells from "@ruff-web/table-cells";
 
 const darkModeMedia =

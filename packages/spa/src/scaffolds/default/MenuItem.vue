@@ -17,7 +17,7 @@
       <template #icon>
         <ruff-icon type="antd" :name="item?.icon" />
       </template>
-      <span>{{ item?.name }}</span>
+      <span :data-route-link="item?.link">{{ item?.name }}</span>
     </a-menu-item>
   </template>
 </template>

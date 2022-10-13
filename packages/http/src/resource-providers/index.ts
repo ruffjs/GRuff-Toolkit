@@ -14,7 +14,7 @@ export default function registerResources<
     client[name] = CallableResourceProvider.defineCallApi(name, {
       call,
       prefix: [prefix],
-      client: client as RuffClient,
+      client: client as unknown as RuffClient,
     });
   });
   (Object.keys(resources) as R[]).forEach((name) => {
@@ -22,7 +22,7 @@ export default function registerResources<
     client[name] = StatelessResourceProvider.defineProvider(name, {
       resource,
       prefix,
-      client: client as RuffClient,
+      client: client as unknown as RuffClient,
     });
   });
 }

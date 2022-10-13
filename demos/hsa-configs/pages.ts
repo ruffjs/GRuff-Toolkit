@@ -1,33 +1,71 @@
 import { DirectRouter, PlaceholderPage } from "@ruff-web/spa";
 import { extractMenuFromRoutes, orderMenuItems } from "@ruff-web/spa/src/context";
 
-import HomePage from "../hsa-views/home/HomePage.vue";
+import About from "../hsa-views/about/About.vue";
+
+import StartUp from "../hsa-views/basic-usages/StartUp.vue";
 
 const pages = [
     {
-        path: "home",
-        component: HomePage,
+        path: "about",
+        component: About,
         meta: {
-            name: "首页",
+            name: "关于这次分享",
         },
     },
     {
-        path: "others",
+        path: "basic-usages",
         component: DirectRouter,
         meta: {
-            name: "其它工具",
+            name: "基本用法",
         },
         children: [
             {
-                path: "home",
-                component: HomePage,
+                path: "startup",
+                component: StartUp,
                 meta: {
-                    name: "首页",
+                    name: "快速使用",
                 },
             }
+        ],
+    },
+    {
+        path: "advance-usages",
+        component: DirectRouter,
+        meta: {
+            name: "更多用法",
+        },
+        children: [
+        ],
+    },
+    {
+        path: "concepts",
+        component: About,
+        meta: {
+            name: "一些概念",
+        },
+    },
+    {
+        path: "configs",
+        component: DirectRouter,
+        meta: {
+            name: "配置客户端",
+        },
+        children: [
+        ],
+    },
+    {
+        path: "vista",
+        component: DirectRouter,
+        meta: {
+            name: "更多",
+        },
+        children: [
         ],
     },
 ] as RuffSPAPageConfig[];
 
 export const menu = orderMenuItems(extractMenuFromRoutes(pages))
 export default pages
+
+console.log(menu)

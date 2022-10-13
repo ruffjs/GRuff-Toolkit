@@ -1,16 +1,16 @@
-import DataView from "@ruff-web/http/src/helpers/DataView";
+import DataPool from "@ruff-web/http/src/helpers/DataPool";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import clients from "./clients";
 
-const dataview1 = new DataView({
-  apiId: DataView.formatApiId("api/v1/user", "profile", DataView.GET),
+const pool1 = new DataPool({
+  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.ITEM),
   client: clients.user,
   rules: {},
 });
 
 
-const dataview2 = new DataView({
-  apiId: DataView.formatApiId("api/v1/user", DataView.LIST),
+const pool2 = new DataPool({
+  apiId: DataPool.formatApiId("api/v1/user", DataPool.LIST),
   client: clients.mock,
   rules: {
     bla: "foo",
@@ -18,11 +18,11 @@ const dataview2 = new DataView({
   },
 });
 
-console.log(dataview1, dataview2);
+console.log(pool1, pool2);
 
-console.log(dataview1.getApiId());
+console.log(pool1.getApiId());
 
-console.log(dataview2.getApiId());
+console.log(pool2.getApiId());
 
 clients.user.login({
   payload: {
@@ -37,8 +37,8 @@ clients.user.login({
   clients.user.beforeRequest = injectToken((req) => token)
 
   try {
-    const list = await dataview2.fetch({});
-    const profile = await dataview1.fetch(1);
+    const list = await pool2.fetch({});
+    const profile = await pool1.fetch(1);
     console.log(list, profile);
 
     // const { bla, other } = list[0];

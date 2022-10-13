@@ -1,6 +1,6 @@
 import { joinPath } from "../utils/formatters";
 import AbstractResourceProvider from "./AbstractResourceProvider";
-import AffiliatedResourceProvider from "./AffiliatedResourceProvider";
+import FeatureResourceProvider from "./FeatureResourceProvider";
 import CallableResourceProvider from "./CallableResourceProvider";
 import StatefulResourceProvider from "./StatefulResourceProvider";
 
@@ -8,7 +8,7 @@ export type ExtendedIdentifiedResourceProvider<
   T extends RuffHttpResource = any,
   A extends string = any
 > = IdentifiedResourceProvider<T, A> &
-  Record<A, RuffAffiliatedResourceGetter & AffiliatedResourceProvider> &
+  Record<A, RuffFeatureResourceGetter & FeatureResourceProvider> &
   Record<A, RuffResourceCaller>;
 
 export type IdentifiableResourceProvider<T extends RuffHttpResource = any, A extends string = any> = (
@@ -40,7 +40,7 @@ export default class IdentifiedResourceProvider<
           });
         } else {
           (provider as AnyRecord)[propname] =
-            AffiliatedResourceProvider.defineProvider(
+            FeatureResourceProvider.defineProvider(
               propname,
               provider,
               propConf

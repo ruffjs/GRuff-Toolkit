@@ -53,7 +53,7 @@ type RuffCallArguments<P extends AnyRecord = any> = {
     query?: RuffHttpQueryCondition;
 };
 
-type RuffAffiliatedResourceGetter<T extends RuffDataModel = any> = (
+type RuffFeatureResourceGetter<T extends RuffDataModel = any> = (
     condition?: RuffHttpQueryCondition
 ) => Promise<RuffClientResponseContent<T>>;
 

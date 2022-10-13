@@ -10,7 +10,9 @@
     </a-sub-menu>
   </template>
   <template v-else-if="show">
-    <a-menu-item :key="item?.key">{{ item?.name }}</a-menu-item>
+    <a-menu-item :key="item?.key">
+      <span :data-route-link="item?.link">{{ item?.name }}</span></a-menu-item
+    >
   </template>
 </template>
 

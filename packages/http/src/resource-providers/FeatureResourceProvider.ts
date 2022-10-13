@@ -3,14 +3,14 @@ import { formatQueryCondition, joinPath } from "../utils/formatters";
 import { ResourceMethod } from "../utils/resource-methods";
 import AbstractResourceProvider from "./AbstractResourceProvider";
 
-export default class AffiliatedResourceProvider<T extends RuffHttpResource = any> {
+export default class FeatureResourceProvider<T extends RuffHttpResource = any> {
   static defineProvider<T extends RuffHttpResource = any>(
     name: string,
     ref: AbstractResourceProvider,
-    options: RuffCreateAffiliatedResourceProviderConfig<T>
+    options: RuffCreateFeatureResourceProviderConfig<T>
   ) {
-    const provider = new AffiliatedResourceProvider<T>(name, ref, options);
-    const callable = function RuffAffiliatedResourceGetter(subIdOrKeys?: IdOrKeys) {
+    const provider = new FeatureResourceProvider<T>(name, ref, options);
+    const callable = function RuffFeatureResourceGetter(subIdOrKeys?: IdOrKeys) {
       return provider.get(subIdOrKeys);
     };
 
@@ -18,7 +18,7 @@ export default class AffiliatedResourceProvider<T extends RuffHttpResource = any
       getPrefix: provider.getPrefix.bind(provider),
       getFullPath: provider.getFullPath.bind(provider),
       query: provider.query.bind(provider),
-    } as AffiliatedResourceProvider;
+    } as FeatureResourceProvider;
 
     if (options.methods?.includes(ResourceMethod.POST)) {
       bounds.post = provider.post.bind(provider);
@@ -41,12 +41,12 @@ export default class AffiliatedResourceProvider<T extends RuffHttpResource = any
 
   private _ref: AbstractResourceProvider;
   private _name: string;
-  private _options: RuffCreateAffiliatedResourceProviderConfig<T>;
+  private _options: RuffCreateFeatureResourceProviderConfig<T>;
   private _query: RuffHttpQueryModel;
   private constructor(
     name: string,
     ref: AbstractResourceProvider,
-    options: RuffCreateAffiliatedResourceProviderConfig<T>
+    options: RuffCreateFeatureResourceProviderConfig<T>
   ) {
     this._ref = ref;
     this._name = name;
@@ -62,7 +62,7 @@ export default class AffiliatedResourceProvider<T extends RuffHttpResource = any
     return joinPath([this.getPrefix(), this._name]);
   }
 
-  query(...qs: RuffHttpQueryCondition[]): AffiliatedResourceProvider {
+  query(...qs: RuffHttpQueryCondition[]): FeatureResourceProvider {
     const condition = formatQueryCondition(...qs);
     this._query = {
       ...this._query,

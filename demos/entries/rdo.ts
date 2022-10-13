@@ -1,4 +1,4 @@
-import createRDO from "@ruff-web/rdo/src/classes"
+import createRDO from "@ruff-web/data-rdo/src/classes"
 import { createRandom, RandomInstance } from "@ruff-web/data-random";
 
 const random = createRandom()

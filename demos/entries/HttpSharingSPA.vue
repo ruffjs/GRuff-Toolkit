@@ -1,8 +1,8 @@
 <template>
   <ConfigProvider :locale="zhCN">
-    <r-app name="Http Client Samples">
+    <r-app name="Http Client Sharing">
       <r-scaffold
-        name="Http Client Samples"
+        name="Http Client Sharing"
         :menu="menu"
         :menu-width="256"
         :top-height="50"

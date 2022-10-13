@@ -1,5 +1,5 @@
 <template>
-  <r-page :with-dir="['Gruff Tookkit', '首页']">
+  <r-page main-padding="--ms">
     <MarkdownView theme="dark" :value="text" />
   </r-page>
 </template>
@@ -9,9 +9,7 @@ import usePageRoutes from "@ruff-web/spa/src/traits/usePageRoutes";
 import { onMounted } from "vue";
 import MarkdownView from "@ruff-web/markdown-view";
 
-import text from "./text.md?raw";
-
-console.log("text", text);
+import text from "./startup.md?raw";
 
 const { getRoutes } = usePageRoutes();
 onMounted(() => {

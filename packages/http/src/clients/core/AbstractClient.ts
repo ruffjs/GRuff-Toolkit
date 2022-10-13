@@ -57,6 +57,9 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
     onServerError(status: number, error: AxiosError): boolean {
       return true;
     },
+    onNetworkError: function (error: AxiosError): boolean {
+      return true;
+    }
   };
 
   protected __requestFulfilled(req: RuffClientRequestConfig) {
@@ -254,6 +257,15 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
   set onServerError(v: AnyFn) {
     if (typeof v === "function") {
       this.__hooks.onServerError = v;
+    }
+  }
+
+  get onNetworkError() {
+    return this.__hooks.onNetworkError;
+  }
+  set onNetworkError(v: AnyFn) {
+    if (typeof v === "function") {
+      this.__hooks.onNetworkError = v;
     }
   }
 }
