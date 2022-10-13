@@ -8,7 +8,7 @@
       <SubMenuItem
         v-for="subitem in (item?.children as any[])"
         :key="subitem.key"
-        :item="subitem"
+        :item="(subitem as RuffSPAMenuItem)"
       />
     </a-sub-menu>
   </template>
@@ -31,7 +31,7 @@ import SubMenuItem from "./SubMenuItem.vue";
 const props = defineProps({
   item: Object as () => RuffSPAMenuItem,
 });
-const { userInfo } = usePassport();
+const { profile } = usePassport();
 const show = ref(false);
 
 const checkShowState = async () => {
@@ -48,6 +48,6 @@ const checkShowState = async () => {
   }
 };
 watch(props, checkShowState, { immediate: true, deep: true });
-watch(userInfo, checkShowState, { immediate: true, deep: true });
+watch(profile, checkShowState, { immediate: true, deep: true });
 </script>
 <style lang="scss" scoped></style>

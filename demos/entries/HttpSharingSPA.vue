@@ -16,6 +16,6 @@
 import { ConfigProvider } from "ant-design-vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 
-import menu from "../hsa-configs/menu";
+import { menu } from "../hsa-configs/pages";
 import shortcuts from "../hsa-configs/shortcu";
 </script>

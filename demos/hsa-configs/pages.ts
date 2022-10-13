@@ -1,11 +1,15 @@
 import { DirectRouter, PlaceholderPage } from "@ruff-web/spa";
+import { extractMenuFromRoutes, orderMenuItems } from "@ruff-web/spa/src/context";
 
 import HomePage from "../hsa-views/home/HomePage.vue";
 
-export default [
+const pages = [
     {
         path: "home",
         component: HomePage,
+        meta: {
+            name: "首页",
+        },
     },
     {
         path: "others",
@@ -15,26 +19,15 @@ export default [
         },
         children: [
             {
-                path: "csv",
-                component: PlaceholderPage,
+                path: "home",
+                component: HomePage,
                 meta: {
-                    name: "CSV导入导出",
+                    name: "首页",
                 },
-            },
-            {
-                path: "icons",
-                component: PlaceholderPage,
-                meta: {
-                    name: "集成图标库",
-                },
-            },
-            {
-                path: "xrender",
-                component: PlaceholderPage,
-                meta: {
-                    name: "XRender Vue Plus",
-                },
-            },
+            }
         ],
     },
 ] as RuffSPAPageConfig[];
+
+export const menu = orderMenuItems(extractMenuFromRoutes(pages))
+export default pages
