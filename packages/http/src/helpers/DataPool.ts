@@ -47,9 +47,10 @@ export default class DataPool<
     apiId: string;
     // method: GetterMethod;
     client: RuffClient;
+    unmap?: K[]
     mapping?: MappingOptions<T[K], K, OK>;
   }) {
-    const { apiId, client, mapping } = options;
+    const { apiId, client, unmap, mapping } = options;
     const [_, method] = apiId.split(":");
 
     this._client = client;
@@ -61,8 +62,13 @@ export default class DataPool<
     } else {
       this._method = null
     }
-
-    this._mapping = mapping && isNotEmpty(mapping) ? mapping : null;
+    const _mapping: any = {}
+    if (unmap && unmap.length) {
+      unmap.forEach((key: K) => {
+        _mapping[key] = key
+      })
+    }
+    this._mapping = mapping && isNotEmpty(mapping) ? { ...mapping, ..._mapping } : null;
   }
 
   getApiId() {

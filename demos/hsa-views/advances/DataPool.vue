@@ -39,6 +39,7 @@ const userPool = new DataPool({
 const accountPool = new DataPool({
   apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.S),
   client,
+  unmap: ["level", "type", "roles"],
   mapping: {
     uid: "id",
     name: readonly<any>("name"),
