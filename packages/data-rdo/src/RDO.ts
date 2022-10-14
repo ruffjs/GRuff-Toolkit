@@ -6,7 +6,107 @@ type RDOType = 'map' | 'list' | "str" | "raw" | "call"
 const generate: unique symbol = Symbol('RDO::generate')
 const prototype: unique symbol = Symbol('RDO::prototype')
 
-class RDO<T> {
+abstract class AbstractRDO<T> {
+    static readonly symbols = {
+        generate,
+        prototype
+    } as const
+
+    static createRDO(exp: any): AbstractRDO<any> {
+        switch (typeof exp) {
+            case 'undefined':
+                return new RawRDO<null>(null)
+
+            case 'symbol':
+                return new RandomRDO<string>('uuid')
+
+            case 'boolean':
+                return new RandomRDO<bool>('boolean')
+
+            case 'bigint':
+                if (exp > 0) {
+                    const len = exp.toString().length
+                    return new RandomRDO<string>('bigint', len, len)
+                } else if (exp < 0) {
+                    exp = exp * -1n
+                    const len = exp.toString().length
+                    return new RandomRDO<string>('bigint', len, len)
+                }
+                exp = 0
+
+            case 'number':
+                if (exp === 0) {
+                    return new RandomRDO<number>('natural')
+                }
+                let natural = true
+                if (exp < 0) {
+                    natural = false
+                    exp = Math.abs(exp)
+                }
+                const len = Math.floor(exp).toString().length
+                const arr = [...new Array(len)].map(i => "0")
+                if (arr.length > 1) {
+                    arr[0] = "1"
+                }
+                const min = parseInt(arr.join(''))
+                arr[0] = "1"
+                arr.push("0")
+                const max = (parseInt(arr.join('')) - 1) || MAX
+                if (natural) {
+                    return new RandomRDO<number>('integer', min, max)
+                }
+                return new RandomRDO<number>('integer', max * -1, min * -1)
+
+            case 'function':
+                if (exp[generate]) {
+                    if (typeof exp[generate] === 'function') {
+                        return new RandomRDO(exp[generate], exp.prototype)
+                    }
+                    return AbstractRDO.createRDO(exp[generate])
+                }
+                return new RandomRDO(exp)
+
+            case 'object':
+                if (exp === null) {
+                    return new RawRDO<null>(null)
+                }
+                if (exp instanceof Array) {
+                    if (exp.length === 0) {
+                        return new RandomRDO<null[]>('empty')
+                    }
+                    if (exp.length > 3) {
+                        return new RandomRDO<null[]>('pick', unique(exp), 1, 1)
+                    }
+                    if (exp.length === 1) {
+                        return new ListRDO(exp[0], 1, 10)
+                    }
+                    if (typeof exp[1] !== 'number') {
+                        return new RandomRDO<any[]>('pick', unique(exp), 1, 1)
+                    }
+                    if (typeof exp[2] !== 'undefined' && typeof exp[2] !== 'number') {
+                        return new RandomRDO<any[]>('pick', unique(exp), 1, 1)
+                    }
+                    return new ListRDO(exp[0], exp[1], exp[2] || exp[1] || 1)
+                }
+                return createRDOByObject(exp)
+
+            case 'string':
+                exp = exp.trim()
+                if (exp !== '') {
+                    const code = exp.charCodeAt(0)
+                    if ((code > 64 && code < 91) || (code > 96 && code < 123)) {
+                        const [methodname, ...args] = exp.split(' ')
+                        if (methodname !== '') {
+                            return new RandomRDO(methodname, ...args)
+                        }
+                    } else {
+                        return new RawRDO<string>(exp)
+                    }
+                }
+                return new RawRDO<string>('')
+        }
+    }
+
     type: RDOType;
 
     protected constructor(type: RDOType) {
@@ -18,15 +118,15 @@ class RDO<T> {
     }
 }
 
-class MapRDO<T extends object = AnyRecord> extends RDO<T> {
-    fields: Record<keyof T, RDO<any>>;
+class MapRDO<T extends object = AnyRecord> extends AbstractRDO<T> {
+    fields: Record<keyof T, AbstractRDO<any>>;
     [prototype]: typeof Object = Object
     constructor(exp: Record<keyof T, any>) {
         super('map')
         const keys = Object.keys(exp) as Array<keyof T>
-        const fields = {} as Record<keyof T, RDO<any>>
+        const fields = {} as Record<keyof T, AbstractRDO<any>>
         keys.forEach(key => {
-            fields[key] = createRDO(exp[key])
+            fields[key] = AbstractRDO.createRDO(exp[key])
         })
         this.fields = fields
         if ((exp as any)[prototype]) {
@@ -47,12 +147,12 @@ class MapRDO<T extends object = AnyRecord> extends RDO<T> {
     }
 }
 
-class ListRDO<T extends any = any> extends RDO<T[]> {
-    model: RDO<T>;
+class ListRDO<T extends any = any> extends AbstractRDO<T[]> {
+    model: AbstractRDO<T>;
     count: [number, number];
     constructor(model: any, min: number, max: number) {
         super('list')
-        this.model = createRDO(model) as RDO<T>
+        this.model = AbstractRDO.createRDO(model) as AbstractRDO<T>
         let r0 = parseInt(min as unknown as string) || 1, r1
         r0 = r0 >= 0 ? r0 : 0
         if (typeof max === "number" && max > r0) {
@@ -74,13 +174,13 @@ class ListRDO<T extends any = any> extends RDO<T[]> {
     }
 }
 
-class StrRDO<T extends string = string> extends RDO<T> {
+class StrRDO<T extends string = string> extends AbstractRDO<T> {
     template: string;
-    inputs: RDO<any>[];
+    inputs: AbstractRDO<any>[];
     constructor(template: string, inputs: any[]) {
         super('str')
         this.template = template
-        this.inputs = inputs.map(input => createRDO(input))
+        this.inputs = inputs.map(input => AbstractRDO.createRDO(input))
     }
 
     [generate](random: any = {}, context: object = {}): T {
@@ -93,7 +193,7 @@ class StrRDO<T extends string = string> extends RDO<T> {
     }
 }
 
-class RawRDO<T extends any = any> extends RDO<T> {
+class RawRDO<T extends any = any> extends AbstractRDO<T> {
     value: T;
     constructor(value: any) {
         super('raw')
@@ -105,7 +205,7 @@ class RawRDO<T extends any = any> extends RDO<T> {
     }
 }
 
-class RandomRDO<T extends any = any> extends RDO<T> {
+class RandomRDO<T extends any = any> extends AbstractRDO<T> {
     method: string | AnyFn;
     args: any[];
 
@@ -145,9 +245,9 @@ function unique(arr: any[]) {
 
 function createRDOByObject(exp: {
     type?: RDOType
-    model?: RDO<any> | any;
+    model?: AbstractRDO<any> | any;
     count?: [number, number] | number;
-    fields: Record<string, RDO<any> | any>;
+    fields: Record<string, AbstractRDO<any> | any>;
     [prototype]: typeof Object;
     method?: string | AnyFn;
     args?: any[];
@@ -155,7 +255,7 @@ function createRDOByObject(exp: {
     template?: string;
     inputs?: any[];
 }) {
-    if (exp instanceof RDO) {
+    if (exp instanceof AbstractRDO) {
         return exp
     }
     switch (exp.type) {
@@ -216,100 +316,4 @@ function createRDOByObject(exp: {
     return new MapRDO(exp as AnyRecord)
 }
 
-export default function createRDO(exp: any): RDO<any> {
-    switch (typeof exp) {
-        case 'undefined':
-            return new RawRDO<null>(null)
-
-        case 'symbol':
-            return new RandomRDO<string>('uuid')
-
-        case 'boolean':
-            return new RandomRDO<bool>('boolean')
-
-        case 'bigint':
-            if (exp > 0) {
-                const len = exp.toString().length
-                return new RandomRDO<string>('bigint', len, len)
-            } else if (exp < 0) {
-                exp = exp * -1n
-                const len = exp.toString().length
-                return new RandomRDO<string>('bigint', len, len)
-            }
-            exp = 0
-
-        case 'number':
-            if (exp === 0) {
-                return new RandomRDO<number>('natural')
-            }
-            let natural = true
-            if (exp < 0) {
-                natural = false
-                exp = Math.abs(exp)
-            }
-            const len = Math.floor(exp).toString().length
-            const arr = [...new Array(len)].map(i => "0")
-            if (arr.length > 1) {
-                arr[0] = "1"
-            }
-            const min = parseInt(arr.join(''))
-            arr[0] = "1"
-            arr.push("0")
-            const max = (parseInt(arr.join('')) - 1) || MAX
-            if (natural) {
-                return new RandomRDO<number>('integer', min, max)
-            }
-            return new RandomRDO<number>('integer', max * -1, min * -1)
-
-        case 'function':
-            if (exp[generate]) {
-                if (typeof exp[generate] === 'function') {
-                    return new RandomRDO(exp[generate], exp.prototype)
-                }
-                return createRDO(exp[generate])
-            }
-            return new RandomRDO(exp)
-
-        case 'object':
-            if (exp === null) {
-                return new RawRDO<null>(null)
-            }
-            if (exp instanceof Array) {
-                if (exp.length === 0) {
-                    return new RandomRDO<null[]>('empty')
-                }
-                if (exp.length > 3) {
-                    return new RandomRDO<null[]>('pick', unique(exp), 1, 1)
-                }
-                if (exp.length === 1) {
-                    return new ListRDO(exp[0], 1, 10)
-                }
-                if (typeof exp[1] !== 'number') {
-                    return new RandomRDO<any[]>('pick', unique(exp), 1, 1)
-                }
-                if (typeof exp[2] !== 'undefined' && typeof exp[2] !== 'number') {
-                    return new RandomRDO<any[]>('pick', unique(exp), 1, 1)
-                }
-                return new ListRDO(exp[0], exp[1], exp[2] || exp[1] || 1)
-            }
-            return createRDOByObject(exp)
-
-        case 'string':
-            exp = exp.trim()
-            if (exp !== '') {
-                const code = exp.charCodeAt(0)
-                if ((code > 64 && code < 91) || (code > 96 && code < 123)) {
-                    const [methodname, ...args] = exp.split(' ')
-                    if (methodname !== '') {
-                        return new RandomRDO(methodname, ...args)
-                    }
-                } else {
-                    return new RawRDO<string>(exp)
-                }
-            }
-            return new RawRDO<string>('')
-    }
-}
-
-createRDO.generate = generate
-createRDO.prototype = prototype
+export default AbstractRDO

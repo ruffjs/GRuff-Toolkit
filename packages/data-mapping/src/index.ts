@@ -1,7 +1,4 @@
-export default class DataMapping<
-  K extends string = any,
-  OK extends string = any
-> {
+export default class DataMapping<K extends string = any, OK extends string = any> {
   static defineMapping<
     T extends Record<K, any>,
     K extends string = any,
@@ -27,9 +24,7 @@ export default class DataMapping<
           get,
         };
       } else if (typeof options[key] === "object") {
-        const { value, get, set } = options[key] as Partial<
-          MappingOption<T[K], K, OK>
-        >;
+        const { value, get, set } = options[key] as Partial<MappingOption<T[K], K, OK>>;
         formatted[key] = {
           value,
           get,
@@ -42,23 +37,23 @@ export default class DataMapping<
       }
     });
     const mapping = new DataMapping(formatted, target);
-    return mapping as unknown as DataMapping & T & Record<K, unknown>;
+    mapping._keys = keys;
+    return (mapping as unknown) as DataMapping & T & Record<K, unknown>;
   }
 
   private _targetData: MappingData<OK>;
-  private _computedData: Record<K, any>;
+  private _keys: K[] = [];
   private constructor(
     options: Record<K, MappingOption<any, K, OK>>,
     target?: MappingData<OK>
   ) {
     this._targetData = target || ({} as MappingData<OK>);
-    this._computedData = {} as Record<K, any>;
 
     const context = this as any;
     const updateTarget = this.updateTarget.bind(this);
     const getTarget = this.getTarget.bind(this);
-    const getLast = this.getLast.bind(this);
-    context.__proto__ = new Proxy<Record<K, any>>(this._computedData, {
+    const getMapped = this.getMapped.bind(this);
+    context.__proto__ = new Proxy<Record<K, any>>({} as Record<K, any>, {
       get(target, p: K) {
         if (p === "updateTarget") {
           return updateTarget;
@@ -66,8 +61,8 @@ export default class DataMapping<
         if (p === "getTarget") {
           return getTarget;
         }
-        if (p === "getLast") {
-          return getLast;
+        if (p === "getMapped") {
+          return getMapped;
         }
         // console.log(options, p)
         if (typeof options[p]?.get === "function") {
@@ -79,11 +74,7 @@ export default class DataMapping<
       },
       set(target, p: K, value: any, receiver: Record<K, any>) {
         if (typeof options[p].set === "function") {
-          target[p] = (<Function>options[p].set)(
-            value,
-            context._targetData,
-            context
-          );
+          target[p] = (<Function>options[p].set)(value, context._targetData, context);
           return true;
         }
         throw new Error(`Prop ${p} is a readonly property`);
@@ -105,7 +96,11 @@ export default class DataMapping<
     return this._targetData;
   }
 
-  getLast() {
-    return this._computedData;
+  getMapped() {
+    const computedData = {} as Record<K, any>;
+    this._keys.forEach((key: K) => {
+      computedData[key] = (this as any)[key]
+    })
+    return computedData;
   }
 }

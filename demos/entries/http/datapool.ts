@@ -3,16 +3,16 @@ import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import clients from "./clients";
 
 const pool1 = new DataPool({
-  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.ITEM),
+  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.S),
   client: clients.user,
-  rules: {},
+  mapping: {},
 });
 
 
 const pool2 = new DataPool({
-  apiId: DataPool.formatApiId("api/v1/user", DataPool.LIST),
+  apiId: DataPool.formatApiId("api/v1/user", DataPool.M),
   client: clients.mock,
-  rules: {
+  mapping: {
     bla: "foo",
     other: ({ foo }: any) => "It's " + foo,
   },
@@ -37,8 +37,8 @@ clients.user.login({
   clients.user.beforeRequest = injectToken((req) => token)
 
   try {
-    const list = await pool2.fetch({});
-    const profile = await pool1.fetch(1);
+    const list = await pool2.read({});
+    const profile = await pool1.read(1);
     console.log(list, profile);
 
     // const { bla, other } = list[0];

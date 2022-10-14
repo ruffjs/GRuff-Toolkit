@@ -1,9 +1,23 @@
 import { defineMapping } from "@ruff-web/data-mapping";
-import HttpPackagedResource from "../models/HttpPackagedResource";
+// import HttpPackagedResource from "../models/HttpPackagedResource";
 import { isNotEmpty } from "../utils/formatters";
 import { GetterMethod, ResourceMethod } from "../utils/resource-methods";
 
-export default class DataView<
+class MappingLike<T> {
+  data: T;
+  constructor(data: T) {
+    this.data = data
+  }
+  getTarget() {
+    return this.data;
+  }
+
+  getMapped() {
+    return this.data;
+  }
+}
+
+export default class DataPool<
   T extends Record<K, any>,
   K extends string = any,
   OK extends string = any
@@ -20,22 +34,22 @@ export default class DataView<
     return `${arguments[0]}/**/${arguments[1]}:${arguments[2]}`
   }
 
-  static LIST = ResourceMethod.LIST as GetterMethod;
-  static ITEM = ResourceMethod.GET as GetterMethod;
+  static M = ResourceMethod.LIST as GetterMethod;
+  static S = ResourceMethod.GET as GetterMethod;
 
   private _client: RuffClient;
   private _apiId: string;
   private _method: GetterMethod;
 
-  private _rules: MappingOptions<T[K], K, OK> | null;
+  private _mapping: MappingOptions<T[K], K, OK> | null;
 
   constructor(options: {
     apiId: string;
     // method: GetterMethod;
     client: RuffClient;
-    rules?: MappingOptions<T[K], K, OK>;
+    mapping?: MappingOptions<T[K], K, OK>;
   }) {
-    const { apiId, client, rules } = options;
+    const { apiId, client, mapping } = options;
     const [_, method] = apiId.split(":");
 
     this._client = client;
@@ -48,27 +62,27 @@ export default class DataView<
       this._method = null
     }
 
-    this._rules = rules && isNotEmpty(rules) ? rules : null;
+    this._mapping = mapping && isNotEmpty(mapping) ? mapping : null;
   }
 
   getApiId() {
     return this._apiId
   }
 
-  async fetch(idOrKeys: IdOrKeys, query?: RuffHttpQueryModel, subIdOrKeys?: IdOrKeys): Promise<T>;
-  async fetch(query?: RuffHttpQueryModel): Promise<T[]>;
-  async fetch(): Promise<T | T[]> {
+  async read(idOrKeys: IdOrKeys, query?: RuffHttpQueryModel, subIdOrKeys?: IdOrKeys): Promise<MappingLike<T>>;
+  async read(query?: RuffHttpQueryModel): Promise<MappingLike<T>[]>;
+  async read(): Promise<MappingLike<T> | MappingLike<T>[]> {
     if (this._method === ResourceMethod.LIST) return this._getArray(arguments[0]);
     else return this._get(arguments[0], arguments[1], arguments[2]);
   }
 
-  private async _getArray(query: RuffHttpQueryModel): Promise<T[]> {
+  private async _getArray(query: RuffHttpQueryModel): Promise<MappingLike<T>[]> {
     try {
       // console.log(this._client.isMock)
-      const { data } = await this._client.$_call(this._apiId, { query })
+      const { data } = await this._client.$_call(this._apiId, { query: { pageIndex: 1, pageSize: 10, ...query } })
       if (data[this._client.listKey]) {
         return data[this._client.listKey].map((item: any) =>
-          this._rules ? defineMapping<T>(this._rules, item) : HttpPackagedResource.packageResource<T>(item, {} as any)
+          this._mapping ? (defineMapping(this._mapping, item) as unknown as MappingLike<T>) : new MappingLike(item as T)
         );
       } else {
         throw new Error("This type of resource may not provided LIST method, or check your configurations.")
@@ -80,12 +94,12 @@ export default class DataView<
     }
   }
 
-  private async _get(idOrKeys: IdOrKeys, query: RuffHttpQueryModel, subIdOrKeys?: IdOrKeys): Promise<T> {
+  private async _get(idOrKeys: IdOrKeys, query: RuffHttpQueryModel, subIdOrKeys?: IdOrKeys): Promise<MappingLike<T>> {
     try {
       const { data } = await this._client.$_call(this._apiId, { idOrKeys, subIdOrKeys, query })
-      return this._rules ? defineMapping(this._rules, data) : HttpPackagedResource.packageResource<T>(data, {} as any)
+      return this._mapping ? (defineMapping(this._mapping, data) as unknown as MappingLike<T>) : new MappingLike(data as T)
     } catch (error) {
-      // return defineMapping<T>(this._rules, {});
+      // return defineMapping<T>(this._mapping, {});
       throw error
     }
   }

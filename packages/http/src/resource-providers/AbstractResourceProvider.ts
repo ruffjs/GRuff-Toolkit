@@ -1,7 +1,7 @@
 import { formatQueryCondition } from "../utils/formatters";
 
-export default abstract class AbstractResourceProvider {
 
+export default abstract class AbstractResourceProvider {
   protected _client: RuffClient;
   protected _prefix;
   protected _path: string;

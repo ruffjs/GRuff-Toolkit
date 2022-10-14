@@ -21,12 +21,11 @@ const clients = {
   tank: createClient("/test-tank-svc"),
   bsmm: createClient("/test-bsm-svc"),
   bsmu: createClient("/test-bsm-user-svc/"),
-  mock: createClient("/test-user-svc", {
+  mock: createClient("", {
     resources: {
       user: userMock,
     },
-    // withMock: true,
-    rules: {
+    mockrules: {
       ...userMockConfig,
     },
   }),

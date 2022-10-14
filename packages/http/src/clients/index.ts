@@ -3,6 +3,7 @@ import MockClient from "./mock/MockClient";
 import HttpClient from "./http/HttpClient";
 import { pickMockRules } from "../helpers/vendors/MockRule";
 
+export const MockProtocol = "ruffmock://"
 function createClient<R extends string = any, C extends string = any>(
   options: (RuffCreateClientOptions & RuffClientHooks) | string,
   configs?: RuffCreateClientConfigs<R, C>
@@ -13,25 +14,25 @@ function createClient<R extends string = any, C extends string = any>(
 ): MockClient<R> & Record<R, IExtendedResourceProvider> & Record<C, RuffResourceCaller>;
 function createClient<R extends string = any, C extends string = any>(
   options: (RuffCreateClientOptions & RuffClientHooks) | string,
-  configs: RuffCreateMockClientWithRandomsConfigs<R>
+  configs: RuffCreateMockClientWithMockRulesConfigs<R>
 ): MockClient<R> & Record<R, IExtendedResourceProvider> & Record<C, RuffResourceCaller>;
 function createClient<R extends string = any, C extends string = any>(
   options: (RuffCreateClientOptions & RuffClientHooks) | string,
   configs:
     | RuffCreateClientConfigs<R, C>
     | RuffCreateMockClientSimpleConfigs<R>
-    | RuffCreateMockClientWithRandomsConfigs<R> = {}
+    | RuffCreateMockClientWithMockRulesConfigs<R> = {}
 ) {
-  const { axios, withMock, rules, resources, calls } =
+  const { axios, mockrules, resources, calls } =
     configs as RuffCreateMockClientSimpleConfigs<R> &
-    RuffCreateMockClientWithRandomsConfigs<R>;
-  if (withMock || rules) {
+    RuffCreateMockClientWithMockRulesConfigs<R>;
+  if (options === MockProtocol || mockrules) {
     const mockRules: Record<string, RuffMockRandomConfig> = {};
-    if (withMock) {
+    if (options === MockProtocol) {
       Object.assign(mockRules, pickMockRules(resources, "api/v1"));
     }
-    if (rules) {
-      Object.assign(mockRules, rules);
+    if (mockrules) {
+      Object.assign(mockRules, mockrules);
     }
     const client = new MockClient<R, C>(
       options,

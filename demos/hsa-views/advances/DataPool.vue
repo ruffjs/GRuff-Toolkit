@@ -3,16 +3,13 @@
     <MarkdownView theme="dark" :value="mdraw" />
 
     <r-panel>
-      <box row justify-content="start">
-        <a-button @click="createUser">创建用户</a-button>
-        <a-button :disabled="!profile?.id" @click="modifyUserProfile"
-          >修改用户信息</a-button
-        >
-        <a-button :disabled="!profile?.id" @click="deleteUser">删除用户</a-button>
-      </box>
-
-      <JSONView read-only mode="tree" v-model="(profile as any)"
-    /></r-panel>
+      <a-button @click="fetchUserProfile">读取用户(uid: 1)信息</a-button>
+      <a-button @click="mappingUserProfile">读取用户(uid: 2)信息并映射</a-button>
+      <JSONView read-only mode="tree" v-model="(profile as any)" />
+      <br />
+      <a-button @click="fetchUserList">读取多个用户信息（ 6 条数据）</a-button>
+      <JSONView read-only mode="tree" v-model="(list as any)" />
+    </r-panel>
   </r-page>
 </template>
 
@@ -25,6 +22,8 @@ import resources from "../../hsa-utils/configs/test-user-svc";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import { getSPAContext } from "@ruff-web/spa/src/context";
 import { ref } from "vue";
+import DataPool from "@ruff-web/http/src/helpers/DataPool";
+import { readonly } from "@ruff-web/data-mapping";
 
 const { storage } = getSPAContext();
 const client = createClient("/test-user-svc", {
@@ -32,57 +31,59 @@ const client = createClient("/test-user-svc", {
 });
 client.beforeRequest = injectToken(() => storage.user.token);
 
+const userPool = new DataPool({
+  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.S),
+  client,
+  mapping: {},
+});
+const accountPool = new DataPool({
+  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.S),
+  client,
+  mapping: {
+    uid: "id",
+    name: readonly<any>("name"),
+    mb: {
+      get(data: any) {
+        return "+86" + data.phone;
+      },
+      set(phone: string, data: any) {
+        data.phone = phone;
+      },
+    },
+  },
+});
+const usersPool = new DataPool({
+  apiId: DataPool.formatApiId("api/v1/user", DataPool.M),
+  client,
+  mapping: {},
+});
+
 const profile = ref<any>({});
+const list = ref<any[]>([]);
 
-const createUser = async () => {
-  try {
-    const res = await client.user.query({ phone: "18620881237" }).list(1);
-    if (res.length) {
-      await client.user(res[0].id as number).drop();
-    }
-  } catch (error) {}
+const fetchUserProfile = async () => {
   profile.value = {};
-  client.user
-    .post({
-      name: "Test User",
-      phone: "18620881237",
-      password: "string123",
-      remark: "string",
-      roleIds: [1],
-      allProject: true,
-    })
-    .then(async (res) => {
-      profile.value = res.$raw;
-    })
-    .catch((err) => {
-      console.log("write data err", err);
-    });
+  try {
+    const res = await userPool.read(1);
+    // console.log(res);
+    profile.value = res.getMapped();
+  } catch (error) {}
 };
 
-const deleteUser = () => {
-  client
-    .user(profile.value.id as number)
-    .drop()
-    .then(async (res) => {
-      profile.value = {};
-    })
-    .catch((err) => {
-      console.log("write data err", err);
-    });
+const mappingUserProfile = async () => {
+  // profile.value = {};
+  try {
+    const res = await accountPool.read(2);
+    // console.log(res);
+    profile.value = res.getMapped();
+  } catch (error) {}
 };
 
-const modifyUserProfile = async () => {
-  client
-    .user(profile.value.id as number)
-    .set({
-      name: "Modified User",
-      remark: "has been modified",
-    })
-    .then(async (res) => {
-      profile.value = res.$raw;
-    })
-    .catch((err) => {
-      console.log("write data error:", err);
-    });
+const fetchUserList = async () => {
+  profile.value = {};
+  try {
+    const res = await usersPool.read({ pageSize: 6 });
+    list.value = res.map((r) => r.getMapped());
+  } catch (error) {}
 };
 </script>

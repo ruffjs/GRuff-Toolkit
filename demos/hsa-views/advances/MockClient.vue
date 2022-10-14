@@ -4,10 +4,14 @@
 
     <r-panel>
       <box row justify-content="start">
-        <a-button @click="getDeviceList5">指定数量(5)</a-button>
-        <a-button @click="getDeviceList8n2">指定页长和页数 (8, 2)</a-button>
-        <a-button @click="getDeviceListQ">筛选设备</a-button>
-        <a-button @click="pickDeviceList">使用pick方法 (2231, 2232, 2166)</a-button>
+        <a-button @click="genDevice">模拟单个设备(id: 444)</a-button>
+        <a-button @click="clear">清空</a-button>
+      </box>
+      <JSONView read-only mode="tree" v-model="(item as any)" />
+
+      <br />
+      <box row justify-content="start">
+        <a-button @click="genList">模拟设备列表(10 条)</a-button>
         <a-button @click="clear">清空</a-button>
       </box>
       <JSONView read-only mode="tree" v-model="(list as any)"
@@ -20,56 +24,36 @@ import MarkdownView from "@ruff-web/markdown-view";
 import JSONView from "json-editor-vue";
 import mdraw from "./mock-client.md?raw";
 import createClient from "@ruff-web/http/src/clients";
-import resources from "../../hsa-utils/configs/test-dev-svc";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import { getSPAContext } from "@ruff-web/spa/src/context";
 import { ref } from "vue";
+import resources from "@/hsa-utils/models/Device.model";
 
 const { storage } = getSPAContext();
-const client = createClient("/test-dev-svc", {
+const client = createClient("ruffmock://", {
   resources,
 });
 client.beforeRequest = injectToken(() => storage.user.token);
 
+const item = ref<any>({});
 const list = ref<any[]>([]);
 
-const getDeviceList5 = async () => {
+const genDevice = async () => {
   try {
-    const res = await client.device.list(5);
-    list.value = res.$raw;
-  } catch (error) {
-    console.log(error);
-  }
+    // console.log(resources);
+    const res = await client.device.get(444);
+    console.log(res.$raw);
+    item.value = res.$raw;
+  } catch (error) {}
 };
 
-const getDeviceList8n2 = async () => {
+const genList = async () => {
   try {
-    const res = await client.device.list(8, 2);
+    // console.log(resources);
+    const res = await client.device.list(10, 1);
+    // console.log(res);
     list.value = res.$raw;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const getDeviceListQ = async () => {
-  try {
-    const res = await client.device
-      .query({ type: "Device", online: true })
-      .query("sort=lastReport")
-      .list();
-    list.value = res.$raw;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const pickDeviceList = async () => {
-  try {
-    const res = await client.device.pick([2231, 2232, 2166]);
-    list.value = res.$raw;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 const clear = () => {

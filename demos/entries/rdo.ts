@@ -1,4 +1,4 @@
-import createRDO from "@ruff-web/data-rdo/src/classes"
+import createRDO, { symbols } from "@ruff-web/data-rdo"
 import { createRandom, RandomInstance } from "@ruff-web/data-random";
 
 const random = createRandom()
@@ -10,7 +10,7 @@ random.extends({
 })
 
 class User {
-    static [createRDO.generate] = {
+    static [symbols.generate] = {
         [createRDO.prototype]: User.prototype,
         uid: 0,
         username: 'email',
@@ -19,7 +19,7 @@ class User {
 }
 
 class Task {
-    static [createRDO.generate] = {
+    static [symbols.generate] = {
         id: 1111222233334444,
         name: 'ctitle 5 10',
         state: false,
@@ -29,7 +29,7 @@ class Task {
 class Device {
     id: string;
     name: string;
-    static [createRDO.generate]() { return new Device }
+    static [symbols.generate]() { return new Device }
 
     constructor() {
         this.id = random.id()
@@ -63,7 +63,7 @@ const rdo = createRDO({
 })
 
 console.log(rdo)
-console.log(rdo[createRDO.generate](random))
-console.log(rdo[createRDO.generate](random))
+console.log(rdo[symbols.generate](random))
+console.log(rdo[symbols.generate](random))
 
 export default {}

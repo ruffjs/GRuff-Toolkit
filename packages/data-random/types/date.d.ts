@@ -16,5 +16,7 @@ interface RandomMethods_Data {
 
     datetime(format: string = 'yyyy-MM-dd HH:mm:ss'): string
 
+    isotime(): string
+
     now(unit?: RandomDateUnit | RandomDateUnit_Short | '', format: string = 'yyyy-MM-dd HH:mm:ss'): string
 }

@@ -38,6 +38,10 @@ export function datetime(this: RandomMethods, format: string = 'yyyy-MM-dd HH:mm
     return this._formatDate(this._randomDate(), format)
 }
 
+export function isotime(this: RandomMethods) {
+    return this.datetime('yyyy-MM-ddPHH:mm:ss.000Z').replace('P', "T")
+}
+
 export function now(this: RandomMethods, unit: RandomDateUnit | RandomDateUnit_Short | '' = '', format: string = 'yyyy-MM-dd HH:mm:ss') {
     // now(unit) now(format)
     if (arguments.length === 1) {

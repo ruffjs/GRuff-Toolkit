@@ -2,39 +2,24 @@
 
 > MockClient 和 HttpClient 都实现了 RuffClient 接口，它们通过挂载相同的 ResourceProvider，而保证两个 client 保持一致的体验，进而实现相互替代、切换
 
-## 指定设备列表长度和页数
+## 创建一个 MockClient 并获取设备信息
 
-> 查询 5 条数据
->
-> 对应 HTTP 操作: GET /api/v1/device?pageSize=5&pageIndex=1
+> MockClient的使用和HttpClient一致，只是配置参数不同
 
-```typescript
-const res: HttpResourcesList<Device, any> = await client.device.list(5);
+```ts
+import createClient from "@ruff-web/http/src/clients";
+import resources from "../../configs/mock-user-svc";
+
+const client = createClient("ruffmock://", {
+  resources,
+});
+
+// 模拟单个设备
+const res = await client.device.get(444);
 // print res.$raw;
-```
 
-> 查询第 2 页，每页 8 条数据
->
-> 对应 HTTP 操作:
->
-> GET /api/v1/device?pageSize=8&pageIndex=2
-
-```typescript
-const res: HttpResourcesList<Device, any> = await client.device.list(8, 2);
-// print res.$raw;
-```
-
-## 设置查询条件
-
-> 查询在线子设备，按lastReport逆序
->
-> 对应 HTTP 操作: GET /api/v1/device?type=Device&online=true&sort=lastReport&order=desc
-
-```typescript
-const res: HttpResourcesList<Device, any> = await client.device
-      .query({ type: "Device", online: true })
-      .query("sort=lastReport&order=desc")
-      .list();
+// 模拟设备列表
+const res = await client.device.list(10);
 // print res.$raw;
 ```
 

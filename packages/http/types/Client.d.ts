@@ -174,12 +174,10 @@ type RuffClientMockResourcesConfigs<E extends string = any> = Record<
 interface RuffCreateMockClientSimpleConfigs<E extends string = any>
   extends RuffCreateClientConfigs<E> {
   resources: RuffClientMockResourcesConfigs<E>;
-  withMock: boolean;
 }
 
-interface RuffCreateMockClientWithRandomsConfigs<E extends string = any>
+interface RuffCreateMockClientWithMockRulesConfigs<E extends string = any>
   extends RuffCreateClientConfigs<E> {
   resources: RuffClientResourcesConfigs<E> | RuffClientMockResourcesConfigs<E>;
-  withMock?: boolean;
-  rules: Record<string, RuffMockRandomConfig>;
+  mockrules: Record<string, RuffMockRandomConfig>;
 }

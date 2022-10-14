@@ -65,7 +65,7 @@ export function id(this: RandomMethods) {
         ],
         last = ["1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"];
 
-    id = this.pick(DICT).id + this.date("yyyyMMdd") + this.string("number", 3);
+    id = this.pick(DICT).id + this.date("yyyyMMdd") + this.string(3, 3, "number");
 
     for (let i = 0; i < id.length; i++) {
         sum += Number(id[i]) * Number(rank[i]);
