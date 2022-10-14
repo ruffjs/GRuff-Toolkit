@@ -1,53 +1,62 @@
 # 终极集成配置：ResourceModel
 
-## 指定设备列表长度和页数
-
-> 查询 5 条数据
->
-> 对应 HTTP 操作: GET /api/v1/device?pageSize=5&pageIndex=1
-
 ```typescript
-const res: HttpResourcesList<Device, any> = await client.device.list(5);
-// print res.$raw;
+export class Gateway extends AbstractResourceModel {
+    tenantId!: number;
+    id!: number;
+    name!: string;
+    type = "Gateway";
+
+    static [RDO.symbols.generate]() { return new Gateway }
+
+    constructor() {
+        super();
+        this.id = random.natural()
+        this.tenantId = random.natural()
+        this.name = random.string()
+    }
+}
+
+export class Device extends AbstractResourceModel {
+    static [AbstractResourceModel.methods] = ["POST", "LIST", "GET", "PUT", "DELETE"]
+    static [AbstractResourceModel.primaryKey] = 'id'
+    static [AbstractResourceModel.prickKey] = 'ids'
+    static [AbstractResourceModel.listKeys] = ["content", "totalCount", 'pageSize', 'pageIndex']
+
+    creatorId!: number;
+    tenantId!: number;
+    id!: number;
+    name!: string;
+    type!: string;
+    model!: string;
+    network: string[] = [];
+    sn!: string;
+    online!: boolean;
+    ota!: boolean;
+    alert!: boolean;
+    lastReport!: ISOTime
+    gateway!: Gateway
+
+
+    static [RDO.symbols.generate] = {
+        [RDO.symbols.prototype]: Device.prototype,
+        creatorId: 0,
+        tenantId: 0,
+        id: 0,
+        name: 'cword 5 8',
+        type: ["Device", "Gateway"],
+        model: 'string',
+        network: ['string'],
+        sn: 'uuid',
+        online: true,
+        ota: false,
+        alert: false,
+        lastReport: 'isotime ',
+        gateway: Gateway
+    }
+}
+
+export default {
+    device: convertProviderConfigByResourceModel("api/v1", Device)
+} 
 ```
-
-> 查询第 2 页，每页 8 条数据
->
-> 对应 HTTP 操作:
->
-> GET /api/v1/device?pageSize=8&pageIndex=2
-
-```typescript
-const res: HttpResourcesList<Device, any> = await client.device.list(8, 2);
-// print res.$raw;
-```
-
-## 设置查询条件
-
-> 查询在线子设备，按lastReport逆序
->
-> 对应 HTTP 操作: GET /api/v1/device?type=Device&online=true&sort=lastReport&order=desc
-
-```typescript
-const res: HttpResourcesList<Device, any> = await client.device
-      .query({ type: "Device", online: true })
-      .query("sort=lastReport&order=desc")
-      .list();
-// print res.$raw;
-```
-
-## 使用pick()方法
-
-> 实质是query({[idskey]: []}).list()的语法糖
->
-> 查询 5 条数据
-> 对应 HTTP 操作: GET /api/v1/device?pageSize=9999&pageIndex=1&ids=2231&ids=2232&ids=2166
-
-```typescript
-const res: HttpResourcesList<Device, any> = await client.device.pick([2231, 2232, 2166]);
-// or
-const res: HttpResourcesList<Device, any> = await client.query({ids: [2231, 2232, 2166]}).list();
-// print res.$raw;
-```
-
-## 演示

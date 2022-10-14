@@ -14,11 +14,9 @@ export default {
     pickable: false,
     pk: 'id',
     [M.POST]: async (_: RuffClientResourceCallParams) => {
-        console.log("11111");
         return restResponse({})
     },
     [M.LIST]: async (_: RuffClientResourceCallParams) => {
-        console.log("22222");
         return restResponse({
             content: [
                 {
@@ -35,7 +33,6 @@ export default {
         });
     },
     [M.PUT]: async (_: RuffClientResourceCallParams) => {
-        console.log("33333");
         return restResponse({})
     },
     [M.DELETE]: restResponse(true),
@@ -43,14 +40,12 @@ export default {
         loginLog: {
             methods: [M.LIST],
             [M.LIST]: async (_: RuffClientResourceCallParams) => {
-                console.log("44444");
                 return restResponse({})
             },
             '/': {
                 loginLog2: {
                     methods: [M.LIST],
                     [M.LIST]: async (_: RuffClientResourceCallParams) => {
-                        console.log("55555");
                         return restResponse({})
                     },
                 },
@@ -59,22 +54,19 @@ export default {
         token: {
             methods: [M.POST],
             [M.LIST]: async (_: RuffClientResourceCallParams) => {
-                console.log("66666");
                 return restResponse({})
             },
         },
         login: {
             method: M.POST,
             0: (async ({ payload, query, idOrKeys, subIdOrKeys }, config) => {
-                // console.log("77777");
                 // console.log(payload, query, idOrKeys, subIdOrKeys, config)
-                return restResponse(7777777, 201, "massage")
+                return restResponse("cretaed", 201, "massage")
             }) as RuffMockRandomFunction,
         },
         loginBySmsCode: {
             method: M.POST,
             0: async (_: RuffClientResourceCallParams): Promise<RuffClientResponseContent> => {
-                // console.log("88888");
                 return Promise.reject(restResponse({}, 401, "Need Login"))
             },
         },
@@ -83,39 +75,30 @@ export default {
         profile: {
             methods: [M.GET, M.PUT],
             [M.GET]: async (_: RuffClientResourceCallParams) => {
-                console.log("99999");
                 return restResponse({})
             },
             [M.PUT]: async (_: RuffClientResourceCallParams) => {
-                console.log("aaaaa");
                 return restResponse({})
             },
         },
         password: {
             methods: [M.PUT],
             [M.PUT]: async (_: RuffClientResourceCallParams) => {
-                console.log("bbbbb");
                 return restResponse({})
             },
         },
         bindPhone: {
             methods: [M.POST, M.DELETE],
             [M.POST]: async (_: RuffClientResourceCallParams) => {
-                console.log("ccccc");
                 return restResponse({})
             },
             [M.DELETE]: async (_: RuffClientResourceCallParams) => {
-                console.log("ddddd");
                 return restResponse({})
             },
         },
         doSth: {
             method: M.POST,
             path: "fetch404",
-            // 0: async () => {
-            //     console.log("eeeee");
-            //     return restResponse({})
-            // },
         },
     },
 };

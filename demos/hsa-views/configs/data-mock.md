@@ -1,45 +1,101 @@
 # 配置数据模拟函数
 
-> 此
-
-## 直接使用 Client 接口查询
-
-> 用户 id 为 1
->
-> 对应 HTTP 操作: GET /api/v1/user/{id}/profile
-
 ```typescript
-import createClient from "@ruff-web/http/src/clients";
-import resources from "../../configs/test-user-svc";
+import { ResourceMethod as M } from "@ruff-web/http/src/utils/resource-methods";
+import { restResponse } from "@ruff-web/http/src/helpers";
 
-/* 创建客户端 */
-const client = createClient("https://test-user-svc.ruffcorp.com", {
-  resources,
-});
-
-// 查询用户信息
-const res = await client.user(1).profile.get();
-// or
-const res = await client.user(1).profile();
-// print res.$raw;
+export default {
+    prefix: 'api/v1',
+    methods: [M.POST, M.LIST, M.PUT, M.DELETE],
+    pickable: false,
+    pk: 'id',
+    [M.POST]: async (_: RuffClientResourceCallParams) => {
+        return restResponse({})
+    },
+    [M.LIST]: async (_: RuffClientResourceCallParams) => {
+        return restResponse({
+            content: [
+                {
+                    id: "bar1",
+                },
+                {
+                    id: "bar2",
+                },
+                {
+                    foo: "bar3",
+                },
+            ],
+            totalCount: 10,
+        });
+    },
+    [M.PUT]: async (_: RuffClientResourceCallParams) => {
+        return restResponse({})
+    },
+    [M.DELETE]: restResponse(true),
+    '/': {
+        loginLog: {
+            methods: [M.LIST],
+            [M.LIST]: async (_: RuffClientResourceCallParams) => {
+                return restResponse({})
+            },
+            '/': {
+                loginLog2: {
+                    methods: [M.LIST],
+                    [M.LIST]: async (_: RuffClientResourceCallParams) => {
+                        return restResponse({})
+                    },
+                },
+            },
+        },
+        token: {
+            methods: [M.POST],
+            [M.LIST]: async (_: RuffClientResourceCallParams) => {
+                return restResponse({})
+            },
+        },
+        login: {
+            method: M.POST,
+            0: (async ({ payload, query, idOrKeys, subIdOrKeys }, config) => {
+                // console.log(payload, query, idOrKeys, subIdOrKeys, config)
+                return restResponse("cretaed", 201, "massage")
+            }) as RuffMockRandomFunction,
+        },
+        loginBySmsCode: {
+            method: M.POST,
+            0: async (_: RuffClientResourceCallParams): Promise<RuffClientResponseContent> => {
+                return Promise.reject(restResponse({}, 401, "Need Login"))
+            },
+        },
+    },
+    '/**/': {
+        profile: {
+            methods: [M.GET, M.PUT],
+            [M.GET]: async (_: RuffClientResourceCallParams) => {
+                return restResponse({})
+            },
+            [M.PUT]: async (_: RuffClientResourceCallParams) => {
+                return restResponse({})
+            },
+        },
+        password: {
+            methods: [M.PUT],
+            [M.PUT]: async (_: RuffClientResourceCallParams) => {
+                return restResponse({})
+            },
+        },
+        bindPhone: {
+            methods: [M.POST, M.DELETE],
+            [M.POST]: async (_: RuffClientResourceCallParams) => {
+                return restResponse({})
+            },
+            [M.DELETE]: async (_: RuffClientResourceCallParams) => {
+                return restResponse({})
+            },
+        },
+        doSth: {
+            method: M.POST,
+            path: "fetch404",
+        },
+    },
+};
 ```
-
-## 通过 HttpPackagedResource 获取用户信息
-
-> 查询第 3 个用户 (每页 1 个，第 3 页)
->
-> 对应 HTTP 操作:
->
-> GET /api/v1/user?pageSize=1&pageIndex=3
->
-> GET /api/v1/user/{id}/profile
-
-```typescript
-for (const user of await client.user.list(1, 3)) {
-  // user instanceof IHttpPackagedResource
-  const res = await user.profile();
-  // print res.$raw;
-}
-```
-
-## 演示

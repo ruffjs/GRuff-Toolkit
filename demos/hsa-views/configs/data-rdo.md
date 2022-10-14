@@ -1,72 +1,71 @@
 # 使用RDO描述对象来配置随机规则
 
-## 创建用户
-
-> 对应 HTTP 操作: POST /api/v1/user
-
 ```typescript
-import createClient from "@ruff-web/http/src/clients";
-import resources from "../../configs/test-user-svc";
+import createRDO, { symbols } from "@ruff-web/data-rdo"
+import { createRandom, RandomInstance } from "@ruff-web/data-random";
 
-/* 创建客户端 */
-const client = createClient("https://test-user-svc.ruffcorp.com", {
-  resources,
-});
-// 定义用户ID
-let uid: number
+const random = createRandom()
 
-// 查询用户信息
-client.user
-    .post({
-      name: "Test User",
-      phone: "18620881237",
-      password: "string123",
-      remark: "string",
-      roleIds: [1],
-      allProject: true,
-    })
-    .then(async (res) => {
-      // uid = res.id
-      // print res.$raw;
-    })
-    .catch((err) => {
-      // Handling
-    });
-```
+random.extends({
+    address() {
+        return "自定义拓展方法"
+    }
+})
 
-## 修改用户信息
+class User {
+    static [symbols.generate] = {
+        [createRDO.prototype]: User.prototype,
+        uid: 0,
+        username: 'email',
+        name: 'cname'
+    }
+}
 
-> 对应 HTTP 操作: PUT /api/v1/user/{id}
+class Task {
+    static [symbols.generate] = {
+        id: 1111222233334444,
+        name: 'ctitle 5 10',
+        state: false,
+    }
+}
 
-```typescript
-client
-    .user(uid)
-    .set({
-      name: "Modified User",
-      remark: "has been modified",
-    })
-    .then(async (res) => {
-      // print res.$raw;
-    })
-    .catch((err) => {
-      // Handling
-    });
-```
+class Device {
+    id: string;
+    name: string;
+    static [symbols.generate]() { return new Device }
 
-## 删除用户
+    constructor() {
+        this.id = random.id()
+        this.name = random.string()
+    }
+}
 
-> 对应 HTTP 操作: DELETE /api/v1/user/{id}
+const rdo = createRDO({
+    "locateType": ["Auto", "Auto"],
+    "coordSys": ["autonavi1", "autonavi2", "autonavi1"],
+    "location": "121.339435, 31.199995",
+    "cloudProvider": "pick Aliyun AWS",
+    "name": "cword 3 5",
+    "productId": 1011,
+    "projectId": [0, 1, 2, 3],
+    "sn": "string 10 10 ABCDEFGH",
+    "value": "string",
+    "gatewaySn": "uuid",
+    "referId": 0,
+    "remark": "sentence",
+    "address": "address",
+    "desc": "echo this is a static sentence",
+    "users": [User, 5, 10],
+    "devices": [Device, 3],
+    "tasks": [Task],
+    "region": {
+        type: 'str',
+        template: "{0} {1} {2}",
+        inputs: ["province", "city", "county"]
+    }
+})
 
-```typescript
-client
-    .user(uid)
-    .drop()
-    .then(async (res) => {
-      // print res.$raw;
-    })
-    .catch((err) => {
-      // Handling
-    });
+rdo[symbols.generate](random)
 ```
 
 ## 演示
