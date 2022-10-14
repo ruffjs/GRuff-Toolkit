@@ -1,8 +1,8 @@
 <template>
   <ConfigProvider :locale="zhCN">
-    <r-app name="Http Client Sharing">
+    <r-app name="Http Tools Sharing">
       <r-scaffold
-        name="Http Client Sharing"
+        name="Http Tools Sharing"
         :menu="menu"
         :menu-width="256"
         :top-height="50"

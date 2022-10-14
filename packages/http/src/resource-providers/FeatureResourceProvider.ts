@@ -1,4 +1,4 @@
-import HttpPackagedResource from "../models/HttpPackagedResource";
+import HttpPackagedResource, { IHttpPackagedResource } from "../models/HttpPackagedResource";
 import { formatQueryCondition, joinPath } from "../utils/formatters";
 import { ResourceMethod } from "../utils/resource-methods";
 import AbstractResourceProvider from "./AbstractResourceProvider";
@@ -94,7 +94,7 @@ export default class FeatureResourceProvider<T extends RuffHttpResource = any> {
 
   async get<DT extends RuffHttpResource = T>(
     subIdOrKeys?: IdOrKeys
-  ): Promise<HttpPackagedResource<DT>> {
+  ): Promise<IHttpPackagedResource<DT>> {
     if (!this._options.methods?.includes(ResourceMethod.GET)) {
       throw new Error('cannot get this affiliated resource of the related entity')
     }

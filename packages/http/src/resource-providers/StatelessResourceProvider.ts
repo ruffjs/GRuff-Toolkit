@@ -20,24 +20,26 @@ export type IFriendlyResourceProvider<
   AR extends string = any,
   AC extends string = any,
   T extends RuffHttpResource = any
-> = IdentifiableResourceProvider<T, AR | AC> &
-  StatelessResourceProvider<T, any, AR | AC> &
+> = IdentifiableResourceProvider<T, AR, AC> &
+  StatelessResourceProvider<T, any, AR, AC> &
   Record<SR, IExtendedResourceProvider> &
   Record<SC, RuffResourceCaller>;
 
 export default class StatelessResourceProvider<
   T extends RuffHttpResource = any,
   S extends string = any,
-  A extends string = any
-> extends StatefulResourceProvider<T, A> {
+  AR extends string = any,
+  AC extends string = any,
+> extends StatefulResourceProvider<T, AR, AC> {
   static defineProvider<
     T extends RuffHttpResource = any,
     S extends string = any,
-    A extends string = any
-  >(name: string, options: Readonly<RuffResourceProviderDefinationOptions<T, S, A>>) {
+    AR extends string = any,
+    AC extends string = any,
+  >(name: string, options: Readonly<RuffResourceProviderDefinationOptions<T, S, AR | AC>>) {
     const provider = new StatelessResourceProvider(name, options);
     const identifiable = function createIdentifiableResource(idOrKeys: IdOrKeys) {
-      return IdentifiedResourceProvider.defineProvider<T, A>(
+      return IdentifiedResourceProvider.defineProvider<T, AR, AC>(
         name,
         idOrKeys,
         options,
@@ -75,7 +77,7 @@ export default class StatelessResourceProvider<
       setPrefix: provider.setPrefix.bind(provider),
       getPrefix: provider.getPrefix.bind(provider),
       getFullPath: provider.getFullPath.bind(provider),
-      $beFriendly: provider.$beFriendly.bind(identifiable),
+      $getFriendlyProvider: provider.$getFriendlyProvider.bind(identifiable),
       query: provider.query.bind(provider),
     } as StatelessResourceProvider;
 
@@ -109,17 +111,17 @@ export default class StatelessResourceProvider<
       identifiable,
       provider,
       bounds
-    ) as unknown as IExtendedResourceProvider<T, S, A>;
+    ) as unknown as IExtendedResourceProvider<T, S, AR | AC>;
   }
 
   private constructor(
     name: string,
-    options: RuffResourceProviderDefinationOptions<T, S, A>
+    options: RuffResourceProviderDefinationOptions<T, S, AR | AC>
   ) {
     super(name, options, {} as RuffHttpQueryModel);
   }
 
-  $beFriendly<
+  $getFriendlyProvider<
     SR extends string = any,
     SC extends string = any,
     AR extends string = any,
@@ -131,7 +133,7 @@ export default class StatelessResourceProvider<
 
   query(...qs: RuffHttpQueryCondition[]): StatefulResourceProvider {
     const condition = formatQueryCondition(...qs);
-    return StatefulResourceProvider.defineProvider<T, A>(
+    return StatefulResourceProvider.defineProvider<T, AR, AC>(
       this._path,
       this._options,
       condition as RuffHttpQueryModel

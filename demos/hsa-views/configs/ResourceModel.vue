@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import MarkdownView from "@ruff-web/markdown-view";
 import JSONView from "json-editor-vue";
-import mdraw from "./query-with-conditions.md?raw";
+import mdraw from "./resource-model.md?raw";
 import createClient from "@ruff-web/http/src/clients";
 import resources from "../../hsa-utils/configs/test-dev-svc";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";

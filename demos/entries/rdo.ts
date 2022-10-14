@@ -43,7 +43,7 @@ const rdo = createRDO({
     "location": "121.339435, 31.199995",
     "cloudProvider": "pick Aliyun AWS",
     "name": "cword 3 5",
-    "productId": 111,
+    "productId": 1011,
     "projectId": [0, 1, 2, 3],
     "sn": "string 10 10 ABCDEFGH",
     "value": "string",

@@ -71,12 +71,14 @@ export default {
         }
       }
       setTimeout(() => {
-        this.imgs = this.$refs.preview.querySelectorAll("img");
-        for (let i = 0, len = this.imgs.length; i < len; i++) {
-          this.imgs[i].onclick = () => {
-            const src = this.imgs[i].getAttribute("src");
-            this.previewImage(src);
-          };
+        if (this.$refs.preview) {
+          this.imgs = this.$refs.preview.querySelectorAll("img");
+          for (let i = 0, len = this.imgs.length; i < len; i++) {
+            this.imgs[i].onclick = () => {
+              const src = this.imgs[i].getAttribute("src");
+              this.previewImage(src);
+            };
+          }
         }
       }, 600);
     },

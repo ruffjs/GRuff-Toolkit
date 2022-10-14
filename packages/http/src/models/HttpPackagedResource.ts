@@ -1,9 +1,13 @@
 import FeatureResourceProvider from "../resource-providers/FeatureResourceProvider";
 import { ExtendedIdentifiedResourceProvider } from "../resource-providers/IdentifiedResourceProvider";
 
-export type ProxiedHttpPackagedResource<T extends RuffHttpResource = any, A extends string = any> = HttpPackagedResource<T, A> & T &
-  Record<A, RuffFeatureResourceGetter & FeatureResourceProvider> &
-  Record<A, RuffResourceCaller> & {
+export type IHttpPackagedResource<
+  T extends RuffHttpResource = any,
+  AR extends string = any,
+  AC extends string = any
+> = HttpPackagedResource<T, AR, AC> & T &
+  Record<AR, RuffFeatureResourceGetter & FeatureResourceProvider> &
+  Record<AC, RuffResourceCaller> & {
     $raw: T
   };
 
@@ -12,14 +16,22 @@ const packageScalarValue = (raw: any) => ({
   valueOf() { return raw }
 })
 
-export default class HttpPackagedResource<T extends RuffHttpResource = any, A extends string = any> {
-  static packageResource<T extends RuffHttpResource = any, A extends string = any>(raw: T, ref: ExtendedIdentifiedResourceProvider<T, A>) {
-    return new HttpPackagedResource(raw, ref) as ProxiedHttpPackagedResource<T, A>
+export default class HttpPackagedResource<
+  T extends RuffHttpResource = any,
+  AR extends string = any,
+  AC extends string = any
+> {
+  static packageResource<
+    T extends RuffHttpResource = any,
+    AR extends string = any,
+    AC extends string = any
+  >(raw: T, ref: ExtendedIdentifiedResourceProvider<T, AR, AC>) {
+    return new HttpPackagedResource(raw, ref) as IHttpPackagedResource<T, AR, AC>
   }
 
-  private constructor(raw: T, ref: ExtendedIdentifiedResourceProvider<T, A>) {
+  private constructor(raw: T, ref: ExtendedIdentifiedResourceProvider<T, AR, AC>) {
     (this as any).__proto__ = new Proxy(typeof raw === 'object' ? (raw || packageScalarValue(raw)) : packageScalarValue(raw), {
-      get(target: any, p: A) {
+      get(target: any, p: AR | AC) {
         if (p === "$raw") {
           return target;
         }
@@ -31,7 +43,7 @@ export default class HttpPackagedResource<T extends RuffHttpResource = any, A ex
         }
         return undefined;
       },
-      set(target: any, p: A, v: any) {
+      set(target: any, p: AR | AC, v: any) {
         if (p in target) {
           target[p] = v;
           return true

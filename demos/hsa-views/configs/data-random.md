@@ -1,4 +1,6 @@
-# 增加查询条件
+# 使用data-random来生成随机数据
+
+> M
 
 ## 指定设备列表长度和页数
 
@@ -33,20 +35,6 @@ const res: HttpResourcesList<Device, any> = await client.device
       .query({ type: "Device", online: true })
       .query("sort=lastReport&order=desc")
       .list();
-// print res.$raw;
-```
-
-## 使用pick()方法
-
-> 实质是query({[idskey]: []}).list()的语法糖
->
-> 查询 5 条数据
-> 对应 HTTP 操作: GET /api/v1/device?pageSize=9999&pageIndex=1&ids=2231&ids=2232&ids=2166
-
-```typescript
-const res: HttpResourcesList<Device, any> = await client.device.pick([2231, 2232, 2166]);
-// or
-const res: HttpResourcesList<Device, any> = await client.query({ids: [2231, 2232, 2166]}).list();
 // print res.$raw;
 ```
 

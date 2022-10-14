@@ -30,7 +30,7 @@ type Profile = {
   allProject: boolean
 }
 
-const userHttp = clients.user.user.$beFriendly<
+const userHttp = clients.user.user.$getFriendlyProvider<
   "loginLog" | "token",
   "login" | "loginBySmsCode",
   "profile" | "password" | "bindPhone",
@@ -73,9 +73,9 @@ userHttp.login({
 
   // console.log(await userHttp.pick([1, 10]))
 
-  const $beFriendlydUserLoginLogResource = userHttp.loginLog.$beFriendly();
+  const $getFriendlyProviderdUserLoginLogResource = userHttp.loginLog.$getFriendlyProvider();
 
-  console.log(await $beFriendlydUserLoginLogResource.list());
+  console.log(await $getFriendlyProviderdUserLoginLogResource.list());
 
   userHttp.post({
     "name": "Test User",
@@ -95,7 +95,7 @@ userHttp.login({
   })
 
   // clients
-  userHttp(1).doSth().then(res => {
+  userHttp(1).doSth({}).then(res => {
     console.log('userHttp(1).doSth res:', res)
   }).catch(err => {
     console.log('userHttp(1).doSth err:', err, err.toJSON())

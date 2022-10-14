@@ -1,7 +1,11 @@
-import { ProxiedHttpPackagedResource } from "./HttpPackagedResource";
+import { IHttpPackagedResource } from "./HttpPackagedResource";
 
-export default class HttpResourcesList<T extends RuffHttpResource = any, A extends string = any>
-  extends Array<ProxiedHttpPackagedResource<T, A>>
+export default class HttpResourcesList<
+  T extends RuffHttpResource = any,
+  AR extends string = any,
+  AC extends string = any
+>
+  extends Array<IHttpPackagedResource<T, AR, AC>>
   implements RuffHttpResourcesList<T>
 {
   private _raw: RuffHttpPageableResources<T>;

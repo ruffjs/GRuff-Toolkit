@@ -3,34 +3,39 @@ import AbstractResourceProvider from "./AbstractResourceProvider";
 import FeatureResourceProvider from "./FeatureResourceProvider";
 import CallableResourceProvider from "./CallableResourceProvider";
 import StatefulResourceProvider from "./StatefulResourceProvider";
+import { IHttpPackagedResource } from "../models/HttpPackagedResource";
 
 export type ExtendedIdentifiedResourceProvider<
   T extends RuffHttpResource = any,
-  A extends string = any
-> = IdentifiedResourceProvider<T, A> &
-  Record<A, RuffFeatureResourceGetter & FeatureResourceProvider> &
-  Record<A, RuffResourceCaller>;
+  AR extends string = any,
+  AC extends string = any,
+> = IdentifiedResourceProvider<T, AR, AC> &
+  Record<AR, RuffFeatureResourceGetter & FeatureResourceProvider> &
+  Record<AC, RuffResourceCaller>;
 
-export type IdentifiableResourceProvider<T extends RuffHttpResource = any, A extends string = any> = (
-  idOrKeys: IdOrKeys
-) => ExtendedIdentifiedResourceProvider<T, A>;
+export type IdentifiableResourceProvider<T extends RuffHttpResource = any, AR extends string = any,
+  AC extends string = any,> = (
+    idOrKeys: IdOrKeys
+  ) => ExtendedIdentifiedResourceProvider<T, AR, AC>;
 
 export default class IdentifiedResourceProvider<
   T extends RuffHttpResource = any,
-  A extends string = any
+  AR extends string = any,
+  AC extends string = any,
 > extends AbstractResourceProvider {
-  static defineProvider<T extends RuffHttpResource = any, A extends string = any>(
-    name: string,
-    idOrKeys: IdOrKeys,
-    options: Readonly<RuffResourceProviderDefinationOptions<T, never, A>>,
-    query: RuffHttpQueryModel
-  ) {
-    const provider = new IdentifiedResourceProvider<T, A>(name, idOrKeys, options, query) as ExtendedIdentifiedResourceProvider<T, A>;
+  static defineProvider<T extends RuffHttpResource = any, AR extends string = any,
+    AC extends string = any,>(
+      name: string,
+      idOrKeys: IdOrKeys,
+      options: Readonly<RuffResourceProviderDefinationOptions<T, never, AR | AC>>,
+      query: RuffHttpQueryModel
+    ) {
+    const provider = new IdentifiedResourceProvider<T, AR, AC>(name, idOrKeys, options, query) as ExtendedIdentifiedResourceProvider<T, AR, AC>;
     const { client, resource } = options;
     const props = resource["/**/"];
 
     if (props !== undefined) {
-      (Object.keys(props) as A[]).forEach((propname) => {
+      (Object.keys(props) as Array<AR | AC>).forEach((propname) => {
         const propConf = props[propname];
         if ("method" in propConf) {
           (provider as AnyRecord)[propname] = CallableResourceProvider.defineCallApi(propname, {
@@ -56,7 +61,7 @@ export default class IdentifiedResourceProvider<
   private constructor(
     name: string,
     idOrKeys: IdOrKeys,
-    options: RuffResourceProviderDefinationOptions<T, never, A>,
+    options: RuffResourceProviderDefinationOptions<T, never, AR | AC>,
     query: RuffHttpQueryModel
   ) {
     super(name, options, query);
@@ -79,11 +84,11 @@ export default class IdentifiedResourceProvider<
     return StatefulResourceProvider.prototype.query.apply(this, qs) as unknown as IdentifiedResourceProvider
   }
 
-  async get(): Promise<RuffClientResponseContent<T>> {
-    return StatefulResourceProvider.prototype.get.call(this, this._idOrKeys)
+  async get<DT extends RuffHttpResource = T>(): Promise<IHttpPackagedResource<DT, any>> {
+    return StatefulResourceProvider.prototype.get.call(this, this._idOrKeys) as Promise<IHttpPackagedResource<DT, any>>
   }
 
-  async set(payload: T, partially: boolean) {
+  async set(payload: T, partially: boolean = false) {
     return StatefulResourceProvider.prototype.set.call(this, this._idOrKeys, payload, partially)
   }
 

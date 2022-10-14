@@ -27,15 +27,15 @@ export function d100(this: RandomMethods) {
 export function guid(this: RandomMethods) {
     var pool = "abcdefABCDEF1234567890",
         guid =
-            this.string(pool, 8) +
+            this.string(8, 8, pool) +
             "-" +
-            this.string(pool, 4) +
+            this.string(4, 4, pool) +
             "-" +
-            this.string(pool, 4) +
+            this.string(4, 4, pool) +
             "-" +
-            this.string(pool, 4) +
+            this.string(4, 4, pool) +
             "-" +
-            this.string(pool, 12);
+            this.string(12, 12, pool);
     return guid;
 }
 
