@@ -7,7 +7,7 @@
     </a-radio-group>
   </div>
   <div>
-    <r-col-grouped-twrapper :columns="columns" :column-key="group" :pagination="false">
+    <r-col-groupable-twrapper :columns="columns" :group-index="group" :pagination="false">
       <template #default="{ scrollYConfig, computedColumns }">
         <a-table
           rowKey="id"
@@ -38,7 +38,7 @@
           </template>
         </a-table>
       </template>
-    </r-col-grouped-twrapper>
+    </r-col-groupable-twrapper>
   </div>
 </template>
 

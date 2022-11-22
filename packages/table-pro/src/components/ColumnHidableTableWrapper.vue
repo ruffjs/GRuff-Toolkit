@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { computed, ref, useSlots } from "vue";
 import { hidableColumns } from "../utils/props";
-import { divideHidableColumns } from "../utils/methods";
+import { analyzeHidableColumns } from "../utils/methods";
 import useHeightCalculator from "../traits/useHeightCalculator";
 import useTableWrapperProps from "../traits/useTableWrapperProps";
 
@@ -49,7 +49,7 @@ const { tableHeight, paginationHeight } = useTableWrapperProps(props, slots);
 
 const hiddenColumns = ref<any[]>([]);
 const computedColumns = computed(() => {
-  const [showns, hiddens] = divideHidableColumns(props.columns, props);
+  const [showns, hiddens] = analyzeHidableColumns(props.columns, props);
   hiddenColumns.value = hiddens;
   return showns;
 });

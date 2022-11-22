@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { computed, ref, useSlots } from "vue";
 import { variColumns } from "../utils/props";
-import { divideHidableColumns } from "../utils/methods";
+import { analyzeHidableColumns } from "../utils/methods";
 import useHeightCalculator from "../traits/useHeightCalculator";
 import useTableWrapperProps from "../traits/useTableWrapperProps";
 
@@ -55,14 +55,14 @@ const computedColumns = computed(() => {
   } else {
     const defaultColumns = props.columns?.default || [];
     const selectedColumns =
-      props.columns && props.columnKey !== "default"
-        ? props.columns[props.columnKey] || []
+      props.columns && props.groupIndex !== "default"
+        ? props.columns[props.groupIndex] || []
         : [];
 
     columns = [...defaultColumns, ...selectedColumns];
   }
 
-  const [showns, hiddens] = divideHidableColumns(columns, props);
+  const [showns, hiddens] = analyzeHidableColumns(columns, props);
   hiddenColumns.value = hiddens;
   return showns;
 });

@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import useCustomRender from "../traits/useCustomRender";
+import useCustomText from "../traits/useCustomText";
 
 const props = defineProps({
   index: Number,
@@ -18,5 +18,5 @@ const props = defineProps({
   },
 });
 
-const title = useCustomRender(props);
+const title = useCustomText(props);
 </script>

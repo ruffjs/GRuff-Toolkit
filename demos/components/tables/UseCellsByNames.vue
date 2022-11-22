@@ -1,42 +1,14 @@
 <template>
-  <r-table-wrapper :data-length="dataSource.length" :pagination="false">
-    <template #default="{ bodyHeight: y, isScrollNeeded }">
-      <a-table
-        rowKey="id"
-        :scroll="isScrollNeeded ? { y } : undefined"
-        :columns="columns"
-        :data-source="dataSource"
-        :pagination="false"
-        :loading="false"
-      >
-        <template #bodyCell="{ column, text, record }">
-          <r-tcell-link
-            v-if="column.useCell === 'link'"
-            :text="text"
-            :record="record"
-            :column="column"
-          />
-          <r-tcell-tooltip
-            v-if="column.useCell === 'projects'"
-            :text="text"
-            :record="record"
-            :column="column"
-          />
-          <r-tcell-actions
-            v-if="column.useCell === 'actions'"
-            :column="column"
-            :record="record"
-          />
-        </template>
-      </a-table>
-    </template>
-  </r-table-wrapper>
+  <r-cells-embed-twrapper
+    :pagination="false"
+    :data-source="dataSource"
+    :columns="columns"
+    row-key="id"
+  />
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-
-defineProps({
+const props = defineProps({
   isMobileDevice: Boolean,
 });
 
@@ -44,7 +16,7 @@ const columns: any[] = [
   {
     title: "用户名称",
     dataIndex: "name",
-    useCell: "link",
+    rfCell: "ruff-link-cell",
     disabled(record: AnyRecord) {
       return record?.level === "Admin";
     },
@@ -70,12 +42,13 @@ const columns: any[] = [
   {
     title: "用户手机号",
     dataIndex: "phone",
+    hidden: () => props.isMobileDevice,
   },
   {
     title: "所属站点",
     dataIndex: "projects",
-    useCell: "projects",
-    ellipsis: true,
+    hidden: () => props.isMobileDevice,
+    rfCell: "ruff-tooltip-cell",
     rfTextRender: ({ text, record }: any) => {
       let sites = "";
       if (record.level == "Admin") {
@@ -92,9 +65,9 @@ const columns: any[] = [
   },
   {
     title: "操作",
-    dataIndex: "operating",
     width: 200,
-    useCell: "actions",
+    hidden: () => props.isMobileDevice,
+    rfCell: "ruff-actions-cell",
     actions: (record: AnyRecord) => {
       return [
         {
@@ -121,7 +94,6 @@ const columns: any[] = [
 
 const users = [
   {
-    id: 116,
     createAt: "2021-11-02T03:18:45.000Z",
     updateAt: "2021-11-02T03:18:45.000Z",
     tenantId: 33,
@@ -158,7 +130,6 @@ const users = [
     wechatUser: null,
   },
   {
-    id: 171,
     createAt: "2022-08-24T02:09:54.000Z",
     updateAt: "2022-08-24T02:13:33.000Z",
     tenantId: 33,
@@ -195,8 +166,12 @@ const users = [
     wechatUser: null,
   },
 ];
-const dataSource = ref([...users]);
-
+const dataSource = [...users, ...users, ...users, ...users].map(
+  (user: any, id: number) => ({
+    ...user,
+    id,
+  })
+);
 const handleEdit = (record: any) => {
   alert(`编辑${record.name}`);
 };
@@ -204,18 +179,4 @@ const handleEdit = (record: any) => {
 const handleDelete = (id: number) => {
   alert(`删除Id为[${id}]的用户`);
 };
-
-onMounted(() => {
-  setTimeout(() => {
-    dataSource.value = [
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-    ];
-  }, 3000);
-});
 </script>

@@ -1,50 +1,61 @@
 <template>
-  <r-table-wrapper :data-length="dataSource.length" :pagination="false">
-    <template #default="{ bodyHeight: y, isScrollNeeded }">
-      <a-table
-        rowKey="id"
-        :scroll="isScrollNeeded ? { y } : undefined"
-        :columns="columns"
-        :data-source="dataSource"
-        :pagination="false"
-        :loading="false"
-      >
-        <template #bodyCell="{ column, text, record }">
-          <r-tcell-link
-            v-if="column.useCell === 'link'"
-            :text="text"
-            :record="record"
-            :column="column"
-          />
-          <r-tcell-tooltip
-            v-if="column.useCell === 'projects'"
-            :text="text"
-            :record="record"
-            :column="column"
-          />
-          <r-tcell-actions
-            v-if="column.useCell === 'actions'"
-            :column="column"
-            :record="record"
-          />
-        </template>
-      </a-table>
-    </template>
-  </r-table-wrapper>
+  <div>
+    <a-radio-group v-model:value="group">
+      <a-radio-button value="default">用户</a-radio-button>
+      <a-radio-button value="admin">管理员</a-radio-button>
+      <a-radio-button value="super">超管</a-radio-button>
+    </a-radio-group>
+  </div>
+  <div>
+    <r-col-groupable-twrapper :columns="columns" :group-index="group" :pagination="false">
+      <template #default="{ scrollYConfig, computedColumns }">
+        <a-table
+          rowKey="id"
+          :scroll="isMobileDevice ? undefined : scrollYConfig"
+          :columns="computedColumns"
+          :data-source="dataSource"
+          :pagination="false"
+          :loading="false"
+        >
+          <template #bodyCell="{ column, text, record }">
+            <r-tcell-link
+              v-if="column.bodyCell === 'link'"
+              :text="text"
+              :record="record"
+              :column="column"
+            />
+            <r-tcell-tooltip
+              v-if="column.bodyCell === 'projects'"
+              :text="text"
+              :record="record"
+              :column="column"
+            />
+            <r-tcell-actions
+              v-if="column.bodyCell === 'actions'"
+              :column="column"
+              :record="record"
+            />
+          </template>
+        </a-table>
+      </template>
+    </r-col-groupable-twrapper>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
+import { toGroups } from "@ruff-web/table-pro/src/utils/group";
 
 defineProps({
   isMobileDevice: Boolean,
 });
+const group = ref("default");
 
-const columns: any[] = [
+const sweetColumns = [
   {
     title: "用户名称",
     dataIndex: "name",
-    useCell: "link",
+    bodyCell: "link",
     disabled(record: AnyRecord) {
       return record?.level === "Admin";
     },
@@ -70,11 +81,13 @@ const columns: any[] = [
   {
     title: "用户手机号",
     dataIndex: "phone",
+    rfScope: ["admin"],
   },
   {
     title: "所属站点",
     dataIndex: "projects",
-    useCell: "projects",
+    bodyCell: "projects",
+    rfScope: ["super"],
     ellipsis: true,
     rfTextRender: ({ text, record }: any) => {
       let sites = "";
@@ -93,8 +106,27 @@ const columns: any[] = [
   {
     title: "操作",
     dataIndex: "operating",
+    width: 100,
+    bodyCell: "actions",
+    rfScope: ["admin"],
+    actions: (record: AnyRecord) => {
+      return [
+        {
+          name: "编辑",
+          disabled: record.level === "Admin",
+          action: () => {
+            handleEdit(record);
+          },
+        },
+      ];
+    },
+  },
+  {
+    title: "操作",
+    dataIndex: "operating",
     width: 200,
-    useCell: "actions",
+    bodyCell: "actions",
+    rfScope: ["super"],
     actions: (record: AnyRecord) => {
       return [
         {
@@ -119,7 +151,9 @@ const columns: any[] = [
   },
 ];
 
-const users = [
+const columns = toGroups(sweetColumns);
+
+const dataSource = ref([
   {
     id: 116,
     createAt: "2021-11-02T03:18:45.000Z",
@@ -194,8 +228,7 @@ const users = [
     ],
     wechatUser: null,
   },
-];
-const dataSource = ref([...users]);
+]);
 
 const handleEdit = (record: any) => {
   alert(`编辑${record.name}`);
@@ -204,18 +237,5 @@ const handleEdit = (record: any) => {
 const handleDelete = (id: number) => {
   alert(`删除Id为[${id}]的用户`);
 };
-
-onMounted(() => {
-  setTimeout(() => {
-    dataSource.value = [
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-    ];
-  }, 3000);
-});
 </script>
+<style lang="scss"></style>

@@ -16,19 +16,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "paths": {
-      "@ruff-web/*": [
-        "packages/*"
-      ],
-      "@/*": [
-        "demos/*"
-      ]
+      "@ruff-web/*": ["packages/*"],
+      "@/*": ["demos/*"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
     "demos/**/*.ts",
@@ -42,7 +33,7 @@
     "packages/**/*.tsx",
     "packages/**/*.vue",
     "src/**/*.ts",
-    "types/**/*.d.ts",
+    "types/**/*.d.ts"
   ],
   "references": [
     {

@@ -8,50 +8,30 @@
         :data-source="dataSource"
         :pagination="false"
         :loading="false"
-      >
-        <template #bodyCell="{ column, text, record }">
-          <r-tcell-link
-            v-if="column.useCell === 'link'"
-            :text="text"
-            :record="record"
-            :column="column"
-          />
-          <r-tcell-tooltip
-            v-if="column.useCell === 'projects'"
-            :text="text"
-            :record="record"
-            :column="column"
-          />
-          <r-tcell-actions
-            v-if="column.useCell === 'actions'"
-            :column="column"
-            :record="record"
-          />
-        </template>
-      </a-table>
+      />
     </template>
   </r-table-wrapper>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
+import { withCell } from "@ruff-web/table-cells/src/utils/cell";
 
 defineProps({
   isMobileDevice: Boolean,
 });
 
 const columns: any[] = [
-  {
+  withCell("ruff-link-cell", {
     title: "用户名称",
     dataIndex: "name",
-    useCell: "link",
     disabled(record: AnyRecord) {
       return record?.level === "Admin";
     },
     action(record: AnyRecord) {
       handleEdit(record);
     },
-  },
+  }),
   {
     title: "用户角色",
     dataIndex: "roles",
@@ -71,11 +51,9 @@ const columns: any[] = [
     title: "用户手机号",
     dataIndex: "phone",
   },
-  {
+  withCell("ruff-tooltip-cell", {
     title: "所属站点",
     dataIndex: "projects",
-    useCell: "projects",
-    ellipsis: true,
     rfTextRender: ({ text, record }: any) => {
       let sites = "";
       if (record.level == "Admin") {
@@ -89,12 +67,10 @@ const columns: any[] = [
       }
       return sites;
     },
-  },
-  {
+  }),
+  withCell("ruff-actions-cell", {
     title: "操作",
-    dataIndex: "operating",
     width: 200,
-    useCell: "actions",
     actions: (record: AnyRecord) => {
       return [
         {
@@ -116,7 +92,7 @@ const columns: any[] = [
         },
       ];
     },
-  },
+  }),
 ];
 
 const users = [
@@ -195,7 +171,15 @@ const users = [
     wechatUser: null,
   },
 ];
-const dataSource = ref([...users]);
+const dataSource = ref([
+  ...users,
+  ...users,
+  ...users,
+  ...users,
+  ...users,
+  ...users,
+  ...users,
+]);
 
 const handleEdit = (record: any) => {
   alert(`编辑${record.name}`);
@@ -204,18 +188,4 @@ const handleEdit = (record: any) => {
 const handleDelete = (id: number) => {
   alert(`删除Id为[${id}]的用户`);
 };
-
-onMounted(() => {
-  setTimeout(() => {
-    dataSource.value = [
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-      ...users,
-    ];
-  }, 3000);
-});
 </script>

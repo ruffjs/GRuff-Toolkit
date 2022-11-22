@@ -83,7 +83,7 @@ const columns: any = [
     useCell: "projects",
     ellipsis: true,
     hidden: () => props.isMobileDevice,
-    customRender: ({ text, record }: any) => {
+    rfTextRender: ({ text, record }: any) => {
       let sites = "";
       if (record.level == "Admin") {
         sites = "所有站点";

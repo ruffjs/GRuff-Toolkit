@@ -2,7 +2,7 @@
   <dl class="ruff-table-hidden-cells">
     <template v-for="item in hiddenColumns" :key="item.dataIndex">
       <dt>{{ item.title }}</dt>
-      <dd v-if="item.useCell === 'actions'">
+      <dd v-if="item.actions">
         <span
           v-for="(action, index) in item.actions(record)"
           :key="index"
@@ -13,6 +13,9 @@
           @click="action.action"
           >{{ action.name }}</span
         >
+      </dd>
+      <dd v-else-if="item.rfTextRender && typeof item.rfTextRender === 'function'">
+        {{ item.rfTextRender({ text: record[item.dataIndex], record, column: item }) }}
       </dd>
       <dd v-else-if="item.customRender && typeof item.customRender === 'function'">
         {{ item.customRender({ text: record[item.dataIndex], record, column: item }) }}
