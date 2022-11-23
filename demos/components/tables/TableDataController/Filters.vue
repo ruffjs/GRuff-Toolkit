@@ -1,9 +1,11 @@
 <template>
   <r-cells-embed-twrapper
-    :pagination="false"
     :data-source="dataSource"
     :columns="columns"
     row-key="id"
+    :pagination="pagination"
+    @pageChange="handlePageChange"
+    @pageSizeChange="handlePageSizeChange"
   />
 </template>
 
@@ -13,7 +15,7 @@ import clients from "@/entries/http/clients";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import { User } from "./User";
 import { userdata } from "./pool";
-import defineTableData from "./defineTableData";
+import defineTableDataController from "./defineTableDataController";
 
 const props = defineProps({
   isMobileDevice: Boolean,
@@ -114,7 +116,13 @@ const client = clients.user.user.$getFriendlyProvider<
   never,
   User
 >();
-const { dataSource, updateData } = defineTableData({
+const {
+  dataSource,
+  pagination,
+  updateData,
+  handlePageChange,
+  handlePageSizeChange,
+} = defineTableDataController({
   dataPool: userdata,
 });
 onMounted(() => {

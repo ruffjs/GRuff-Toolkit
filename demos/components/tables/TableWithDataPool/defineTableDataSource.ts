@@ -4,6 +4,7 @@ import { Ref, ref } from "vue";
 
 export interface BatchQueryPool<T extends RuffHttpResource> {
   read(query: RuffHttpQueryModel): Promise<MappingLike<T>[]>;
+  total: number;
 }
 
 export interface DefineTableDataSourceOptions<T extends RuffHttpResource> {
@@ -14,8 +15,8 @@ export default function defineTableDataSource<T extends RuffHttpResource>({
 }: DefineTableDataSourceOptions<T>) {
   const dataSource = ref<T[]>([]) as Ref<T[]>;
 
+  const debounced = debounce(dataPool.read.bind(dataPool), 200);
   const updateData = async (query?: RuffHttpQueryModel) => {
-    const debounced = debounce(dataPool.read.bind(dataPool), 200);
     const [data, err] = await tryLikeGo(debounced(query || {}));
     if (err) {
       console.error("update table data error:", err);

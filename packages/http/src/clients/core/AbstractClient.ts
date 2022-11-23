@@ -3,10 +3,14 @@ import { ApiHub, defineApiHub } from "../../helpers/ApiHub";
 import registerResources from "../../resource-providers";
 import { toObjectiveQuery, withQueryString } from "../../utils/formatters";
 
-export default abstract class AbstractBaseClient<R extends string = any, C extends string = any> implements RuffClientHooks {
+export default abstract class AbstractBaseClient<
+  R extends string = any,
+  C extends string = any
+> implements RuffClientHooks
+{
   protected _pageIndex = 1;
   get pageIndex() {
-    return this._pageIndex
+    return this._pageIndex;
   }
 
   protected _pageSize = 10;
@@ -14,15 +18,23 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
     this._pageSize = size;
   }
   get pageSize() {
-    return this._pageSize
+    return this._pageSize;
   }
 
-  protected _listKey = 'content';
+  protected _listKey = "content";
   set listKey(key: string) {
     this._listKey = key;
   }
   get listKey() {
-    return this._listKey
+    return this._listKey;
+  }
+
+  protected _countKey = "totalCount";
+  set countKey(key: string) {
+    this._countKey = key;
+  }
+  get countKey() {
+    return this._countKey;
   }
 
   protected _endpoint: string = "";
@@ -35,14 +47,21 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
   }
 
   protected __hooks: RuffClientHooks = {
-    beforeRequest(req: RuffClientRequestConfig): void { },
-    onError(error: AnyError | AxiosError, response?: AxiosResponse | false): boolean {
+    beforeRequest(req: RuffClientRequestConfig): void {},
+    onError(
+      error: AnyError | AxiosError,
+      response?: AxiosResponse | false
+    ): boolean {
       return true;
     },
     onRequestError(error: AxiosError): boolean {
       return true;
     },
-    onResponseError(status: number, error: AxiosError, response?: AxiosResponse): boolean {
+    onResponseError(
+      status: number,
+      error: AxiosError,
+      response?: AxiosResponse
+    ): boolean {
       return true;
     },
     on401Error(error: AxiosError, response: AxiosResponse): boolean {
@@ -59,14 +78,16 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
     },
     onNetworkError: function (error: AxiosError): boolean {
       return true;
-    }
+    },
   };
 
   protected __requestFulfilled(req: RuffClientRequestConfig) {
     this.__hooks.beforeRequest(req);
     return req;
   }
-  protected __responseFulfilled(res: AxiosResponse<RuffClientResponse>): RuffClientResponse {
+  protected __responseFulfilled(
+    res: AxiosResponse<RuffClientResponse>
+  ): RuffClientResponse {
     return res.data;
   }
 
@@ -77,10 +98,10 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
     throw {
       handled: true,
       error,
-    }
+    };
   }
   protected __responseRejected(error: AxiosError) {
-    const status = error?.response?.status || 400
+    const status = error?.response?.status || 400;
     let propagating = true;
 
     if (status >= 500) {
@@ -95,7 +116,7 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
       }
     } else if (status === 401) {
       // console.log(error)
-      console.log(this.__hooks)
+      console.log(this.__hooks);
       if (this.__hooks.on401Error(error, error.response as any)) {
         if (this.__hooks.onResponseError(status, error, error.response)) {
           propagating = !!this.__hooks.onError(error, error.response);
@@ -136,7 +157,7 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
     throw {
       handled: true,
       error,
-    }
+    };
   }
 
   protected constructor(
@@ -144,13 +165,12 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
     resources?: RuffClientResourcesConfigs<R>,
     calls?: RuffClientCallersConfigs<C>
   ) {
-
     if (options && typeof options === "object") {
-      (
-        Object.keys(this.__hooks) as (keyof RuffClientHooks)[]
-      ).forEach((hook) => {
-        this[hook] = options[hook] as any;
-      });
+      (Object.keys(this.__hooks) as (keyof RuffClientHooks)[]).forEach(
+        (hook) => {
+          this[hook] = options[hook] as any;
+        }
+      );
     }
 
     registerResources(
@@ -161,32 +181,39 @@ export default abstract class AbstractBaseClient<R extends string = any, C exten
   }
 
   withQueryString = withQueryString;
-  toObjectiveQuery = toObjectiveQuery
+  toObjectiveQuery = toObjectiveQuery;
 
   defineApiHub<
     T extends CreateApiHubDefination = any,
-    X extends Record<string, AnyFn<Promise<RuffClientResponseContent<any>>>> = {}
-  >(prefix: string, config: CreateApiHubConfig<T>, more: (X | ((client: RuffClient) => X)) = {} as X): ApiHub<T> & X {
-    const client = this as unknown as RuffClient
-    const apihub = defineApiHub<T>(prefix, client, config)
+    X extends Record<
+      string,
+      AnyFn<Promise<RuffClientResponseContent<any>>>
+    > = {}
+  >(
+    prefix: string,
+    config: CreateApiHubConfig<T>,
+    more: X | ((client: RuffClient) => X) = {} as X
+  ): ApiHub<T> & X {
+    const client = this as unknown as RuffClient;
+    const apihub = defineApiHub<T>(prefix, client, config);
     if (more) {
-      if (typeof more === 'object') {
+      if (typeof more === "object") {
         return {
           ...apihub,
-          ...more
-        }
+          ...more,
+        };
       }
-      if (typeof more === 'function') {
+      if (typeof more === "function") {
         return {
           ...apihub,
-          ...more(client)
-        }
+          ...more(client),
+        };
       }
     }
     return {
       ...apihub,
-      ...({} as X)
-    }
+      ...({} as X),
+    };
   }
 
   get beforeRequest() {

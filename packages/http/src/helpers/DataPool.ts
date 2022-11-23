@@ -41,8 +41,12 @@ export default class DataPool<
   private _client: RuffClient;
   private _apiId: string;
   private _method: GetterMethod;
-
   private _mapping: MappingOptions<T[K], K, OK> | null;
+
+  private _total: number;
+  get total() {
+    return this._total;
+  }
 
   constructor(options: {
     apiId: string;
@@ -58,10 +62,13 @@ export default class DataPool<
     this._apiId = apiId;
     if (method === String(ResourceMethod.LIST)) {
       this._method = ResourceMethod.LIST;
+      this._total = 0;
     } else if (method === String(ResourceMethod.GET)) {
       this._method = ResourceMethod.GET;
+      this._total = 1;
     } else {
       this._method = null;
+      this._total = 0;
     }
     const _mapping: any = {};
     if (unmap && unmap.length) {
@@ -98,6 +105,7 @@ export default class DataPool<
         query: { pageIndex: 1, pageSize: 10, ...query },
       });
       if (data[this._client.listKey]) {
+        this._total = (data[this._client.countKey] as number) || 0;
         return data[this._client.listKey].map((item: any) =>
           this._mapping
             ? (defineMapping(this._mapping, item) as unknown as MappingLike<T>)

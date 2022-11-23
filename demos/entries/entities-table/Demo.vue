@@ -12,6 +12,24 @@
         <TableWithDataPool :isMobileDevice="isMobileDevice" />
       </div>
     </div>
+    <div class="table-demo-item">
+      <h4 class="table-demo-name">3. 基于Http Client DataPool更新表格数据 + 分页</h4>
+      <div class="table-demo-body">
+        <TableDataController :isMobileDevice="isMobileDevice" />
+      </div>
+    </div>
+    <div class="table-demo-item">
+      <h4 class="table-demo-name">4. 使用过滤表单</h4>
+      <div class="table-demo-body">
+        <TableWithDataPool :isMobileDevice="isMobileDevice" />
+      </div>
+    </div>
+    <div class="table-demo-item">
+      <h4 class="table-demo-name">5. 使用集成于模型的网络与表格配置</h4>
+      <div class="table-demo-body">
+        <TableWithDataPool :isMobileDevice="isMobileDevice" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -19,6 +37,7 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import TableWithHttpClient from "@/components/tables/TableWithHttpClient.vue";
 import TableWithDataPool from "@/components/tables/TableWithDataPool/index.vue";
+import TableDataController from "@/components/tables/TableDataController/Pagination.vue";
 
 const isMobileDevice = ref(window.screen.availWidth <= 576);
 const onWindowResize = () => {
