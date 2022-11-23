@@ -1,9 +1,15 @@
 <template>
   <div class="table-demo">
     <div class="table-demo-item">
-      <h4 class="table-demo-name">1. 基于Http Client的手动更新表格</h4>
+      <h4 class="table-demo-name">1. 基于Http Client获取表格数据</h4>
       <div class="table-demo-body">
-        <UseCellsByNames :isMobileDevice="isMobileDevice" />
+        <TableWithHttpClient :isMobileDevice="isMobileDevice" />
+      </div>
+    </div>
+    <div class="table-demo-item">
+      <h4 class="table-demo-name">2. 基于Http Client DataPool获取表格数据</h4>
+      <div class="table-demo-body">
+        <TableWithDataPool :isMobileDevice="isMobileDevice" />
       </div>
     </div>
   </div>
@@ -11,7 +17,8 @@
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from "vue";
-import UseCellsByNames from "@/components/tables/UseCellsByNames.vue";
+import TableWithHttpClient from "@/components/tables/TableWithHttpClient.vue";
+import TableWithDataPool from "@/components/tables/TableWithDataPool/index.vue";
 
 const isMobileDevice = ref(window.screen.availWidth <= 576);
 const onWindowResize = () => {
@@ -24,6 +31,21 @@ const onWindowResize = () => {
 
 onMounted(() => {
   window.addEventListener("resize", onWindowResize);
+  const symbol = Symbol("test");
+  const a: {
+    [symbol]?: string;
+  } = {
+    [symbol]: "foo",
+  };
+  const b = {
+    ...a,
+  };
+  const c = {
+    [symbol]: "bar",
+    ...a,
+  };
+
+  console.log("test if symbol can be merged", b, c);
 });
 onUnmounted(() => {
   window.removeEventListener("resize", onWindowResize);

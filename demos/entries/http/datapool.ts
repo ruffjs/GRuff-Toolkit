@@ -3,14 +3,13 @@ import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import clients from "./clients";
 
 const pool1 = new DataPool({
-  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.S),
+  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.ITEM),
   client: clients.user,
   mapping: {},
 });
 
-
 const pool2 = new DataPool({
-  apiId: DataPool.formatApiId("api/v1/user", DataPool.M),
+  apiId: DataPool.formatApiId("api/v1/user", DataPool.LIST),
   client: clients.mock,
   mapping: {
     bla: "foo",
@@ -24,29 +23,31 @@ console.log(pool1.getApiId());
 
 console.log(pool2.getApiId());
 
-clients.user.login({
-  payload: {
-    loginName: "demo",
-    password: "123456",
-    clientType: "Web",
-  },
-}).then(async (resp) => {
-  // console.log('userHttp.login resp:', resp)
-  const { token } = resp.data
-  // console.log('userHttp.login token:', token)
-  clients.user.beforeRequest = injectToken((req) => token)
+clients.user
+  .login({
+    payload: {
+      loginName: "demo",
+      password: "123456",
+      clientType: "Web",
+    },
+  })
+  .then(async (resp) => {
+    // console.log('userHttp.login resp:', resp)
+    const { token } = resp.data;
+    // console.log('userHttp.login token:', token)
+    clients.user.beforeRequest = injectToken((req) => token);
 
-  try {
-    const list = await pool2.read({});
-    const profile = await pool1.read(1);
-    console.log(list, profile);
+    try {
+      const list = await pool2.read({});
+      const profile = await pool1.read(1);
+      console.log(list, profile);
 
-    // const { bla, other } = list[0];
-    // console.log(bla, other);
-  } catch (error) {
-    console.log(error);
-  }
-
-}).catch(err => {
-  console.log('userHttp.login err:', err)
-});
+      // const { bla, other } = list[0];
+      // console.log(bla, other);
+    } catch (error) {
+      console.log(error);
+    }
+  })
+  .catch((err) => {
+    console.log("userHttp.login err:", err);
+  });
