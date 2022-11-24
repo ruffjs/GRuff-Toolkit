@@ -24,8 +24,8 @@ export default defineComponent({
       ...trimPropsObject(props, boxPropType),
       direction: props.direction || "row",
       class: props.class
-        ? `bricky-touchable-box ${props.class}`
-        : "bricky-touchable-box",
+        ? `brix-touchable-box ${props.class}`
+        : "brix-touchable-box",
       style: {
         ...cssProps,
         ...props.style,
@@ -37,7 +37,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.bricky-touchable-box {
+.brix-touchable-box {
   cursor: pointer;
   &:hover {
     background-color: var(--local-hghilight-color);

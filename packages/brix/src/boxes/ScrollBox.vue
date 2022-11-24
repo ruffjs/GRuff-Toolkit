@@ -38,8 +38,8 @@ export default defineComponent({
     const boxProps = {
       ...trimPropsObject(props, boxPropType),
       class: props.class
-        ? `bricky-scroll-box ${props.class}`
-        : "bricky-scroll-box",
+        ? `brix-scroll-box ${props.class}`
+        : "brix-scroll-box",
       style: {
         ...cssProps,
         ...props.style,
@@ -51,7 +51,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.bricky-scroll-box {
+.brix-scroll-box {
   width: 100%;
   height: 100%;
 }

@@ -8,7 +8,7 @@ import {
 } from "vue";
 import Antd from "ant-design-vue";
 import "../styles/antd/antd.variable.css";
-import bricks from "@ruff-web/bricky";
+import bricks from "@ruff-web/brix";
 import icons from "@ruff-web/icons";
 import { allocateStorage } from "@ruff-web/data-storage/index";
 import createVuexStore from "./store/createVuexStore";
@@ -92,18 +92,16 @@ export default class Context implements IRuffSPAContext {
         store,
         router,
         boundaries,
-      })
-      onCreate &&
-        onCreate(
-          (Context.currentInstance)
-        );
+      });
+      onCreate && onCreate(Context.currentInstance);
 
       if (onRequestUserToken) {
         Context.currentInstance._onRequestUserToken = onRequestUserToken;
       }
       if (onRequestUserData) {
         Context.currentInstance._onRequestUserData = onRequestUserData;
-      } if (onRequestPermission) {
+      }
+      if (onRequestPermission) {
         Context.currentInstance._onRequestPermission = onRequestPermission;
       }
     }
@@ -146,16 +144,17 @@ export default class Context implements IRuffSPAContext {
           : store.commit("app/assignState", states)
     );
     Context.currentInstance = this;
-    this.requestToken = this.requestToken.bind(this)
-    this.updateUserData = this.updateUserData.bind(this)
-    this.checkPermission = this.checkPermission.bind(this)
+    this.requestToken = this.requestToken.bind(this);
+    this.updateUserData = this.updateUserData.bind(this);
+    this.checkPermission = this.checkPermission.bind(this);
   }
 
-
-  static DEFAULT_USER_TOKEN = "#DEFAULT_USER_TOKEN:for_the_app_not_use_token_for_sign_in"
+  static DEFAULT_USER_TOKEN =
+    "#DEFAULT_USER_TOKEN:for_the_app_not_use_token_for_sign_in";
   private _onRequestUserToken(
-    userState: UserState, payload: AnyRecord
-  ): Promise<{ token: string, payload: AnyRecord }> {
+    userState: UserState,
+    payload: AnyRecord
+  ): Promise<{ token: string; payload: AnyRecord }> {
     return Promise.resolve({ token: Context.DEFAULT_USER_TOKEN, payload: {} });
   }
   private _onRequestUserData(
@@ -189,7 +188,7 @@ export default class Context implements IRuffSPAContext {
       vueApp.config.errorHandler = (err, vm, info) => {
         console.log(err, vm, info);
       };
-      vueApp.config.warnHandler = (err, vm, info) => { };
+      vueApp.config.warnHandler = (err, vm, info) => {};
 
       vueApp
         .use(Antd)

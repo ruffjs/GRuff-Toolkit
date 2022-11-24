@@ -26,7 +26,7 @@ export default defineComponent({
     // console.log(props, styleObj);
     return (
       <span
-        class={props.class ? `bricky-text ${props.class}` : "bricky-text"}
+        class={props.class ? `brix-text ${props.class}` : "brix-text"}
         style={{
           ...styleObj,
           ...cssObj,
@@ -40,7 +40,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.bricky-text {
+.brix-text {
   display: inline;
 }
 </style>
