@@ -8,7 +8,7 @@
 
 // import "../demos/entries/http/mock";
 
-// import "../demos/entries/http/dataview";
+// import "../demos/entries/http/datapool";
 
 // import "../demos/entries/http/api-hub";
 
