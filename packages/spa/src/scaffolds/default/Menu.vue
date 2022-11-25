@@ -12,9 +12,9 @@
 </template>
 
 <script setup lang="ts">
-import useScreenInfos from "../../traits/useScreenInfos";
-import useColorTheme from "../../traits/useColorTheme";
-import useMenuSettings from "../../traits/useMenuSettings";
+import useScreenInfos from "../../reactive/useScreenInfos";
+import useColorTheme from "../../reactive/useColorTheme";
+import useMenuSettings from "../../reactive/useMenuSettings";
 import { reactive, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import MenuItem from "./MenuItem.vue";

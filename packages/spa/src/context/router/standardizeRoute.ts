@@ -47,49 +47,49 @@ export default function standardizeRoute(this: any, item: RuffSPAPageConfig) {
   }
 
   if (_ruff_spa_shortName && _ruff_spa_shortName !== "workspace") {
-    let _ruff_spa_accessDesc = null;
-    if (item.accessDesc || this.meta?._ruff_spa_accessDesc) {
+    let _ruff_spa_accessBy = null;
+    if (item.accessBy || this.meta?._ruff_spa_accessBy) {
       // console.log(
       //   "Access Description",
       //   _ruff_spa_shortName,
-      //   item.accessDesc,
-      //   this.meta?._ruff_spa_accessDesc
+      //   item.accessBy,
+      //   this.meta?._ruff_spa_accessBy
       // )
-      if (this.meta?._ruff_spa_accessDesc) {
-        if (item.accessDesc) {
-          _ruff_spa_accessDesc = [
-            ...this.meta?._ruff_spa_accessDesc,
-            item.accessDesc,
+      if (this.meta?._ruff_spa_accessBy) {
+        if (item.accessBy) {
+          _ruff_spa_accessBy = [
+            ...this.meta?._ruff_spa_accessBy,
+            item.accessBy,
           ];
-          delete item.accessDesc;
+          delete item.accessBy;
         } else {
-          _ruff_spa_accessDesc = [...this.meta?._ruff_spa_accessDesc];
+          _ruff_spa_accessBy = [...this.meta?._ruff_spa_accessBy];
         }
       } else {
-        _ruff_spa_accessDesc = [item.accessDesc];
-        delete item.accessDesc;
+        _ruff_spa_accessBy = [item.accessBy];
+        delete item.accessBy;
       }
     }
     item.meta = {
       ...item.meta,
       _ruff_spa_shortName,
-      _ruff_spa_accessDesc,
+      _ruff_spa_accessBy,
     };
   }
 
   if (item.component) {
     if (item.children && item.children.length) {
-      const names: string[] = []
-      item.children = item.children.map(standardizeRoute, item).filter(i => {
+      const names: string[] = [];
+      item.children = item.children.map(standardizeRoute, item).filter((i) => {
         if (i === undefined) {
-          return false
+          return false;
         }
         if (i.name && names.includes(i.name)) {
-          console.error(`route name "${i.name}" has been taken already.`)
-          return false
+          console.error(`route name "${i.name}" has been taken already.`);
+          return false;
         }
-        i.name && names.push(i.name)
-        return true
+        i.name && names.push(i.name);
+        return true;
       }) as RuffSPAPageConfig[];
     }
   } else if (item.redirect) {
@@ -99,8 +99,8 @@ export default function standardizeRoute(this: any, item: RuffSPAPageConfig) {
   if (item.name || item.redirect) {
   } else {
     // throw new TypeError("route must have a name like attr");
-    console.error("route must have a name-like attr")
-    return undefined
+    console.error("route must have a name-like attr");
+    return undefined;
   }
 
   return item;

@@ -17,8 +17,8 @@
 // import "../demos/entries/storage";
 
 // import "../demos/entries/table";
-import "../demos/entries/entities-table";
+// import "../demos/entries/entities-table";
 
-// import "../demos/entries/spa";
+import "../demos/entries/spa";
 
 // import "../demos/entries/http-sharing-spa";

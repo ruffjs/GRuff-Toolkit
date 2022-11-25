@@ -10,7 +10,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import useCustomText from "../traits/useCustomText";
+import useCustomText from "../reactive/useCustomText";
 
 const props = defineProps({
   text: [String, Number, Object, Boolean],

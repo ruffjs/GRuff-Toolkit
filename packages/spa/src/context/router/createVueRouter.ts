@@ -9,11 +9,11 @@ import { getSPAContext } from "..";
 const checkAccessPermission = async (
   route: VueRouter.RouteLocationNormalized
 ) => {
-  if (route.meta?._ruff_spa_accessDesc) {
-    // console.log("to.meta", route.meta._ruff_spa_accessDesc)
+  if (route.meta?._ruff_spa_accessBy) {
+    // console.log("to.meta", route.meta._ruff_spa_accessBy)
     const runtime = getSPAContext();
-    const promises = (route.meta._ruff_spa_accessDesc as AnyArray).map(
-      (accessDesc) => runtime.checkPermission(accessDesc)
+    const promises = (route.meta._ruff_spa_accessBy as AnyArray).map(
+      (accessBy) => runtime.checkPermission(accessBy)
     );
 
     try {

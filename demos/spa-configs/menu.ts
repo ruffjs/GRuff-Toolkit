@@ -108,14 +108,39 @@ export default [
   },
   {
     key: "workspace/form",
-    name: "表单组件与表单处理",
+    name: "表单组件与表单配置",
     icon: "form-outlined",
     children: [
-      // {
-      //   key: "workspace/form/",
-      //   name: "",
-      //   link: "/form/",
-      // },
+      {
+        key: "workspace/form/selectable",
+        name: "可选输入框",
+        link: "/form/selectable",
+      },
+      {
+        key: "workspace/form/time-range",
+        name: "时间区间选择器",
+        link: "/form/time-range",
+      },
+      {
+        key: "workspace/form/popup",
+        name: "自定义弹出式选择器",
+        link: "/form/popup",
+      },
+      {
+        key: "workspace/form/location",
+        name: "自定义表单元素容器",
+        link: "/form/location",
+      },
+      {
+        key: "workspace/form/widgets",
+        name: "申明式表单组件与申明式表单组件容器",
+        link: "/form/widgets",
+      },
+      {
+        key: "workspace/form/form",
+        name: "申明式表单",
+        link: "/form/form",
+      },
     ],
   },
   {

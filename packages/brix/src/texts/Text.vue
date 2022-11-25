@@ -13,15 +13,12 @@ export type TextNonStyleProps = {
 export type TextProps = TextStyleProps & TextNonStyleProps;
 
 export default defineComponent({
-  name: "BText",
+  name: "BxText",
   props: textPropType,
   render(props: any) {
     const slots = useSlots();
     // const { style, css, class: className, ...rest } = toRefs(props);
-    const styleObj = convertPropsToStyleObject(
-      props as TextStyleProps,
-      textPropType
-    );
+    const styleObj = convertPropsToStyleObject(props as TextStyleProps, textPropType);
     const cssObj = props.css ? convertCssToStyleObject(props.css) : {};
     // console.log(props, styleObj);
     return (

@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import useCustomText from "../traits/useCustomText";
+import useCustomText from "../reactive/useCustomText";
 
 const props = defineProps({
   index: Number,

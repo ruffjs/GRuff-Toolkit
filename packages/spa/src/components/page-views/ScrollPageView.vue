@@ -10,17 +10,17 @@
       ></WithDirHeader>
     </box>
 
-    <b-scroll-box flex="1" width="100%" :height="withDir ? 'calc(100% - 80px)' : '100%'">
+    <bx-scroll-box flex="1" width="100%" :height="withDir ? 'calc(100% - 80px)' : '100%'">
       <box v-if="!withDir">
         <slot name="header" />
       </box>
       <box :flex="1" :padding="mainPadding">
-        <PermissionView :accessDesc="accessDesc" :checkingText="permissionCheckingText">
+        <PermissionView :access-by="accessBy" :checkingText="permissionCheckingText">
           <template #unauth><slot name="no-permis"></slot></template>
           <slot></slot>
         </PermissionView>
       </box>
-    </b-scroll-box>
+    </bx-scroll-box>
   </box>
 </template>
 
@@ -38,7 +38,7 @@ defineProps({
     type: [Number, String, Array],
     default: [0, "--ms", "--ms"],
   },
-  accessDesc: [Object, String, Number],
+  accessBy: [Object, String, Number],
   permissionCheckingText: {
     type: String,
     default: "登录中...",

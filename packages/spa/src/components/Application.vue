@@ -14,8 +14,8 @@ import { onErrorCaptured, onMounted, useSlots, watch } from "vue";
 // import { ConfigProvider } from "ant-design-vue";
 import { registerTheme } from "../styles/antd/cssVariables";
 
-import useGeneralSettings from "../traits/useGeneralSettings";
-import useColorTheme from "../traits/useColorTheme";
+import useGeneralSettings from "../reactive/useGeneralSettings";
+import useColorTheme from "../reactive/useColorTheme";
 
 const { name } = defineProps({
   name: String,

@@ -13,7 +13,7 @@ import clients from "@/entries/http/clients";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import { User } from "./User";
 import { userdata } from "./pool";
-import defineTableDataSource from "./defineTableDataSource";
+import defineTableDataSource from "@ruff-web/table-pro/src/reactive/defineTableDataSource";
 
 const props = defineProps({
   isMobileDevice: Boolean,

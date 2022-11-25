@@ -15,7 +15,7 @@ import clients from "@/entries/http/clients";
 import { injectToken } from "@ruff-web/http/src/utils/formatters";
 import { User } from "./User";
 import { userdata } from "./pool";
-import defineTableDataController from "./defineTableDataController";
+import defineTableDataController from "@ruff-web/sdk/src/reactive/defineTableDataController";
 
 const props = defineProps({
   isMobileDevice: Boolean,

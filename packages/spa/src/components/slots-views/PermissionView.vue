@@ -18,31 +18,31 @@ import Context from "../../context/Context";
 
 const slots = useSlots();
 const props = defineProps({
-  accessDesc: [Object, String, Number],
+  accessBy: [Object, String, Number],
   checkingText: {
     type: String,
     default: "登录中...",
   },
-  defaultReason: {
+  reasonText: {
     type: String,
     default: "权限不足",
   },
 });
 const show = ref();
-const reason = ref(props.defaultReason || "权限不足");
+const reason = ref(props.reasonText || "权限不足");
 
 watchEffect(async () => {
-  if (props.accessDesc) {
+  if (props.accessBy) {
     const runtime = Context.getCurrentInstance();
     try {
-      await runtime.checkPermission(props.accessDesc);
+      await runtime.checkPermission(props.accessBy);
       show.value = true;
     } catch (error: any) {
       // console.log(error);
       if (error?.reason) {
         reason.value = error.reason;
       } else {
-        reason.value = props.defaultReason || "权限不足";
+        reason.value = props.reasonText || "权限不足";
       }
       show.value = false;
     }

@@ -38,8 +38,8 @@
 import { computed, ref, useSlots } from "vue";
 import { hidableColumns } from "../utils/props";
 import { analyzeHidableColumns } from "../utils/methods";
-import useHeightCalculator from "../traits/useHeightCalculator";
-import useTableWrapperProps from "../traits/useTableWrapperProps";
+import useHeightCalculator from "../reactive/useHeightCalculator";
+import useTableWrapperProps from "../reactive/useTableWrapperProps";
 
 const slots = useSlots();
 const emit = defineEmits(["pageChange", "pageSizeChange"]);

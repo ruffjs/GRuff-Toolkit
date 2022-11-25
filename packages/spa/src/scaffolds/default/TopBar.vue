@@ -7,7 +7,7 @@
     background="var(--ruff-top-bar-background)"
   >
     <box row align="center">
-      <b-touchable @click="toggleMenuStatus" :padding="[0, '--ms']">
+      <bx-touchable @click="toggleMenuStatus" :padding="[0, '--ms']">
         <txt :line-height="18" :margin="[8, 0]">
           <ruff-icon
             type="antd"
@@ -16,13 +16,13 @@
             class="side-bar-switch"
           />
         </txt>
-      </b-touchable>
+      </bx-touchable>
       <Breadcrumb v-if="withCrumb" />
     </box>
     <box :flex="1" paddingH="10" row justify="right" align="center">
       <template v-for="shotcut in shotcuts">
         <router-link v-if="shotcut.type === 'link'" :to="(shotcut.link as string)">
-          <b-touchable :padding="[0, 10]">
+          <bx-touchable :padding="[0, 10]">
             <txt :line-height="18">
               <ruff-icon
                 type="antd"
@@ -31,7 +31,7 @@
                 class="top-bar-text"
               />
             </txt>
-          </b-touchable>
+          </bx-touchable>
         </router-link>
         <DropDown
           v-else-if="shotcut.type === 'dropdown'"
@@ -49,8 +49,8 @@
 </template>
 
 <script setup lang="ts">
-import useMenuSettings from "../../traits/useMenuSettings";
-import useTopbarSettings from "../../traits/useTopbarSettings";
+import useMenuSettings from "../../reactive/useMenuSettings";
+import useTopbarSettings from "../../reactive/useTopbarSettings";
 import Breadcrumb from "../../components/crumbs/Breadcrumb.vue";
 import { ref } from "vue";
 import DropDown from "./DropDown.vue";

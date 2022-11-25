@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import usePageRoutes from "@ruff-web/spa/src/traits/usePageRoutes";
+import usePageRoutes from "@ruff-web/spa/src/reactive/usePageRoutes";
 import { onMounted } from "vue";
 
 const { getRoutes } = usePageRoutes();

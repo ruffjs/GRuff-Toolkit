@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { ref, watch } from "vue";
-import usePassport from "@ruff-web/spa/src/traits/useUserPassport";
+import usePassport from "@ruff-web/spa/src/reactive/useUserPassport";
 import { getSPAContext } from "../../context";
 
 export default {
@@ -32,10 +32,10 @@ const props = defineProps({
 const { profile } = usePassport();
 const show = ref(false);
 const checkShowState = async () => {
-  if (props.item?.accessDesc) {
+  if (props.item?.accessBy) {
     const runtime = getSPAContext();
     try {
-      await runtime.checkPermission(props.item?.accessDesc);
+      await runtime.checkPermission(props.item?.accessBy);
       show.value = true;
     } catch (error) {
       show.value = false;

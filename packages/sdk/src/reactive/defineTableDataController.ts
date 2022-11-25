@@ -1,7 +1,7 @@
 import { reactive, ref } from "vue";
 import defineTableDataSource, {
   BatchQueryPool,
-} from "../TableWithDataPool/defineTableDataSource";
+} from "../../../table-pro/src/reactive/defineTableDataSource";
 
 export interface PaginationConfig {
   showSizeChanger?: boolean;
@@ -15,7 +15,7 @@ export interface DefineTableDataControllerOptions<
 > {
   dataPool: BatchQueryPool<T>;
   queries?: F;
-  pageConf?: PaginationConfig;
+  pageConf?: PaginationConfig | false;
 }
 
 export default function defineTableDataController<
@@ -35,44 +35,56 @@ export default function defineTableDataController<
     pageSize: 10,
     ...queries,
   });
-  const pagination = reactive({
-    showSizeChanger:
-      typeof pageConf?.showSizeChanger === "boolean"
-        ? pageConf.showSizeChanger
-        : true,
-    showQuickJumper:
-      typeof pageConf?.showQuickJumper === "boolean"
-        ? pageConf.showSizeChanger
-        : true,
-    current:
-      typeof filterForm.pageIndex === "number" ? filterForm.pageIndex : 1,
-    pageSize:
-      typeof filterForm.pageSize === "number" ? filterForm.pageSize : 10,
-    pageSizeOptions:
-      typeof pageConf?.pageSizeOptions === "object"
-        ? pageConf.pageSizeOptions
-        : ["10", "20", "30", "40"],
-    total: 0,
-  });
+  const pagination =
+    pageConf === false
+      ? false
+      : reactive({
+          showSizeChanger:
+            typeof pageConf?.showSizeChanger === "boolean"
+              ? pageConf.showSizeChanger
+              : true,
+          showQuickJumper:
+            typeof pageConf?.showQuickJumper === "boolean"
+              ? pageConf.showSizeChanger
+              : true,
+          current:
+            typeof filterForm.pageIndex === "number" ? filterForm.pageIndex : 1,
+          pageSize:
+            typeof filterForm.pageSize === "number" ? filterForm.pageSize : 10,
+          pageSizeOptions:
+            typeof pageConf?.pageSizeOptions === "object"
+              ? pageConf.pageSizeOptions
+              : ["10", "20", "30", "40"],
+          total: 0,
+        });
 
   const updateData = async () => {
     updating.value = true;
     await updateDataSource(filterForm);
-    pagination.total = dataPool.total;
+    if (pagination !== false) {
+      pagination.total = dataPool.total;
+    }
+
     updating.value = false;
   };
 
   const handlePageChange = (current: number) => {
     (filterForm as RuffPageableResourcesQueryModel).pageIndex = current;
-    pagination.current = current;
+    if (pagination !== false) {
+      pagination.current = current;
+    }
+
     updateData();
   };
 
   const handlePageSizeChange = (current: number, pageSize: number) => {
     (filterForm as RuffPageableResourcesQueryModel).pageIndex = current;
     (filterForm as RuffPageableResourcesQueryModel).pageSize = pageSize;
-    pagination.current = current;
-    pagination.pageSize = pageSize;
+
+    if (pagination !== false) {
+      pagination.current = current;
+      pagination.pageSize = pageSize;
+    }
     updateData();
   };
 
