@@ -7,9 +7,9 @@
       <div class="code">
         <HighlightJS language="html" :code="tpl" />
       </div>
-      <h4>业务代码</h4>
+      <h4>业务脚本</h4>
       <div class="code">
-        <HighlightJS language="js" :code="ts" />
+        <HighlightJS language="ts" :code="ts" />
       </div>
     </r-panel>
   </r-scroll-page>

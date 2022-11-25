@@ -1,6 +1,13 @@
 import { AnimateRouter, DirectRouter, PlaceholderPage } from "@ruff-web/spa";
 
 import AutoHeight from "@/spa-views/tables/AutoHeight.vue";
+import Pagination from "@/spa-views/tables/Pagination.vue";
+import HidableColumns from "@/spa-views/tables/HidableColumns.vue";
+import GroupedColumns from "@/spa-views/tables/GroupedColumns.vue";
+import GroupedColumns2 from "@/spa-views/tables/GroupedColumns2.vue";
+import Cells from "@/spa-views/tables/Cells.vue";
+import CellRenders from "@/spa-views/tables/CellRenders.vue";
+import CellNames from "@/spa-views/tables/CellNames.vue";
 
 export const tables = {
   path: "table",
@@ -18,14 +25,14 @@ export const tables = {
     },
     {
       path: "pagination",
-      component: PlaceholderPage,
+      component: Pagination,
       meta: {
         name: "带有分页的表格",
       },
     },
     {
       path: "hidable-columns",
-      component: PlaceholderPage,
+      component: HidableColumns,
       meta: {
         name: "按条件隐藏列表",
       },
@@ -39,34 +46,34 @@ export const tables = {
       children: [
         {
           path: "v1",
-          component: PlaceholderPage,
+          component: GroupedColumns,
           meta: {
             name: "v1",
           },
         },
         {
           path: "v2",
-          component: PlaceholderPage,
+          component: GroupedColumns2,
         },
       ],
     },
     {
       path: "cells",
-      component: PlaceholderPage,
+      component: Cells,
       meta: {
         name: "使用自定义单元格组件",
       },
     },
     {
       path: "cell-renders",
-      component: PlaceholderPage,
+      component: CellRenders,
       meta: {
         name: "使用自定义单元格渲染函数",
       },
     },
     {
       path: "cell-names",
-      component: PlaceholderPage,
+      component: CellNames,
       meta: {
         name: "使用自定义单元格名",
       },

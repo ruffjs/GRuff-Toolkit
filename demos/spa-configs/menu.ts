@@ -98,12 +98,12 @@ export default [
       {
         key: "workspace/table/grouped-columns/v1",
         name: "对列进行分组 v1",
-        link: "/table/group-columns/v1",
+        link: "/table/grouped-columns/v1",
       },
       {
         key: "workspace/table/grouped-columns/v2",
         name: "对列进行分组 v2",
-        link: "/table/group-columns/v2",
+        link: "/table/grouped-columns/v2",
       },
       {
         key: "workspace/table/cells",
