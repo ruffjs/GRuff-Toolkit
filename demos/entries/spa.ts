@@ -4,6 +4,8 @@ import { createApp } from "vue";
 import App from "./SPA.vue";
 import clients from "./http/clients";
 
+import "highlight.js/styles/stackoverflow-light.css";
+
 const storage = context.storage as any;
 const store = context.store;
 if (storage.token) {

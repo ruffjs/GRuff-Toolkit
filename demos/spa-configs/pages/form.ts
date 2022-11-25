@@ -1,5 +1,12 @@
 import { DirectRouter, PlaceholderPage } from "@ruff-web/spa";
 
+import Selectable from "@/spa-views/forms/Selectable.vue";
+import TimeRange from "@/spa-views/forms/TimeRange.vue";
+import Popup from "@/spa-views/forms/Popup.vue";
+import Location from "@/spa-views/forms/Location.vue";
+import Widgets from "@/spa-views/forms/Widgets.vue";
+import Form from "@/spa-views/forms/Form.vue";
+
 export const forms = {
   path: "form",
   component: DirectRouter,
@@ -9,42 +16,42 @@ export const forms = {
   children: [
     {
       path: "selectable",
-      component: PlaceholderPage,
+      component: Selectable,
       meta: {
         name: "可选输入框",
       },
     },
     {
       path: "time-range",
-      component: PlaceholderPage,
+      component: TimeRange,
       meta: {
         name: "时间区间选择器",
       },
     },
     {
       path: "popup",
-      component: PlaceholderPage,
+      component: Popup,
       meta: {
         name: "自定义弹出式选择器",
       },
     },
     {
       path: "location",
-      component: PlaceholderPage,
+      component: Location,
       meta: {
         name: "自定义表单元素容器",
       },
     },
     {
       path: "widgets",
-      component: PlaceholderPage,
+      component: Widgets,
       meta: {
         name: "申明式表单组件与申明式表单组件容器",
       },
     },
     {
       path: "form",
-      component: PlaceholderPage,
+      component: Form,
       meta: {
         name: "申明式表单",
       },
