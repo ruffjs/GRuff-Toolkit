@@ -33,14 +33,13 @@ import { getSPAContext } from "../../context";
 const { profile, signIn: updateInfo, signOut: handleLogout } = usePassport();
 
 onMounted(async () => {
-  console.log("user profile", profile.value);
   const { storage, updateUserData } = getSPAContext();
+  // console.log("user profile", storage.user.uid, profile.value);
   if (storage.user.uid) {
     const userData = await updateUserData(storage.user.uid);
-    console.log(userData);
     updateInfo(userData);
   } else {
-    console.log(storage.user);
+    console.log("storage.user", storage.user);
   }
 });
 </script>
