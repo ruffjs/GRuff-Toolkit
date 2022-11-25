@@ -36,12 +36,12 @@
         <slot name="right-top" />
       </box>
     </box>
-    <b-scroll-box flex="1" both>
-      <PermissionView :accessDesc="accessDesc" :checkingText="permissionCheckingText">
+    <bx-scroll-box flex="1" both>
+      <PermissionView :access-by="accessBy" :checkingText="permissionCheckingText">
         <template #unauth><slot name="no-permis"></slot></template>
         <slot></slot>
       </PermissionView>
-    </b-scroll-box>
+    </bx-scroll-box>
   </box>
 </template>
 <script setup lang="ts">
@@ -54,7 +54,7 @@ defineProps({
     type: [Boolean, String],
     default: true,
   },
-  accessDesc: [Object, String, Number],
+  accessBy: [Object, String, Number],
   permissionCheckingText: {
     type: String,
     default: "登录中...",

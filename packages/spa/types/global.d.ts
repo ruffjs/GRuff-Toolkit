@@ -40,7 +40,7 @@ interface RuffSPAPageConfig {
   component?: unknown;
   redirect?: unknown;
   children?: RuffSPAPageConfig[];
-  accessDesc?: any;
+  accessBy?: any;
   meta?: Record<string | number | symbol, unknown>;
 }
 
@@ -50,6 +50,6 @@ interface RuffSPAMenuItem {
   name: string;
   icon?: string;
   link?: string;
-  accessDesc?: any;
+  accessBy?: any;
   children?: RuffSPAMenuItem[];
 }

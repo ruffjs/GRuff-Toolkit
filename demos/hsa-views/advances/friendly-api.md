@@ -1,12 +1,12 @@
-# 使用编辑器友好的API
+# 使用编辑器友好的 API
 
 > 此功能仅为了增强开发体验，不提供业务支持
 
-## 使用 @ruff-web/entities 提供的标准clients
+## 使用 @ruff-web/entities 提供的标准 clients
 
-> Gruff Entities在提供实体配置的同时，会同时提供相应接口的定义描述，封装为开箱即用的 HttpClient 和 MockClient，直接使用即可获得类型提示和检查
+> Gruff Entities 在提供实体配置的同时，会同时提供相应接口的定义描述，封装为开箱即用的 HttpClient 和 MockClient，直接使用即可获得类型提示和检查
 >
-> Entities库有待整理
+> Entities 库有待整理
 
 ## 使用 $getFriendlyProvider 方法获得一个带有细节描述的 ResourceProvider 对象
 
@@ -53,10 +53,10 @@ userProvider(1).doSth1;
 const user = await userProvider.get(1);
 // const user: IHttpPackagedResource<User, "profile" | "password" | "bindPhone", "doSth">
 
-user.id
+user.id;
 // (property) User.id: number
 
-user.name
+user.name;
 // (property) User.name: string
 
 user.password;
@@ -64,7 +64,6 @@ user.password;
 
 user.doSth2;
 // (property) doSth2: RuffResourceCaller<any, any>
-
 ```
 
 ## 在终端接口上重新指定资源模型
@@ -85,6 +84,6 @@ class Device {
 const device = await client.device(2153).get<Device>();
 // const device: IHttpPackagedResource<Device, any, any>
 
-device.name
+device.name;
 // (property) Device.name: string
 ```

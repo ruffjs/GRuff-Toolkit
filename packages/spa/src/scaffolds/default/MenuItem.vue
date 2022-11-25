@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import usePassport from "@ruff-web/spa/src/traits/useUserPassport";
+import usePassport from "@ruff-web/spa/src/reactive/useUserPassport";
 import { ref, watch } from "vue";
 import { getSPAContext } from "../../context";
 import SubMenuItem from "./SubMenuItem.vue";
@@ -35,10 +35,10 @@ const { profile } = usePassport();
 const show = ref(false);
 
 const checkShowState = async () => {
-  if (props.item?.accessDesc) {
+  if (props.item?.accessBy) {
     const runtime = getSPAContext();
     try {
-      await runtime.checkPermission(props.item?.accessDesc);
+      await runtime.checkPermission(props.item?.accessBy);
       show.value = true;
     } catch (error) {
       show.value = false;

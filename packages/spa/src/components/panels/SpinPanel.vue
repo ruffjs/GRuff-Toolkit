@@ -7,7 +7,7 @@
       :padding="padding"
       overflow="auto"
     >
-      <PermissionView :accessDesc="accessDesc" :checkingText="permissionCheckingText">
+      <PermissionView :access-by="accessBy" :checkingText="permissionCheckingText">
         <template #unauth><slot name="no-permis"></slot></template>
         <slot></slot>
       </PermissionView>
@@ -25,7 +25,7 @@ const props = defineProps({
     default: "--ms",
   },
   spinning: Boolean,
-  accessDesc: [Object, String, Number],
+  accessBy: [Object, String, Number],
   permissionCheckingText: {
     type: String,
     default: "登录中...",

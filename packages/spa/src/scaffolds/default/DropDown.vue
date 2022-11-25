@@ -1,10 +1,10 @@
 <template>
   <a-dropdown placement="bottomRight">
-    <b-touchable :padding="[0, 10]" row>
+    <bx-touchable :padding="[0, 10]" row>
       <box>
         <txt class="top-bar-text">{{ name }}</txt>
       </box>
-    </b-touchable>
+    </bx-touchable>
     <template v-slot:overlay>
       <a-menu class="ant-pro-drop-down menu" :selected-keys="selectedKeys">
         <a-menu-item

@@ -8,6 +8,7 @@ import PageNotFound from "../spa-views/errors/PageNotFound.vue";
 import "../styles/index.scss";
 import { PlaceholderPage } from "@ruff-web/spa";
 import { createVNode, defineComponent } from "vue";
+import clients from "@/entries/http/clients";
 
 export default CreateSPAContext({
   anonymousAccess: false,
@@ -45,6 +46,26 @@ export default CreateSPAContext({
       return Promise.reject();
     }
     return Promise.resolve();
+  },
+  async onRequestUserData(userState: UserState, uid: string | number) {
+    try {
+      // console.log(userState, uid)
+      const res: any = await clients.user.user(uid).profile();
+      return {
+        uid: res.id,
+        email: res.email,
+        username: res.email || res.phone,
+        display: res.name,
+        admin: res.level === "Admin",
+        banned: false,
+        levelLable: res.level,
+        usergroups: res.roles,
+        custom: res.$raw,
+      };
+    } catch (error) {
+      console.log(error);
+      return Promise.reject();
+    }
   },
   onCreate({ storage, store }) {
     // client.onTokenRequired = () => {

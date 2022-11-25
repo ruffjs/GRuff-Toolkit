@@ -85,7 +85,8 @@ const pagination = reactive({
 });
 
 const handlePageChange = (current: number) => {
-  console.log("handlePageChange", current);
+  // console.log("handlePageChange", current);
+  pagination.current = current;
 };
 
 const handlePageSizeChange = (current: number, pageSize: number) => {

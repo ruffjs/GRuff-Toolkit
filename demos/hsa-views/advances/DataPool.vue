@@ -32,12 +32,12 @@ const client = createClient("/test-user-svc", {
 client.beforeRequest = injectToken(() => storage.user.token);
 
 const userPool = new DataPool({
-  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.S),
+  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.ITEM),
   client,
   mapping: {},
 });
 const accountPool = new DataPool({
-  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.S),
+  apiId: DataPool.formatApiId("api/v1/user", "profile", DataPool.ITEM),
   client,
   unmap: ["level", "type", "roles"],
   mapping: {
@@ -54,7 +54,7 @@ const accountPool = new DataPool({
   },
 });
 const usersPool = new DataPool({
-  apiId: DataPool.formatApiId("api/v1/user", DataPool.M),
+  apiId: DataPool.formatApiId("api/v1/user", DataPool.LIST),
   client,
   mapping: {},
 });

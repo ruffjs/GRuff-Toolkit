@@ -1,6 +1,6 @@
 <template>
   <r-table-wrapper :pagination="false">
-    <template #default="{ bodyHeight: y, scrollYConfig }">
+    <template #default="{ scrollYConfig }">
       <a-table
         rowKey="id"
         :scroll="scrollYConfig"

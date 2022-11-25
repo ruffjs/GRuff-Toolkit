@@ -1,6 +1,6 @@
 <template>
   <router-link to="/">
-    <b-touchable
+    <bx-touchable
       :width="isMenuCollapsed && isDesktopDevice ? dockWidth : menuWidth"
       :height="topHeight"
       background="var(--ruff-top-bar-background)"
@@ -20,14 +20,14 @@
           >{{ props.title }}</txt
         >
       </box>
-    </b-touchable>
+    </bx-touchable>
   </router-link>
 </template>
 
 <script setup lang="ts">
 import logoSrc from "../../assets/images/logo.png";
-import useScreenInfos from "../../traits/useScreenInfos";
-import useMenuSettings from "../../traits/useMenuSettings";
+import useScreenInfos from "../../reactive/useScreenInfos";
+import useMenuSettings from "../../reactive/useMenuSettings";
 
 const { isDesktopDevice, isMobileDevice } = useScreenInfos();
 const { isMenuCollapsed } = useMenuSettings();

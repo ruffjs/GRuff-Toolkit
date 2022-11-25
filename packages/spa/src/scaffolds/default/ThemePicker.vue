@@ -1,10 +1,10 @@
 <template>
   <a-dropdown placement="bottomRight">
-    <b-touchable :padding="[0, 10]" row>
+    <bx-touchable :padding="[0, 10]" row>
       <box>
         <txt class="top-bar-text">{{ theme }}</txt>
       </box>
-    </b-touchable>
+    </bx-touchable>
     <template v-slot:overlay>
       <a-menu class="ant-pro-drop-down menu" :selected-keys="[themeMode]">
         <a-menu-item key="light" @click="setThemeMode('light')">浅色 </a-menu-item>
@@ -16,7 +16,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
-import useColorTheme from "../../traits/useColorTheme";
+import useColorTheme from "../../reactive/useColorTheme";
 
 const map = {
   light: "浅色",

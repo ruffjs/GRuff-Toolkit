@@ -1,37 +1,58 @@
 <template>
   <div class="table-demo">
     <div class="table-demo-item">
-      <h4 class="table-demo-name">自动高度</h4>
+      <h4 class="table-demo-name">1. 自动高度</h4>
       <div class="table-demo-body">
         <AutoHeight :isMobileDevice="isMobileDevice" />
       </div>
     </div>
 
     <div class="table-demo-item">
-      <h4 class="table-demo-name">自动高度 + 分页</h4>
+      <h4 class="table-demo-name">2. 自动高度 + 分页</h4>
       <div class="table-demo-body">
         <WithPagination :isMobileDevice="isMobileDevice" />
       </div>
     </div>
 
     <div class="table-demo-item">
-      <h4 class="table-demo-name">自动高度 + 单元格组件</h4>
+      <h4 class="table-demo-name">3. 自动高度 + 单元格组件</h4>
       <div class="table-demo-body">
         <UseCells :isMobileDevice="isMobileDevice" />
       </div>
     </div>
 
     <div class="table-demo-item">
-      <h4 class="table-demo-name">自动高度 + 可隐藏列</h4>
+      <h4 class="table-demo-name">4. 自动高度 + 注入式单元格组件</h4>
+      <div class="table-demo-body">
+        <UseCellsByInjection :isMobileDevice="isMobileDevice" />
+      </div>
+    </div>
+
+    <div class="table-demo-item">
+      <h4 class="table-demo-name">5. 自动高度 + 可隐藏列</h4>
       <div class="table-demo-body">
         <Hidable :isMobileDevice="isMobileDevice" />
       </div>
     </div>
 
     <div class="table-demo-item">
-      <h4 class="table-demo-name">自动高度 + 列分组</h4>
+      <h4 class="table-demo-name">6. 自动高度 + 列分组</h4>
       <div class="table-demo-body">
         <GroupColumns :isMobileDevice="isMobileDevice" />
+      </div>
+    </div>
+
+    <div class="table-demo-item">
+      <h4 class="table-demo-name">7. 自动高度 + 使用糖函数简化分组配置</h4>
+      <div class="table-demo-body">
+        <GroupColumnsWithSugar :isMobileDevice="isMobileDevice" />
+      </div>
+    </div>
+
+    <div class="table-demo-item">
+      <h4 class="table-demo-name">8. 自动高度 + 申明式，列可隐藏、可分组单元格组件</h4>
+      <div class="table-demo-body">
+        <UseCellsByNames :isMobileDevice="isMobileDevice" />
       </div>
     </div>
   </div>
@@ -44,6 +65,9 @@ import WithPagination from "@/components/tables/WithPagination.vue";
 import UseCells from "@/components/tables/UseCells.vue";
 import Hidable from "@/components/tables/Hidable.vue";
 import GroupColumns from "@/components/tables/GroupColumns.vue";
+import GroupColumnsWithSugar from "@/components/tables/GroupColumnsWithSugar.vue";
+import UseCellsByInjection from "@/components/tables/UseCellsByInjection.vue";
+import UseCellsByNames from "@/components/tables/UseCellsByNames.vue";
 
 const isMobileDevice = ref(window.screen.availWidth <= 576);
 const onWindowResize = () => {

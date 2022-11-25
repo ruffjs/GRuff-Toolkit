@@ -35,8 +35,8 @@
 <script setup lang="ts">
 import { useSlots } from "vue";
 import { basic } from "../utils/props";
-import useHeightCalculator from "../traits/useHeightCalculator";
-import useTableWrapperProps from "../traits/useTableWrapperProps";
+import useHeightCalculator from "../reactive/useHeightCalculator";
+import useTableWrapperProps from "../reactive/useTableWrapperProps";
 
 const slots = useSlots();
 const emit = defineEmits(["pageChange", "pageSizeChange"]);

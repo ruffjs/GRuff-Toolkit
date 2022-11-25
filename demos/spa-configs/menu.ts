@@ -57,7 +57,23 @@ export default [
     key: "workspace/container",
     name: "其他SPA容器",
     icon: "snippets-outlined",
-    children: [],
+    children: [
+      {
+        key: "workspace/container/tabs",
+        name: "多选项卡",
+        link: "/container/tabs",
+      },
+      {
+        key: "workspace/container/route",
+        name: "子路由选项卡",
+        link: "/container/route",
+      },
+      {
+        key: "workspace/container/cols",
+        name: "分栏与交互",
+        link: "/container/cols",
+      },
+    ],
   },
   {
     key: "workspace/table",
@@ -80,14 +96,14 @@ export default [
         link: "/table/hidable-columns",
       },
       {
-        key: "workspace/table/group-columns/v1",
+        key: "workspace/table/grouped-columns/v1",
         name: "对列进行分组 v1",
-        link: "/table/group-columns/v1",
+        link: "/table/grouped-columns/v1",
       },
       {
-        key: "workspace/table/group-columns/v2",
+        key: "workspace/table/grouped-columns/v2",
         name: "对列进行分组 v2",
-        link: "/table/group-columns/v2",
+        link: "/table/grouped-columns/v2",
       },
       {
         key: "workspace/table/cells",
@@ -95,27 +111,52 @@ export default [
         link: "/table/cells",
       },
       {
-        key: "workspace/table/cellrenders",
+        key: "workspace/table/cell-renders",
         name: "使用自定义单元格渲染函数",
-        link: "/table/cellrenders",
+        link: "/table/cell-renders",
       },
       {
-        key: "workspace/table/cellnames",
+        key: "workspace/table/cell-names",
         name: "使用自定义单元格名",
-        link: "/table/cellnames",
+        link: "/table/cell-names",
       },
     ],
   },
   {
     key: "workspace/form",
-    name: "表单组件与表单处理",
+    name: "表单组件与表单配置",
     icon: "form-outlined",
     children: [
-      // {
-      //   key: "workspace/form/",
-      //   name: "",
-      //   link: "/form/",
-      // },
+      {
+        key: "workspace/form/selectable",
+        name: "可选输入框",
+        link: "/form/selectable",
+      },
+      {
+        key: "workspace/form/time-range",
+        name: "时间区间选择器",
+        link: "/form/time-range",
+      },
+      {
+        key: "workspace/form/popup",
+        name: "自定义弹出式选择器",
+        link: "/form/popup",
+      },
+      {
+        key: "workspace/form/location",
+        name: "自定义表单元素容器",
+        link: "/form/location",
+      },
+      {
+        key: "workspace/form/widgets",
+        name: "申明式表单组件与申明式表单组件容器",
+        link: "/form/widgets",
+      },
+      {
+        key: "workspace/form/form",
+        name: "申明式表单",
+        link: "/form/form",
+      },
     ],
   },
   {
@@ -134,9 +175,9 @@ export default [
         link: "/advance-table/query",
       },
       {
-        key: "workspace/advance-table/querybyroute",
+        key: "workspace/advance-table/query-relate-to-route",
         name: "与路由双向绑定的高级检索",
-        link: "/advance-table/querybyroute",
+        link: "/advance-table/query-relate-to-route",
       },
       {
         key: "workspace/advance-table/with-editor",
@@ -185,11 +226,11 @@ export default [
         name: "使用DataView展示和编辑用户",
         link: "/entities/data-view",
       },
-      {
-        key: "workspace/entities/others",
-        name: "其它实体表格与表单",
-        link: "/entities/others",
-      },
+      // {
+      //   key: "workspace/entities/others",
+      //   name: "其它实体表格与表单",
+      //   link: "/entities/others",
+      // },
       {
         key: "workspace/entities/widgets",
         name: "其它小组件",
@@ -207,16 +248,16 @@ export default [
         name: "CSV导入导出",
         link: "/others/csv",
       },
-      {
-        key: "workspace/others/icons",
-        name: "集成图标库",
-        link: "/others/icons",
-      },
-      {
-        key: "workspace/others/xrender",
-        name: "XRender Vue Plus",
-        link: "/others/xrender",
-      },
+      // {
+      //   key: "workspace/others/icons",
+      //   name: "集成图标库",
+      //   link: "/others/icons",
+      // },
+      // {
+      //   key: "workspace/others/xrender",
+      //   name: "XRender Vue Plus",
+      //   link: "/others/xrender",
+      // },
     ],
   },
 ] as RuffSPAMenuItem[];

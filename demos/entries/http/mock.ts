@@ -1,56 +1,65 @@
 import clients from "./clients";
 
 type User = {
-    id?: number
-    name: string
-    email?: string
-    phone: string
-    password: string
-    remark: string
-    roleIds: number[]
-    projectIds?: number[]
-    allProject: boolean
-}
+  id?: number;
+  name: string;
+  email?: string;
+  phone: string;
+  password: string;
+  remark: string;
+  roleIds: number[];
+  projectIds?: number[];
+  allProject: boolean;
+};
 
 const mockUserHttp = clients.mock.user.$getFriendlyProvider<
-    "loginLog" | "token",
-    "login" | "loginBySmsCode",
-    "profile" | "password" | "bindPhone",
-    "doSth",
-    User
+  "loginLog" | "token",
+  "login" | "loginBySmsCode",
+  "profile" | "password" | "bindPhone",
+  "doSth",
+  User
 >();
 
 console.log(await mockUserHttp.list(3));
 
-mockUserHttp.login({
+mockUserHttp
+  .login({
     payload: {
-        loginName: "demo",
-        password: "123456",
-        clientType: "Web",
+      loginName: "demo",
+      password: "123456",
+      clientType: "Web",
     },
-}).then(async (resp) => {
-    console.log('mockUserHttp.login resp:', resp)
-}).catch(err => {
-    console.log('mockUserHttp.login err:', err)
-});
+  })
+  .then(async (resp) => {
+    console.log("mockUserHttp.login resp:", resp);
+  })
+  .catch((err) => {
+    console.log("mockUserHttp.login err:", err);
+  });
 
-mockUserHttp.loginBySmsCode({
+mockUserHttp
+  .loginBySmsCode({
     payload: {
-        loginName: "demo",
-        password: "123456",
-        clientType: "Web",
+      loginName: "demo",
+      password: "123456",
+      clientType: "Web",
     },
-}).then(async (resp) => {
-    console.log('mockUserHttp.login resp:', resp)
-}).catch(err => {
-    console.log('mockUserHttp.login err:', err)
-});
+  })
+  .then(async (resp) => {
+    console.log("mockUserHttp.login resp:", resp);
+  })
+  .catch((err) => {
+    console.log("mockUserHttp.login err:", err);
+  });
 
-mockUserHttp(1).doSth().then(res => {
-    console.log('userHttp(1).doSth res:', res)
-}).catch(err => {
-    console.log('userHttp(1).doSth err:', err, err.toJSON())
-});
+mockUserHttp(1)
+  .doSth({})
+  .then((res) => {
+    console.log("userHttp(1).doSth res:", res);
+  })
+  .catch((err) => {
+    console.log("userHttp(1).doSth err:", err, err.toJSON());
+  });
 
 // for (const user of await mockUserHttp.list(3)) {
 //   console.log(user.name, user, user.$raw);

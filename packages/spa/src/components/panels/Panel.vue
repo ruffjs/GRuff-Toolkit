@@ -1,6 +1,6 @@
 <template>
   <box width="100%" height="100%" background="--primary-bgcolor" :padding="padding">
-    <PermissionView :accessDesc="accessDesc" :checkingText="permissionCheckingText">
+    <PermissionView :access-by="accessBy" :checkingText="permissionCheckingText">
       <template #unauth><slot name="no-permis"></slot></template>
       <slot></slot>
     </PermissionView>
@@ -14,7 +14,7 @@ defineProps({
     type: [Number, String, Array],
     default: "--ms",
   },
-  accessDesc: [Object, String, Number],
+  accessBy: [Object, String, Number],
   permissionCheckingText: {
     type: String,
     default: "登录中...",

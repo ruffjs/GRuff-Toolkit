@@ -2,7 +2,7 @@
   <DualModesView>
     <template #mobile>
       <box width="100vw" height="100vh" overflow="hidden">
-        <b-box
+        <bx-box
           :flex="1"
           row
           :width="`calc(100vw + ${menuWidth}px)`"
@@ -44,11 +44,11 @@
               <router-view />
             </box>
           </box>
-        </b-box>
+        </bx-box>
       </box>
     </template>
     <template #desktop>
-      <b-box :flex="1" row width="100vw">
+      <bx-box :flex="1" row width="100vw">
         <box
           :width="isMenuCollapsed ? dockWidth : menuWidth"
           column
@@ -79,7 +79,7 @@
             <router-view />
           </box>
         </box>
-      </b-box>
+      </bx-box>
     </template>
     <div>Hello</div>
   </DualModesView>
@@ -88,8 +88,8 @@
 <script setup lang="ts">
 import { Component, computed, watch } from "vue";
 
-import useMenuSettings from "../../traits/useMenuSettings";
-import useTopbarSettings from "../../traits/useTopbarSettings";
+import useMenuSettings from "../../reactive/useMenuSettings";
+import useTopbarSettings from "../../reactive/useTopbarSettings";
 import logoSrc from "../../assets/images/logo.png";
 
 import Logo from "./Logo.vue";

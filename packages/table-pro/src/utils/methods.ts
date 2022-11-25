@@ -1,4 +1,4 @@
-export const divideHidableColumns = (columns: AnyArray, props: AnyRecord) => {
+export const analyzeHidableColumns = (columns: AnyArray, props: AnyRecord) => {
   const hiddens: any[] = [],
     showns = columns.filter((column: AnyRecord) => {
       if (column.hidden) {

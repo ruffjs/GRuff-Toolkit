@@ -46,8 +46,29 @@ export const variColumns = {
       default: [],
     },
   },
-  columnKey: {
+  groupIndex: {
     type: String,
     default: "default",
+  },
+};
+
+export const embedCells = {
+  ...basic,
+  onHiddenCheck: Function,
+  columns: {
+    type: Array as () => AnyRecord[],
+    default: [],
+  },
+  groupIndex: {
+    type: String,
+    default: "default",
+  },
+  rowKey: {
+    type: String,
+    required: true,
+  },
+  dataSource: {
+    type: Array,
+    default: [],
   },
 };

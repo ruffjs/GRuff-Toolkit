@@ -1,46 +1,46 @@
 type RuffClientResourceCallParams<P extends RuffDataModel = any> = {
-  payload?: P,
-  query?: RuffHttpQueryCondition,
-  idOrKeys?: IdOrKeys,
-  subIdOrKeys?: IdOrKeys,
-}
+  payload?: P;
+  query?: RuffHttpQueryCondition;
+  idOrKeys?: IdOrKeys;
+  subIdOrKeys?: IdOrKeys;
+};
 
 interface RuffClientBaseAPIs {
   isMock: boolean;
   // 请求需要授权时
-  async request<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
+  request<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     config: RuffClientRequestConfig<D>
   ): Promise<RuffClientResponseContent<T>>;
 
-  async get<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
+  get<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     url: string,
     config?: RuffClientRequestConfig<D>
   ): Promise<RuffClientResponseContent<T>>;
 
-  async post<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
-    url: string,
-    data?: D,
-    config?: RuffClientRequestConfig<D>
-  ): Promise<RuffClientResponseContent<T>>;
-
-  async put<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
+  post<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     url: string,
     data?: D,
     config?: RuffClientRequestConfig<D>
   ): Promise<RuffClientResponseContent<T>>;
 
-  async patch<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
+  put<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
+    url: string,
+    data?: D,
+    config?: RuffClientRequestConfig<D>
+  ): Promise<RuffClientResponseContent<T>>;
+
+  patch<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     url: string,
     data?: Partial<D>,
     config?: RuffClientRequestConfig<Partial<D>>
   ): Promise<RuffClientResponseContent<T>>;
 
-  async delete<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
+  delete<T extends RuffHttpResource = any, D extends RuffDataModel = any>(
     url: string,
     config?: RuffClientRequestConfig<D>
   ): Promise<RuffClientResponseContent<T>>;
 
-  async $_call<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $_call<T extends RuffDataModel = any, D extends RuffDataModel = any>(
     apiId: string,
     params: RuffClientResourceCallParams<D>,
     config?: RuffClientRequestConfig<D>
@@ -49,7 +49,10 @@ interface RuffClientBaseAPIs {
 
 interface RuffClientResourceBaseAPIs extends RuffClientBaseAPIs {
   /** 创建资源 */
-  $_create_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $_create_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     pathname: string,
     model: D,
     query?: RuffHttpQueryCondition,
@@ -63,7 +66,10 @@ interface RuffClientResourceBaseAPIs extends RuffClientBaseAPIs {
     config?: RuffClientRequestConfig<D>
   ): Promise<RuffClientResponseContent<T>>;
 
-  $_get_pageable_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $_get_pageable_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     pathname: string,
     query?: RuffPageableResourcesQueryModel,
     config?: RuffClientRequestConfig<D>
@@ -79,10 +85,13 @@ interface RuffClientResourceBaseAPIs extends RuffClientBaseAPIs {
   ): Promise<RuffClientResponseContent<T>>;
 
   /** 删除资源 */
-  $_remove_resource<T extends RuffDataModel = any, D extends RuffDataModel = any>(
+  $_remove_resource<
+    T extends RuffDataModel = any,
+    D extends RuffDataModel = any
+  >(
     pathname: string,
     query?: RuffHttpQueryCondition,
-    config?: RuffClientRequestConfig<D>,
+    config?: RuffClientRequestConfig<D>
   ): Promise<RuffClientResponseContent<T>>;
 }
 
@@ -95,7 +104,10 @@ interface AxiosResponse<T = any, D = any> {
   request?: any;
 }
 type RuffClientRequestConfig<T = any> = any;
-type RuffClientResponse<T extends RuffHttpResource = any, D extends RuffDataModel = any> = AxiosResponse<T, D> | any;
+type RuffClientResponse<
+  T extends RuffHttpResource = any,
+  D extends RuffDataModel = any
+> = AxiosResponse<T, D> | any;
 
 interface RuffClientHooks {
   // 请求即将开启时
@@ -107,7 +119,11 @@ interface RuffClientHooks {
   // 请求过程中发生错误
   onRequestError(error: AxiosError): boolean;
   // 请求失败
-  onResponseError(status: number, error: AxiosError, response?: AxiosResponse): boolean;
+  onResponseError(
+    status: number,
+    error: AxiosError,
+    response?: AxiosResponse
+  ): boolean;
   // 因为未授权而请求失败
   on401Error(error: AxiosError, response: AxiosResponse): boolean;
   on403Error(error: AxiosError, response: AxiosResponse): boolean;
@@ -115,18 +131,16 @@ interface RuffClientHooks {
   // 因服务更新重启或其他原因而请求失败
   onServerError(status: number, error: AxiosError): boolean;
   // 请求超时或网络异常
-  onNetworkError(error: AxiosError): boolean
+  onNetworkError(error: AxiosError): boolean;
 }
 interface RuffClient
-  extends
-  RuffClientResourceBaseAPIs,
-  RuffClientResourceRequestorAPIs,
-  RuffClientHooks {
-
-  readonly pageIndex: number
-  pageSize: number
-  listKey: string
-
+  extends RuffClientResourceBaseAPIs,
+    RuffClientResourceRequestorAPIs,
+    RuffClientHooks {
+  readonly pageIndex: number;
+  pageSize: number;
+  listKey: string;
+  countKey: string;
 
   get network(): {
     timeout: number;
@@ -134,13 +148,19 @@ interface RuffClient
   };
 
   withQueryString(query?: RuffHttpQueryCondition): string;
-  toObjectiveQuery(query?: RuffHttpQueryCondition): RuffHttpQueryModel
+  toObjectiveQuery(query?: RuffHttpQueryCondition): RuffHttpQueryModel;
 
   defineApiHub<
     T extends CreateApiHubDefination = any,
-    X extends Record<string, AnyFn<Promise<RuffClientResponseContent<any>>>> = {}
-  >(prefix: string, config: CreateApiHubConfig<T>, more: (X | ((client: RuffClient) => X)) = {} as X)
-    : { [k in keyof T]: RuffResourceCaller<T[k]['type'], T[k]['model']>; } & X
+    X extends Record<
+      string,
+      AnyFn<Promise<RuffClientResponseContent<any>>>
+    > = {}
+  >(
+    prefix: string,
+    config: CreateApiHubConfig<T>,
+    more: X | ((client: RuffClient) => X) = {} as X
+  ): { [k in keyof T]: RuffResourceCaller<T[k]["type"], T[k]["model"]> } & X;
 }
 
 interface RuffCreateClientOptions {
@@ -159,7 +179,10 @@ type RuffClientCallersConfigs<C extends string = any> = Record<
   RuffCreateCallableResouceProviderConfig & { prefix: string }
 >;
 
-interface RuffCreateClientConfigs<R extends string = any, C extends string = any> {
+interface RuffCreateClientConfigs<
+  R extends string = any,
+  C extends string = any
+> {
   axios?: RuffClientRequestConfig<any>;
   resources?: RuffClientResourcesConfigs<R>;
   calls?: RuffClientCallersConfigs<C>;

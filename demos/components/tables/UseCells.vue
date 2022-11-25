@@ -40,7 +40,7 @@ defineProps({
   isMobileDevice: Boolean,
 });
 
-const columns: any = [
+const columns: any[] = [
   {
     title: "用户名称",
     dataIndex: "name",
@@ -76,7 +76,7 @@ const columns: any = [
     dataIndex: "projects",
     useCell: "projects",
     ellipsis: true,
-    customRender: ({ text, record }: any) => {
+    rfTextRender: ({ text, record }: any) => {
       let sites = "";
       if (record.level == "Admin") {
         sites = "所有站点";

@@ -66,8 +66,8 @@
 </template>
 
 <script setup lang="ts">
-import usePassport from "../traits/useUserPassport";
-import defineFormModel from "@ruff-web/form-pro/src/traits/defineFormModel";
+import usePassport from "../reactive/useUserPassport";
+import defineFormModel from "@ruff-web/form/src/reactive/defineFormModel";
 // import bgImageSrc from "@/assets/images/background.jpg"
 const bgImageSrc = null;
 

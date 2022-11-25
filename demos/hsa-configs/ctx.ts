@@ -36,7 +36,6 @@ export default CreateSPAContext({
       console.log(error)
       return Promise.reject();
     }
-
   },
   async onRequestPermission(userState: UserState, acceesDescription: any) {
     return Promise.resolve();

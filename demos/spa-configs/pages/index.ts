@@ -90,7 +90,7 @@ export default [
   //   meta: {
   //     name: "储罐监控",
   //   },
-  //   accessDesc: {
+  //   accessBy: {
   //     roles: ["PM"],
   //   },
   //   children: [
@@ -98,7 +98,7 @@ export default [
   //       path: "calibration",
   //       // alias: "calibration", 重名的别名会被标准化函数移除
   //       component: PlaceholderPage,
-  //       accessDesc: {
+  //       accessBy: {
   //         roles: ["PM2"],
   //       },
   //       meta: {

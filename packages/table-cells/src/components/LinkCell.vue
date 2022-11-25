@@ -10,10 +10,9 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import useCustomRender from "../traits/useCustomRender";
+import useCustomText from "../reactive/useCustomText";
 
 const props = defineProps({
-  index: Number,
   text: [String, Number, Object, Boolean],
   column: {
     type: Object,
@@ -26,7 +25,7 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const title = useCustomRender(props);
+const title = useCustomText(props);
 const handleClick = () => {
   if (props.record) {
     if (typeof props.column?.link === "string") {
