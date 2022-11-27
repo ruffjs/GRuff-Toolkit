@@ -116,12 +116,12 @@ export const advTables = {
         name: "带行编辑能力的表格",
       },
     },
-    {
-      path: "tables",
-      component: PlaceholderPage,
-      meta: {
-        name: "关联表格",
-      },
-    },
+    // {
+    //   path: "tables",
+    //   component: PlaceholderPage,
+    //   meta: {
+    //     name: "关联表格",
+    //   },
+    // },
   ],
 };

@@ -184,11 +184,11 @@ export default [
         name: "带行编辑能力的表格",
         link: "/advance-table/with-editor",
       },
-      {
-        key: "workspace/advance-table/tables",
-        name: "关联表格",
-        link: "/advance-table/tables",
-      },
+      // {
+      //   key: "workspace/advance-table/tables",
+      //   name: "关联表格",
+      //   link: "/advance-table/tables",
+      // },
     ],
   },
   {
