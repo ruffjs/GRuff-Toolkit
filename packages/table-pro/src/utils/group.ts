@@ -1,19 +1,21 @@
-export function toGroups(sweetColumns: any[]): Record<string, AnyRecord[]> {
+export function toGroupedCols(
+  sweetColumns: any[]
+): Record<string, AnyRecord[]> {
   const columns: any = {
     default: [],
   };
   sweetColumns.forEach((col) => {
-    if (col.rfScope) {
-      if (typeof col.rfScope === "string") {
-        if (!columns[col.rfScope]) {
-          columns[col.rfScope] = [];
+    if (col.rfColScope) {
+      if (typeof col.rfColScope === "string") {
+        if (!columns[col.rfColScope]) {
+          columns[col.rfColScope] = [];
         }
-        columns[col.rfScope].push(col);
+        columns[col.rfColScope].push(col);
       } else if (
-        typeof col.rfScope === "object" &&
-        col.rfScope instanceof Array
+        typeof col.rfColScope === "object" &&
+        col.rfColScope instanceof Array
       ) {
-        col.rfScope.forEach((groupname: any) => {
+        col.rfColScope.forEach((groupname: any) => {
           if (typeof groupname === "string") {
             if (!columns[groupname]) {
               columns[groupname] = [];

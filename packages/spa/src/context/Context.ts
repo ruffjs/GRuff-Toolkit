@@ -19,6 +19,7 @@ import { Store } from "vuex";
 import Viewport from "./viewport/Viewport";
 import TableWrappers from "@ruff-web/table-pro";
 import tableCells from "@ruff-web/table-cells";
+import formComponents from "@ruff-web/form";
 
 const darkModeMedia =
   window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
@@ -196,6 +197,7 @@ export default class Context implements IRuffSPAContext {
         .use(bricks)
         .use(TableWrappers)
         .use(tableCells)
+        .use(formComponents)
         .use(this._store)
         .use(this._router);
       this._installed = true;

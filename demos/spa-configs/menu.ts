@@ -110,11 +110,11 @@ export default [
         name: "使用自定义单元格组件",
         link: "/table/cells",
       },
-      {
-        key: "workspace/table/cell-renders",
-        name: "使用自定义单元格渲染函数",
-        link: "/table/cell-renders",
-      },
+      // {
+      //   key: "workspace/table/cell-renders",
+      //   name: "使用自定义单元格渲染函数",
+      //   link: "/table/cell-renders",
+      // },
       {
         key: "workspace/table/cell-names",
         name: "使用自定义单元格名",
@@ -134,7 +134,7 @@ export default [
       },
       {
         key: "workspace/form/time-range",
-        name: "时间区间选择器",
+        name: "日期区间选择器",
         link: "/form/time-range",
       },
       {
@@ -142,11 +142,11 @@ export default [
         name: "自定义弹出式选择器",
         link: "/form/popup",
       },
-      {
-        key: "workspace/form/location",
-        name: "自定义表单元素容器",
-        link: "/form/location",
-      },
+      // {
+      //   key: "workspace/form/location",
+      //   name: "自定义表单元素容器",
+      //   link: "/form/location",
+      // },
       {
         key: "workspace/form/widgets",
         name: "申明式表单组件与申明式表单组件容器",

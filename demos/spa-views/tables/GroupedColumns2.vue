@@ -2,7 +2,7 @@
   <r-scroll-page with-dir>
     <r-panel>
       <h4>视图</h4>
-      <div class="table"><AutoHeightTable /></div>
+      <div class="table"><GroupColumnsWithSugar /></div>
       <h4>模板代码</h4>
       <div class="code">
         <HighlightJS language="html" :code="tpl" />
@@ -19,14 +19,153 @@
 import { onMounted } from "vue";
 import "highlight.js/lib/common";
 import hljsVuePlugin from "@highlightjs/vue-plugin";
-import AutoHeightTable from "@/components/tables/AutoHeight.vue";
+import GroupColumnsWithSugar from "@/components/tables/GroupColumnsWithSugar.vue";
 
 const HighlightJS = hljsVuePlugin.component;
 const tpl = `
-
+<r-col-groupable-twrapper :columns="columns" :group-index="group" :pagination="false">
+      <template #default="{ scrollYConfig, computedColumns }">
+        <a-table
+          rowKey="id"
+          :scroll="isMobileDevice ? undefined : scrollYConfig"
+          :columns="computedColumns"
+          :data-source="dataSource"
+          :pagination="false"
+          :loading="false"
+        >
+          <template #bodyCell="{ column, text, record }">
+            <r-tcell-link
+              v-if="column.cellname === 'link'"
+              :text="text"
+              :record="record"
+              :column="column"
+            />
+            <r-tcell-tooltip
+              v-if="column.cellname === 'projects'"
+              :text="text"
+              :record="record"
+              :column="column"
+            />
+            <r-tcell-actions
+              v-if="column.cellname === 'actions'"
+              :column="column"
+              :record="record"
+            />
+          </template>
+        </a-table>
+      </template>
+    </r-col-groupable-twrapper>
 `;
 const ts = `
+import { ref } from "vue";
+import { toGroupedCols } from "@ruff-web/table-pro/src/utils/group";
 
+...
+
+const group = ref("default");
+
+const sweetColumns = [
+  {
+    title: "用户名称",
+    dataIndex: "name",
+    cellname: "link",
+    disabled(record: AnyRecord) {
+      return record?.level === "Admin";
+    },
+    action(record: AnyRecord) {
+      handleEdit(record);
+    },
+  },
+  {
+    title: "用户角色",
+    dataIndex: "roles",
+    customRender({ text, record }: any) {
+      var name = "";
+      if (record?.level == "Admin") {
+        name = "超级管理员";
+      } else {
+        record.roles.forEach((item: AnyRecord) => {
+          name = name ? name + "、" + item.name : item.name;
+        });
+      }
+      return name || "-";
+    },
+  },
+  {
+    title: "用户手机号",
+    dataIndex: "phone",
+    rfColScope: ["admin"],
+  },
+  {
+    title: "所属站点",
+    dataIndex: "projects",
+    cellname: "projects",
+    rfColScope: ["super"],
+    ellipsis: true,
+    rfTextRender: ({ text, record }: any) => {
+      let sites = "";
+      if (record.level == "Admin") {
+        sites = "所有站点";
+      } else if (record.roles[0] && record.roles[0].id == 1) {
+        sites = "所有站点";
+      } else {
+        text.forEach((item: AnyRecord) => {
+          sites = sites ? sites + "、" + item.name : item.name;
+        });
+      }
+      return sites;
+    },
+  },
+  {
+    title: "操作",
+    dataIndex: "operating",
+    width: 100,
+    cellname: "actions",
+    rfColScope: ["admin"],
+    actions: (record: AnyRecord) => {
+      return [
+        {
+          name: "编辑",
+          disabled: record.level === "Admin",
+          action: () => {
+            handleEdit(record);
+          },
+        },
+      ];
+    },
+  },
+  {
+    title: "操作",
+    dataIndex: "operating",
+    width: 200,
+    cellname: "actions",
+    rfColScope: ["super"],
+    actions: (record: AnyRecord) => {
+      return [
+        {
+          name: "编辑",
+          disabled: record.level === "Admin",
+          action: () => {
+            handleEdit(record);
+          },
+        },
+        {
+          name: "删除",
+          disabled: record.level === "Admin",
+          deleteConfirm: "确定删除？",
+          action: async () => {
+            try {
+              handleDelete(record.id);
+            } catch (error) {}
+          },
+        },
+      ];
+    },
+  },
+];
+
+const columns = toGroupedCols(sweetColumns);
+...
 `;
 onMounted(() => {
   // code.value = codes.autoHeightCode;
@@ -35,7 +174,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .table {
-  height: 400px;
   margin-bottom: 20px;
 }
 </style>

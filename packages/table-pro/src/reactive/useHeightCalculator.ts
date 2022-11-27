@@ -7,6 +7,7 @@ export default function useHeightCalculator(defaultBodyHeight: number = 400) {
   // const t = ref();
 
   const updatebodyHeight = () => {
+    console.log("resize?");
     if (tableWrapper.value) {
       // console.log(tableWrapper.value);
       const theadHeight =

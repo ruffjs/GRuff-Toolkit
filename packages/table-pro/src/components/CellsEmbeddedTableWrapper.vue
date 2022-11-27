@@ -31,12 +31,12 @@ import { computed } from "vue";
 import { withCell } from "@ruff-web/table-cells/src/utils/cell";
 import { embedCells } from "../utils/props";
 import ColumnsGroupableTableWrapper from "./ColumnsGroupableTableWrapper.vue";
-import { toGroups } from "../utils/group";
+import { toGroupedCols } from "../utils/group";
 import HiddenCells from "@ruff-web/table-cells/src/components/HiddenCells.vue";
 
 const props = defineProps(embedCells);
 const groupedColumns = computed(() => {
-  return toGroups(
+  return toGroupedCols(
     props.columns.map((col) => {
       if (typeof col.rfCell === "string") {
         return withCell(col.rfCell, col);

@@ -19,19 +19,19 @@
         >
           <template #bodyCell="{ column, text, record }">
             <r-tcell-link
-              v-if="column.bodyCell === 'link'"
+              v-if="column.cellname === 'link'"
               :text="text"
               :record="record"
               :column="column"
             />
             <r-tcell-tooltip
-              v-if="column.bodyCell === 'projects'"
+              v-if="column.cellname === 'projects'"
               :text="text"
               :record="record"
               :column="column"
             />
             <r-tcell-actions
-              v-if="column.bodyCell === 'actions'"
+              v-if="column.cellname === 'actions'"
               :column="column"
               :record="record"
             />
@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { toGroups } from "@ruff-web/table-pro/src/utils/group";
+import { toGroupedCols } from "@ruff-web/table-pro/src/utils/group";
 
 defineProps({
   isMobileDevice: Boolean,
@@ -55,7 +55,7 @@ const sweetColumns = [
   {
     title: "用户名称",
     dataIndex: "name",
-    bodyCell: "link",
+    cellname: "link",
     disabled(record: AnyRecord) {
       return record?.level === "Admin";
     },
@@ -81,13 +81,13 @@ const sweetColumns = [
   {
     title: "用户手机号",
     dataIndex: "phone",
-    rfScope: ["admin"],
+    rfColScope: ["admin"],
   },
   {
     title: "所属站点",
     dataIndex: "projects",
-    bodyCell: "projects",
-    rfScope: ["super"],
+    cellname: "projects",
+    rfColScope: ["super"],
     ellipsis: true,
     rfTextRender: ({ text, record }: any) => {
       let sites = "";
@@ -107,8 +107,8 @@ const sweetColumns = [
     title: "操作",
     dataIndex: "operating",
     width: 100,
-    bodyCell: "actions",
-    rfScope: ["admin"],
+    cellname: "actions",
+    rfColScope: ["admin"],
     actions: (record: AnyRecord) => {
       return [
         {
@@ -125,8 +125,8 @@ const sweetColumns = [
     title: "操作",
     dataIndex: "operating",
     width: 200,
-    bodyCell: "actions",
-    rfScope: ["super"],
+    cellname: "actions",
+    rfColScope: ["super"],
     actions: (record: AnyRecord) => {
       return [
         {
@@ -151,7 +151,7 @@ const sweetColumns = [
   },
 ];
 
-const columns = toGroups(sweetColumns);
+const columns = toGroupedCols(sweetColumns);
 
 const dataSource = ref([
   {

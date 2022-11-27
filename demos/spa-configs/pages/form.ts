@@ -1,9 +1,9 @@
 import { DirectRouter, PlaceholderPage } from "@ruff-web/spa";
 
 import Selectable from "@/spa-views/forms/Selectable.vue";
-import TimeRange from "@/spa-views/forms/TimeRange.vue";
+import DateRange from "@/spa-views/forms/DateRange.vue";
 import Popup from "@/spa-views/forms/Popup.vue";
-import Location from "@/spa-views/forms/Location.vue";
+// import Location from "@/spa-views/forms/Location.vue";
 import Widgets from "@/spa-views/forms/Widgets.vue";
 import Form from "@/spa-views/forms/Form.vue";
 
@@ -23,9 +23,9 @@ export const forms = {
     },
     {
       path: "time-range",
-      component: TimeRange,
+      component: DateRange,
       meta: {
-        name: "时间区间选择器",
+        name: "日期区间选择器",
       },
     },
     {
@@ -35,13 +35,13 @@ export const forms = {
         name: "自定义弹出式选择器",
       },
     },
-    {
-      path: "location",
-      component: Location,
-      meta: {
-        name: "自定义表单元素容器",
-      },
-    },
+    // {
+    //   path: "location",
+    //   component: Location,
+    //   meta: {
+    //     name: "自定义表单元素容器",
+    //   },
+    // },
     {
       path: "widgets",
       component: Widgets,

@@ -1,8 +1,20 @@
 <template>
   <r-scroll-page with-dir>
+    <a-radio-group v-model:value="isMobileDevice">
+      <a-radio-button :value="false">PC 端</a-radio-button>
+      <a-radio-button :value="true">移动端</a-radio-button>
+    </a-radio-group>
     <r-panel>
       <h4>视图</h4>
-      <div class="table"><AutoHeightTable /></div>
+      <div
+        class="table"
+        :style="{
+          width: isMobileDevice ? '375px' : '100%',
+          height: isMobileDevice ? '576px' : 'auto',
+        }"
+      >
+        <Hidable :isMobileDevice="isMobileDevice" />
+      </div>
       <h4>模板代码</h4>
       <div class="code">
         <HighlightJS language="html" :code="tpl" />
@@ -16,18 +28,25 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import "highlight.js/lib/common";
 import hljsVuePlugin from "@highlightjs/vue-plugin";
-import AutoHeightTable from "@/components/tables/AutoHeight.vue";
+import Hidable from "@/components/tables/Hidable.vue";
+import { delay } from "@ruff-web/utils/src/async";
 
 const HighlightJS = hljsVuePlugin.component;
+
+const isMobileDevice = ref(false);
 const tpl = `
 
 `;
 const ts = `
 
 `;
+watch(isMobileDevice, async () => {
+  await delay(1000);
+  window.dispatchEvent(new Event("resize"));
+});
 onMounted(() => {
   // code.value = codes.autoHeightCode;
 });
@@ -35,7 +54,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .table {
-  height: 400px;
   margin-bottom: 20px;
 }
 </style>

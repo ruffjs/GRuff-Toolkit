@@ -11,19 +11,19 @@
       >
         <template #bodyCell="{ column, text, record }">
           <r-tcell-link
-            v-if="column.useCell === 'link'"
+            v-if="column.cellname === 'link'"
             :text="text"
             :record="record"
             :column="column"
           />
           <r-tcell-tooltip
-            v-if="column.useCell === 'projects'"
+            v-if="column.cellname === 'projects'"
             :text="text"
             :record="record"
             :column="column"
           />
           <r-tcell-actions
-            v-if="column.useCell === 'actions'"
+            v-if="column.cellname === 'actions'"
             :column="column"
             :record="record"
           />
@@ -44,7 +44,7 @@ const columns: any[] = [
   {
     title: "用户名称",
     dataIndex: "name",
-    useCell: "link",
+    cellname: "link",
     disabled(record: AnyRecord) {
       return record?.level === "Admin";
     },
@@ -74,7 +74,7 @@ const columns: any[] = [
   {
     title: "所属站点",
     dataIndex: "projects",
-    useCell: "projects",
+    cellname: "projects",
     ellipsis: true,
     rfTextRender: ({ text, record }: any) => {
       let sites = "";
@@ -94,7 +94,7 @@ const columns: any[] = [
     title: "操作",
     dataIndex: "operating",
     width: 200,
-    useCell: "actions",
+    cellname: "actions",
     actions: (record: AnyRecord) => {
       return [
         {

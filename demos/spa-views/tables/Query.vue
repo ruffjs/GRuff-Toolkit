@@ -28,9 +28,6 @@ const tpl = `
 const ts = `
 
 `;
-onMounted(() => {
-  // code.value = codes.autoHeightCode;
-});
 </script>
 
 <style lang="scss" scoped>

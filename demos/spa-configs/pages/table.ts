@@ -64,13 +64,13 @@ export const tables = {
         name: "使用自定义单元格组件",
       },
     },
-    {
-      path: "cell-renders",
-      component: CellRenders,
-      meta: {
-        name: "使用自定义单元格渲染函数",
-      },
-    },
+    // {
+    //   path: "cell-renders",
+    //   component: CellRenders,
+    //   meta: {
+    //     name: "使用自定义单元格渲染函数",
+    //   },
+    // },
     {
       path: "cell-names",
       component: CellNames,
