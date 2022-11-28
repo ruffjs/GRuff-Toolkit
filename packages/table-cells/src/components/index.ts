@@ -1,4 +1,4 @@
-import { createVNode } from "vue";
+import { h } from "vue";
 import HiddenCells from "./HiddenCells.vue";
 
 import Actions from "./ActionsCell.vue";
@@ -22,7 +22,7 @@ export default {
 };
 
 export const renderActionsCell = ({ column, record }: RenderContext) =>
-  createVNode(Actions, { column, record });
+  h(Actions, { column, record });
 registerCell("ruff-actions-cell", renderActionsCell, {
   dataIndex: "actions_" + Date.now(),
   actions: (record: AnyRecord) => [],

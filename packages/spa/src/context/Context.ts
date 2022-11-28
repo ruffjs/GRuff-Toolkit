@@ -2,7 +2,7 @@ import { Router } from "vue-router";
 import {
   App as VueApp,
   ComponentInternalInstance,
-  createVNode,
+  h,
   defineComponent,
   getCurrentInstance,
 } from "vue";

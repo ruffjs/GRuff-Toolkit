@@ -6,8 +6,7 @@ import pages from "./pages";
 import PageNotFound from "../spa-views/errors/PageNotFound.vue";
 
 import "../styles/index.scss";
-import { PlaceholderPage } from "@ruff-web/spa";
-import { createVNode, defineComponent } from "vue";
+
 import clients from "@/entries/http/clients";
 
 export default CreateSPAContext({
@@ -21,7 +20,7 @@ export default CreateSPAContext({
     home: "/monitor/history",
     // home: PlaceholderPage,
     // home: defineComponent(PlaceholderPage as {}),
-    // home: () => createVNode("div", {}, "Hello, world"), // FunctionalComponent
+    // home: () => h("div", {}, "Hello, world"), // FunctionalComponent
     // forbidden: PageForbidden,
     default: PageNotFound,
   }),

@@ -22,7 +22,7 @@
         @blur="handleDisplayInputBlur"
         :placeholder="placeholder"
       />
-      <div class="ruff-select-input-mask"></div>
+      <div v-show="states.optionShown" class="ruff-select-input-mask"></div>
       <div class="ruff-select-icon-trigger">
         <ruff-icon
           v-if="displayValue && !disabled && allowClear && states.displayInputHovered"
@@ -193,6 +193,7 @@ const handleOptionInputsFocus = () => {
   // console.log('handleOptionInputsFocus')
   states.optionInputsFocused = true;
 };
+
 const handleOptionInputsBlur = () => {
   // console.log('handleOptionInputsBlur')
   if (states.optionInputsFocused) {
@@ -269,12 +270,13 @@ onDeactivated(() => {
   }
 
   .ruff-select-input-mask {
-    position: absolute;
+    position: fixed;
     top: 0;
-    height: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     z-index: 10;
+    cursor: default;
   }
 
   .ruff-select-icon-trigger {

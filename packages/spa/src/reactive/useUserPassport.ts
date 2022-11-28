@@ -1,6 +1,6 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import { Modal } from "ant-design-vue";
-import { computed, createVNode } from "vue";
+import { computed, h } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { getSPAContext } from "../context";
@@ -41,7 +41,7 @@ export default function useUserPassport() {
   const signOut = () => {
     Modal.confirm({
       // title: "退出登录",
-      icon: createVNode(ExclamationCircleOutlined),
+      icon: h(ExclamationCircleOutlined),
       content: "确定退出登录？",
       okText: "确认",
       cancelText: "取消",

@@ -1,4 +1,4 @@
-import { Component, createVNode, VNode } from "vue";
+import { Component, h, VNode } from "vue";
 
 type Render = (cxt: RenderContext) => VNode;
 
@@ -22,7 +22,7 @@ export function registerComponet(
     registerCell(
       cellname,
       ({ index, column, text, record }) => {
-        return createVNode(component, { index, column, text, record });
+        return h(component, { index, column, text, record });
       },
       defaults
     );

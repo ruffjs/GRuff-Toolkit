@@ -2,17 +2,11 @@
   <a-form-item
     :name="name"
     :html-for="htmlFor"
+    :label="label"
     :label-align="labelAlign"
     :rules="rules"
     ref="formItem"
   >
-    <template #label>
-      {{ label || "-" }}
-      <a-tooltip :placement="placement">
-        <template #title> {{ tip || "-" }} </template>
-        <ruff-icon type="antd" name="QuestionCircleOutlined" style="margin-left: 10px" />
-      </a-tooltip>
-    </template>
     <slot :handleChange="handleChange" :handleBlur="handleBlur" />
   </a-form-item>
 </template>
